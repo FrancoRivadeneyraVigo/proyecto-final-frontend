@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --bs-body-font-family: 'Roboto', sans-serif;
+    --font-headings: 'Baloo 2', sans-serif;
+    --bs-primary: hsla(226, 80%, 56%, 1);
+    --bs-primary-hover: hsla(226, 70%, 45%, 1);
+    --bs-primary-active: hsla(226, 70%, 34%, 1);
+    --bs-secondary: hsla(174, 65%, 38%, 1);
+    --bs-secondary-hover: hsla(174, 65%, 28%, 1);
+    --bs-secondary-active: hsla(174, 65%, 20%, 1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headings);
+}
