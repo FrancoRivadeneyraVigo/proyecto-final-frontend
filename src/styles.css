@@ -2,16 +2,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
-    --bs-body-font-family: 'Roboto', sans-serif;
+    /*Fonts*/
+    --bs-body-font-family: 'Inter', sans-serif;
     --font-headings: 'Baloo 2', sans-serif;
+
+    /*Colors*/
     --bs-primary: hsla(226, 80%, 56%, 1);
     --bs-primary-hover: hsla(226, 70%, 45%, 1);
     --bs-primary-active: hsla(226, 70%, 34%, 1);
+    --bs-primary-bg-subtle: hsla(226, 71%, 92%, 1);
+    --bs-primary-border-subtle: hsla(226, 71%, 92%, 1);
+    --bs-primary-text-emphasis: hsla(226, 70%, 12%, 1);
+
     --bs-secondary: hsla(174, 65%, 38%, 1);
     --bs-secondary-hover: hsla(174, 65%, 28%, 1);
     --bs-secondary-active: hsla(174, 65%, 20%, 1);
+    --bs-secondary-bg-subtle: hsla(174, 64%, 88%, 1);
+    --bs-secondary-border-subtle: hsla(174, 64%, 88%, 1);
+    --bs-secondary-text-emphasis: hsla(175, 64%, 12%, 1);
+
+    --bs-light: hsla(0, 0%, 92%, 1);
+    --bs-light-rgb: 235,235,235;
+    --bs-light-hover: hsla(0, 0%, 85%, 1);
+    --bs-light-active: hsla(0, 0%, 30%, 1);
+    --bs-light-text-emphasis: hsla(0, 0%, 12%, 1);
+
+    
 }
 
+/*Font styles*/
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-headings);
+}
+
+/*Components*/
+
+/*===Button===*/
+.btn {
+    --bs-btn-border-radius: 10px; 
+    --bs-btn-font-size: 16px;
+    --bs-btn-font-weight: 500;
+    --bs-btn-padding-x: 12px;
+    --bs-btn-padding-y: 10px;
+}
+
+/* =========================================
+    BUTTON PRIMARY (filled)
+   ========================================= */
+.btn-primary {
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-color: #fff;
+
+    --bs-btn-hover-bg: var(--bs-primary-hover);
+    --bs-btn-hover-border-color: var(--bs-primary-hover);
+    --bs-btn-hover-color: #fff;
+
+    --bs-btn-active-bg: var(--bs-primary-active);
+    --bs-btn-active-border-color: var(--bs-primary-active);
+    --bs-btn-active-color: #fff;
+
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+
+    --bs-btn-focus-shadow-rgb: 67, 110, 220;
+    /* ajusta al RGB real de tu primary si quieres precisión */
+}
+
+/* =========================================
+    BUTTON PRIMARY OUTLINE
+   ========================================= */
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+
+    --bs-btn-hover-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-hover-color: var(--bs-primary);
+
+    --bs-btn-active-bg: var(--bs-primary-active);
+    --bs-btn-active-border-color: var(--bs-primary-active);
+    --bs-btn-active-color: #fff;
+
+    --bs-btn-disabled-color: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+/* =========================================
+    BUTTON LIGHT
+   ========================================= */
+.btn-light {
+    --bs-btn-bg: var(--bs-light);
+    --bs-btn-border-color: var(--bs-light);
+    --bs-btn-color: var(--bs-light-text-emphasis);
+
+    --bs-btn-hover-bg: var(--bs-light-hover);
+    --bs-btn-hover-border-color: var(--bs-light-hover);
+    --bs-btn-hover-color: var(--bs-light-text-emphasis);
+
+    --bs-btn-active-bg: var(--bs-light-active);
+    --bs-btn-active-border-color: var(--bs-light-active);
+    --bs-btn-active-color: #ffffff;
+
+    --bs-btn-disabled-bg: var(--bs-light);
+    --bs-btn-disabled-border-color: var(--bs-light);
+}
+
+/* =========================================
+    BUTTON LINK
+   ========================================= */
+.btn-link {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: transparent;
+
+    --bs-btn-hover-color: var(--bs-primary-hover);
+    --bs-btn-hover-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-hover-border-color: var(--bs-primary-border-subtle);
+
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary); 
 }
