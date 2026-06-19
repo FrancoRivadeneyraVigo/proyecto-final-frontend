@@ -28,10 +28,65 @@
     --bs-light-text-emphasis: hsla(0, 0%, 12%, 1);
 }
 
-/*Font styles*/
-h1, h2, h3, h4, h5, h6 {
+/*Text styles*/
+h1, h2, h3, h4 {
     font-family: var(--font-headings);
 }
+
+h5 {
+    font-family: var(--bs-body-font-family);
+}
+
+/* Headings */
+h1 {
+    font-size: 60px;
+    line-height: 68px;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: 48px;
+    line-height: 56px;
+    font-weight: 800;
+}
+
+h3 {
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 800;
+}
+
+h4 {
+    font-size: 28px;
+    line-height: 40px;
+    font-weight: 700;
+}
+
+h5 {
+    font-size: 20px;
+    line-height: normal;
+    font-weight: 600;
+}
+
+/* Label */
+.label-large {
+    font-size: 16px;
+    line-height: normal;
+    font-weight: 600;
+}
+
+.label-medium {
+    font-size: 14px;
+    line-height: normal;
+    font-weight: 600;
+}
+
+.label-small {
+    font-size: 12px;
+    line-height: normal;
+    font-weight: 600;
+}
+
 
 /*Components*/
 
@@ -40,8 +95,8 @@ h1, h2, h3, h4, h5, h6 {
     --bs-btn-border-radius: 10px; 
     --bs-btn-font-size: 16px;
     --bs-btn-font-weight: 500;
-    --bs-btn-padding-x: 12px;
-    --bs-btn-padding-y: 10px;
+    --bs-btn-padding-x: 10px;
+    --bs-btn-padding-y: 8px;
 }
 
 /* =========================================
