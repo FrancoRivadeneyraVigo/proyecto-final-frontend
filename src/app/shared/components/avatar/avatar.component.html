@@ -1,3 +1,7 @@
 <div class="avatar">
-    <h3>hola</h3>
+    @if (photoUrl()) {
+    <img [src]="photoUrl()" [alt]="name()" class="avatar-img">
+    } @else {
+    <span class="avatar-initials">{{ initials() }}</span>
+    }
 </div>
