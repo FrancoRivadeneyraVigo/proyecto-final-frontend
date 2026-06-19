@@ -1,1 +1,44 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <div class="container-xxl d-flex align-items-center px-0 py-0">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <div class="brand-icon">
+                    <img src="images/logo.svg" alt="a•tiempo" class="brand-logo" />
+                </div>
+            </a>
+            <!-- Mobile button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+                <!-- Menu -->
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Explorar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Vender</a>
+                    </li>
+                </ul>
+                <!-- Not logged -->
+                <div class="d-flex gap-3 align-items-center">
+                    <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-person-circle'"></app-button>
+
+                    <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-box-arrow-in-right'"></app-button>
+
+                    <app-avatar
+                    [name]="'Clara'"
+                    [surname]="'García'"
+                    [photoUrl]="'https://cdn.pixabay.com/photo/2020/10/19/09/44/woman-5667299_1280.jpg'"
+                    ></app-avatar>
+                </div>
+            </div>
+        </div>  
+    </div>
+</nav>
