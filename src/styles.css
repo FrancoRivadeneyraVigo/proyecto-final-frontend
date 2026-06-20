@@ -11,7 +11,9 @@
     --bs-primary-hover: hsla(226, 70%, 45%, 1);
     --bs-primary-active: hsla(226, 70%, 34%, 1);
     --bs-primary-bg-subtle: hsla(226, 71%, 92%, 1);
+    --bs-primary-bg-subtle-hover: hsla(226, 71%, 85%, 1);
     --bs-primary-border-subtle: hsla(226, 71%, 92%, 1);
+    --bs-primary-border-subtle-hover: hsla(226, 71%, 85%, 1);
     --bs-primary-text-emphasis: hsla(226, 70%, 12%, 1);
 
     --bs-secondary: hsla(174, 65%, 38%, 1);
@@ -99,11 +101,24 @@ h5 {
 
 /*===Button===*/
 .btn {
-    --bs-btn-border-radius: 10px; 
+    --bs-btn-border-radius: 10px;
     --bs-btn-font-size: 16px;
     --bs-btn-font-weight: 500;
     --bs-btn-padding-x: 10px;
     --bs-btn-padding-y: 8px;
+
+    /* =========================================
+        ICON BUTTON
+       ========================================= */
+    &:not(:has(span)) {
+        --bs-btn-padding-x: 8px;
+        --bs-btn-padding-y: 8px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 /* =========================================
@@ -152,16 +167,16 @@ h5 {
     BUTTON LIGHT
    ========================================= */
 .btn-light {
-    --bs-btn-bg: var(--bs-light);
-    --bs-btn-border-color: var(--bs-light);
-    --bs-btn-color: var(--bs-light-text-emphasis);
+    --bs-btn-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-border-color: var(--bs-primary-bg-subtle);
+    --bs-btn-color: var(--bs-primary-text-emphasis);
 
-    --bs-btn-hover-bg: var(--bs-light-hover);
-    --bs-btn-hover-border-color: var(--bs-light-hover);
-    --bs-btn-hover-color: var(--bs-light-text-emphasis);
+    --bs-btn-hover-bg: var(--bs-primary-bg-subtle-hover);
+    --bs-btn-hover-border-color: var(--bs-primary-bg-subtle-hover);
+    --bs-btn-hover-color: var(--bs-primary-text-emphasis);
 
-    --bs-btn-active-bg: var(--bs-light-active);
-    --bs-btn-active-border-color: var(--bs-light-active);
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
     --bs-btn-active-color: #ffffff;
 
     --bs-btn-disabled-bg: var(--bs-light);

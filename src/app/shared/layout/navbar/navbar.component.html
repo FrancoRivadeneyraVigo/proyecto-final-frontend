@@ -24,21 +24,27 @@
                         <a class="nav-link" href="#">Vender</a>
                     </li>
                 </ul>
+
+                @if (!currentUser()) {
                 <!-- Not logged -->
                 <div class="d-flex gap-3 align-items-center">
                     <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
                         [iconLeft]="'bi bi-person-circle'"></app-button>
-
                     <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
                         [iconLeft]="'bi bi-box-arrow-in-right'"></app-button>
-
-                    <app-avatar
-                    [name]="'Clara'"
-                    [surname]="'García'"
-                    [photoUrl]="'https://cdn.pixabay.com/photo/2020/10/19/09/44/woman-5667299_1280.jpg'"
-                    ></app-avatar>
                 </div>
+                } @else {
+                <!-- Logged -->
+                <div class="d-flex gap-3 align-items-center">
+                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
+                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
+                    @if (currentUser(); as user) {
+                    <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
+                    }
+                </div>
+                }
             </div>
-        </div>  
+        </div>
     </div>
 </nav>

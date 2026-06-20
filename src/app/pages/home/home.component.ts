@@ -1,16 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
-import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
-  imports: [ButtonComponent, AvatarComponent, NavbarComponent, FormsModule],
+  imports: [ButtonComponent, AvatarComponent, NavbarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-
 }
