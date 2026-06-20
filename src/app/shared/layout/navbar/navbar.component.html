@@ -29,9 +29,13 @@
                 <!-- Not logged -->
                 <div class="d-flex gap-3 align-items-center">
                     <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
-                        [iconLeft]="'bi bi-person-circle'"></app-button>
-                    <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
-                        [iconLeft]="'bi bi-box-arrow-in-right'"></app-button>
+                        [iconLeft]="'bi bi-person-circle'">
+                    </app-button>
+                    <a routerLink="/login">
+                        <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-box-arrow-in-right'">
+                        </app-button>               
+                    </a>
                 </div>
                 } @else {
                 <!-- Logged -->
@@ -41,6 +45,8 @@
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
                     @if (currentUser(); as user) {
                     <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
+                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-box-arrow-right'"
+                        (click)="onLogout()"></app-button>
                     }
                 </div>
                 }

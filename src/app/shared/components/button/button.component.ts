@@ -17,6 +17,7 @@ export class ButtonComponent {
     | 'btn-light'
     | 'btn-dark'
     | 'btn-link'
+    | 'btn-outline-primary'
   >('btn-primary');
   showIconLeft = input<boolean>(false);
   iconLeft = input<string>('');
