@@ -6,6 +6,7 @@
 .navbar {
     width: 100%;
     padding: 2rem 2rem;
+    background-color: var(--bs-surface);
     
     .container-fluid {
             width: 100%;

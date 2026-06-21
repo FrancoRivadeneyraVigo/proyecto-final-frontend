@@ -46,22 +46,36 @@
     margin-bottom: 16px; 
 }
 
-
-
 /* ============ Columna derecha: contenido ============ */
 .login-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     padding: 40px;
     grid-row: 1;
     grid-column: 2;
+    .section {
+        max-width: 380px;
+    }
 }
 
 .login-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
+    h3, p {
+        text-align: center;
+    }
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .login-forgot-link,
@@ -80,6 +94,8 @@
 @media (max-width: 991px) {
     .login-page {
         grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        min-height: auto;
     }
 
     .login-hero {
@@ -87,24 +103,22 @@
         height: 220px;
         grid-row: 1;
         grid-column: 1;
+        padding: 48px 24px;
     }
 
     .login-content {
         grid-row: 2;
         grid-column: 1;
-        padding: 32px 20px;
+        padding: 48px 24px;
     }
 
     .login-hero-overlay {
-        padding: 20px;
+        padding: 24px;
     }
 
     .login-hero-logo {
-        width: 40px;
-        height: 40px;
+        width: 120px;
+        height: auto;
         margin-bottom: 8px;
     }
-
-    .login-hero-subtitle {
-        font-size: 14px;
-    } }
+}

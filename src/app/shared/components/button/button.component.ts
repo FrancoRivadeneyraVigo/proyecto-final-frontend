@@ -24,4 +24,7 @@ export class ButtonComponent {
   text = input<string>('');
   showIconRight = input<boolean>(false);
   iconRight = input<string>('');
+  type = input<'button' | 'submit' | 'reset'>('button');
+  disabled = input<boolean>(false);
+  fullWidth = input<boolean>(false);
 }
