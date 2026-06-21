@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ILoginRequest, ILoginResponse, IMeResponse } from '../models/auth.interface';
-import { IProfile } from '../models/profile.interface';
+import { environment } from '../../environments/environment';
+import { ILoginRequest, ILoginResponse, IMeResponse } from '../shared/models/auth.interface';
+import { IProfile } from '../shared/models/profile.interface';
 
 // Clave usada para guardar y recuperar el token en localStorage
 const TOKEN_KEY = 'auth_token';

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 
