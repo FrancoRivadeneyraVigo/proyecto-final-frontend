@@ -40,8 +40,9 @@ export class LoginFormComponent {
   async onSubmit() {
     const { email, password } = this.loginForm.value;
     try {
-      const profile = await this.authService.login({ email, password });
-      toast.success(`Bienvenido, ${profile.name} ${profile.surname}`);
+      await this.authService.login({ email, password });
+      const profile = this.authService.currentUser();
+      toast.success(`Bienvenido, ${profile?.name} ${profile?.surname}`);
       this.router.navigate(['/']);
     } catch (error: any) {
       toast.error('Email o contraseña incorrectos');
