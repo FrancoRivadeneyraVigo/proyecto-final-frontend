@@ -10,6 +10,4 @@ export interface IProfile {
     city: string;
     postal_code: string;
     biography: string | null;
-    created_at: string;
-    fk_usuarios_id: number;
 }
