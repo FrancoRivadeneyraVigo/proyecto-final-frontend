@@ -36,14 +36,14 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 40px;
-    color: #fff;
+    padding: 80px;
+    gap: 16px;
+    color: var(--bs-surface);
 }
 
 .login-hero-logo {
     width: 218px;
     height: auto;
-    margin-bottom: 16px; 
 }
 
 /* ============ Columna derecha: contenido ============ */
@@ -52,7 +52,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    min-height: 100%;
+    padding: 80px;
     grid-row: 1;
     grid-column: 2;
     .section {
@@ -94,8 +95,8 @@
 @media (max-width: 991px) {
     .login-page {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        min-height: auto;
+        grid-template-rows: auto 1fr;
+        min-height: 100vh;
     }
 
     .login-hero {
@@ -103,7 +104,6 @@
         height: 220px;
         grid-row: 1;
         grid-column: 1;
-        padding: 48px 24px;
     }
 
     .login-content {
@@ -113,7 +113,7 @@
     }
 
     .login-hero-overlay {
-        padding: 24px;
+        padding: 48px 24px;
     }
 
     .login-hero-logo {
