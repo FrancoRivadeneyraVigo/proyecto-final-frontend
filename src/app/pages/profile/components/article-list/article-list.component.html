@@ -1,0 +1,9 @@
+<div class="article-list">
+    <p class="article-list-count label-medium">{{ total() }} anuncios</p>
+
+    <div class="article-list-items">
+        @for (article of articles(); track article.id) {
+        <app-article-card [article]="article" />
+        }
+    </div>
+</div>

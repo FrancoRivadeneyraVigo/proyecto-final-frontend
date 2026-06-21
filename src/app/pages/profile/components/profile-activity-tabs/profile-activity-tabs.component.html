@@ -1,0 +1,42 @@
+<div class="profile-activity-tabs">
+    <nav class="profile-activity-nav">
+        <button
+            type="button"
+            class="profile-activity-nav-link"
+            [class.active]="activeTab() === 'articles'"
+            (click)="setActiveTab('articles')"
+        >
+            Mis artículos
+        </button>
+        <button
+            type="button"
+            class="profile-activity-nav-link"
+            [class.active]="activeTab() === 'ratings'"
+            (click)="setActiveTab('ratings')"
+        >
+            Valoraciones
+        </button>
+        <button
+            type="button"
+            class="profile-activity-nav-link"
+            [class.active]="activeTab() === 'favorites'"
+            (click)="setActiveTab('favorites')"
+        >
+            Favoritos
+        </button>
+    </nav>
+
+    <div class="profile-activity-panel">
+        @switch (activeTab()) {
+            @case ('articles') {
+            <app-my-articles [userId]="userId()" />
+            }
+            @case ('ratings') {
+            <app-ratings />
+            }
+            @case ('favorites') {
+            <app-favorites />
+            }
+        }
+    </div>
+</div>

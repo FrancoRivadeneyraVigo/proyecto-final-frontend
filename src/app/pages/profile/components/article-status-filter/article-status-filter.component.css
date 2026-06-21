@@ -1,0 +1,17 @@
+.status-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.status-filter-btn {
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border-radius: 999px;
+    --bs-btn-padding-x: 16px;
+    --bs-btn-padding-y: 8px;
+    --bs-btn-font-size: 14px;
+    --bs-btn-font-weight: 500;
+}

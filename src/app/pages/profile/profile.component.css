@@ -2,6 +2,10 @@
     min-height: calc(100vh - 72px);
 }
 
+.profile-activity {
+    padding: 48px 24px 80px;
+}
+
 .profile-hero {
     position: relative;
     overflow: hidden;

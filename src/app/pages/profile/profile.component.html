@@ -43,9 +43,6 @@
                     </div>
 
                     <div class="profile-actions">
-                        <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()">
-                        </app-button>
                         <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-pencil'">
                         </app-button>
@@ -77,5 +74,11 @@
             }
         </div>
     </section>
+
+    @if (user(); as profile) {
+    <section class="profile-activity container-xxl">
+        <app-profile-activity-tabs [userId]="id()!" />
+    </section>
+    }
 </div>
 <app-footer></app-footer>

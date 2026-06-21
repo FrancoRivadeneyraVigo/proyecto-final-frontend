@@ -7,10 +7,11 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { IProfile } from '../../shared/models/profile.interface';
 import { ProfileService } from '../../shared/services/profile.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { ProfileActivityTabsComponent } from './components/profile-activity-tabs/profile-activity-tabs.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, FooterComponent, ButtonComponent],
+  imports: [NavbarComponent, FooterComponent, ButtonComponent, ProfileActivityTabsComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
