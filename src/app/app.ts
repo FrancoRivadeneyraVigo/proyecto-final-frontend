@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgxSonnerToaster } from 'ngx-sonner';
+import { HomeComponent } from './pages/home/home.component';
 
 @Component({
   selector: 'app-root',
