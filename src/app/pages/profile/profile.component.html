@@ -1,2 +1,81 @@
 <app-navbar></app-navbar>
+
+<div class="profile-page">
+    <section class="profile-hero">
+        <div class="profile-hero-bg">
+            <img src="images/hero-watch.webp" alt="" class="profile-hero-image" />
+            <div class="profile-hero-tint"></div>
+        </div>
+
+        <div class="profile-hero-inner container-xxl">
+            <header class="profile-hero-text">
+                <h2>Mi perfil</h2>
+                <p class="body-large">
+                    Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
+                </p>
+            </header>
+
+            @if (user(); as profile) {
+            <div class="profile-card section">
+                <div class="profile-header">
+                    <div class="profile-identity">
+                        <div class="profile-avatar">
+                            @if (profile.photo_url) {
+                            <img [src]="profile.photo_url" [alt]="profile.name" class="profile-avatar-img" />
+                            } @else {
+                            <span class="profile-avatar-initials">
+                                {{ profile.name.charAt(0) }}{{ profile.surname.charAt(0) }}
+                            </span>
+                            }
+                        </div>
+
+                        <div class="profile-info">
+                            <h3>{{ profile.name }} {{ profile.surname }}</h3>
+                            <p class="profile-meta">
+                                <i class="bi bi-star-fill"></i>
+                                <span>{{ profile.rating}} (0 valoraciones)</span>
+                            </p>
+                            <p class="profile-meta">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>{{ profile.city}}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()">
+                        </app-button>
+                        <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-pencil'">
+                        </app-button>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <span class="profile-stat-label">Ventas</span>
+                        <span class="profile-stat-value">28</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-label">Compras</span>
+                        <span class="profile-stat-value">2</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-label">Miembro desde</span>
+                        <span class="profile-stat-value">2026</span>
+                    </div>
+                </div>
+
+                <div class="profile-bio">
+                    <h5>Biografía</h5>
+                    <p class="body-medium text-muted">
+                        {{ profile.biography }}
+                    </p>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
+</div>
 <app-footer></app-footer>
