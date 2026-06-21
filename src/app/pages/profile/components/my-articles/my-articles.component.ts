@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { IArticlesPaginatedResponse } from '../../../../shared/models/article.interface';
-import { ArticleService } from '../../../../shared/services/article.service';
+import { ArticleService } from '../../../../services/article.service';
 import { ArticleListComponent } from '../article-list/article-list.component';
 import { ArticleStatusFilterComponent } from '../article-status-filter/article-status-filter.component';
 

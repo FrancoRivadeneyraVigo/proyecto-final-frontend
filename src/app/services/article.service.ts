@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { IArticlesPaginatedResponse } from '../models/article.interface';
+import { environment } from '../../environments/environment';
+import { IArticlesPaginatedResponse } from '../shared/models/article.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,6 @@ export class ArticleService {
     }
 
     try {
-      console.log(`${this.baseUrl}/${userId}?${params.toString()}`);
       return await lastValueFrom(
         this.httpClient.get<IArticlesPaginatedResponse>(
           `${this.baseUrl}/${userId}?${params.toString()}`

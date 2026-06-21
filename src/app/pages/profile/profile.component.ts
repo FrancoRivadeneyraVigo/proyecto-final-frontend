@@ -5,8 +5,8 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IProfile } from '../../shared/models/profile.interface';
-import { ProfileService } from '../../shared/services/profile.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { ProfileService } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
 import { ProfileActivityTabsComponent } from './components/profile-activity-tabs/profile-activity-tabs.component';
 
 @Component({

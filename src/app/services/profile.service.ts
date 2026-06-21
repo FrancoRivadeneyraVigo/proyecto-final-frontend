@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { IProfile } from '../models/profile.interface';
+import { environment } from '../../environments/environment';
+import { IProfile } from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root',
