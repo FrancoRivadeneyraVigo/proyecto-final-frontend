@@ -17,6 +17,7 @@ export const routes: Routes = [
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
     {path: "sell-item", component: SellItemComponent},
+    {path: "404", component: Error404Component},
     
     {path: "**", component: Error404Component}
 ];

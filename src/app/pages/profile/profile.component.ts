@@ -1,4 +1,5 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
@@ -22,7 +23,15 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit() {
     const userId: string = String(this.id());
-    this.user.set(await this.profileService.getById(userId));
+    try {
+      this.user.set(await this.profileService.getById(userId));
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && error.status === 404) {
+        this.router.navigate(['/404']);
+        return;
+      }
+      throw error;
+    }
   }
 
   async onLogout(): Promise<void> {
