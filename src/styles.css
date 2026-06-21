@@ -218,3 +218,14 @@ h5 {
     --bs-btn-active-bg: var(--bs-primary);
     --bs-btn-active-border-color: var(--bs-primary); 
 }
+
+/*===Section===*/
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 24px;
+    border-radius: 24px;
+    background-color: #fff;
+}
