@@ -17,10 +17,14 @@ export class ButtonComponent {
     | 'btn-light'
     | 'btn-dark'
     | 'btn-link'
+    | 'btn-outline-primary'
   >('btn-primary');
   showIconLeft = input<boolean>(false);
   iconLeft = input<string>('');
   text = input<string>('');
   showIconRight = input<boolean>(false);
   iconRight = input<string>('');
+  type = input<'button' | 'submit' | 'reset'>('button');
+  disabled = input<boolean>(false);
+  fullWidth = input<boolean>(false);
 }
