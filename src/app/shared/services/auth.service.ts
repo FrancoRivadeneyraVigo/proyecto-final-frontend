@@ -19,24 +19,20 @@ export class AuthService {
   currentUser = signal<IProfile | null>(null);
 
   // Envía las credenciales al back, guarda el token recibido
-  // y a continuación recupera el perfil completo del usuario
-  async login(credentials: ILoginRequest): Promise<IProfile> {
+  // y actualiza el estado de sesión (currentUser) con los datos del usuario
+  async login(credentials: ILoginRequest): Promise<void> {
     try {
       const loginRes = await lastValueFrom(
         this.httpClient.post<ILoginResponse>(`${this.baseUrl}/login`, credentials)
       );
       localStorage.setItem(TOKEN_KEY, loginRes.token);
-
-      const profile = await this.fetchCurrentUser();
-      if (!profile) {
-        throw new Error('No se pudo obtener el perfil tras el login');
-      }
-      return profile;
+      await this.fetchCurrentUser();
     } catch (error) {
       console.error('Error en login:', error);
       throw error;
     }
   }
+  
 
   // Avisa al back de que se cierra sesión y, pase lo que pase,
   // limpia el token local y el estado del usuario actual
