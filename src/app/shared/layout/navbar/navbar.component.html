@@ -15,14 +15,14 @@
                 <!-- Menu -->
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Inicio</a>
+                        <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Explorar</a>
+                        <a class="nav-link" routerLinkActive="active" [routerLink]="['/explore']">Explorar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Vender</a>
-                    </li>
+                        <a class="nav-link" routerLinkActive="active" [routerLink]="['/sell-item']">Vender</a>
+                    </li>           
                 </ul>
 
                 @if (!currentUser()) {
