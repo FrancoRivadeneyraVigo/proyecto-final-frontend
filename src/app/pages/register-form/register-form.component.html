@@ -1,1 +1,63 @@
-<p>register-form works!</p>
+<div class="register-page">
+    <section class="register-hero">
+        <img src="images/hero-watch.webp" alt="" class="register-hero-image" />
+        <div class="register-hero-tint"></div>
+        <div class="register-hero-overlay">
+            <img src="images/logo-login.svg" alt="" class="register-hero-logo" />
+            <p class="body-large">
+                Únete a ATiempo para comprar y vender relojes con confianza.
+            </p>
+        </div>
+    </section>
+
+    <section class="register-content">
+        <div class="register-card">
+            <div class="d-flex flex-column gap-1">
+                <h3>Crear cuenta</h3>
+                <p class="text-muted body-medium">Empieza a publicar, guardar favoritos y contactar con vendedores</p>
+            </div>
+            <div class="section">
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" class="form-control" placeholder="tu@email.com" formControlName="email" />
+                    @if (checkTouched('email') && checkError('email', 'required')) {
+                    <small class="text-danger">El email es obligatorio.</small>
+                    }
+                    @if (checkTouched('email') && checkError('email', 'pattern')) {
+                    <small class="text-danger">Introduce un email válido.</small>
+                    }
+
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input id="password" type="password" class="form-control" formControlName="password" />
+                    @if (checkTouched('password') && checkError('password', 'required')) {
+                    <small class="text-danger">La contraseña es obligatoria.</small>
+                    }
+                    @if (checkTouched('password') && checkError('password', 'minlength')) {
+                    <small class="text-danger">La contraseña debe tener al menos 6 caracteres.</small>
+                    }
+
+                    <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                    <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword" />
+                    @if (checkTouched('confirmPassword') && checkError('confirmPassword', 'required')) {
+                    <small class="text-danger">Confirma tu contraseña.</small>
+                    }
+                    @if (passwordsDoNotMatch()) {
+                    <small class="text-danger">Las contraseñas no coinciden.</small>
+                    }
+
+                    <app-button [text]="isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'" [class]="'btn-primary'"
+                        [showIconRight]="true" [iconRight]="'bi bi-arrow-right'" [type]="'submit'"
+                        [disabled]="registerForm.invalid || isSubmitting" [fullWidth]="true">
+                    </app-button>
+
+                    <p class="text-center text-muted body-medium">¿Ya tienes cuenta en ATiempo?</p>
+                    <a routerLink="/login">
+                        <app-button [text]="'Iniciar sesión'" [class]="'btn-link'"></app-button>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<app-footer></app-footer>

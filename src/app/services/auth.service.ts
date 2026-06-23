@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ILoginRequest, ILoginResponse, IMeResponse } from '../shared/models/auth.interface';
+import { ILoginRequest, ILoginResponse, IMeResponse, IRegisterRequest } from '../shared/models/auth.interface';
 import { IProfile } from '../shared/models/profile.interface';
 
 // Clave usada para guardar y recuperar el token en localStorage
@@ -14,6 +14,7 @@ const TOKEN_KEY = 'auth_token';
 export class AuthService {
   private httpClient = inject(HttpClient);
   private baseUrl: string = `${environment.apiUrl}/auth`;
+  private usersUrl: string = `${environment.apiUrl}/users`;
 
   // Estado reactivo: null = no hay sesión, IProfile = usuario logueado
   currentUser = signal<IProfile | null>(null);
@@ -32,7 +33,19 @@ export class AuthService {
       throw error;
     }
   }
-  
+
+  async register(credentials: IRegisterRequest): Promise<void> {
+    try {
+      const registerRes = await lastValueFrom(
+        this.httpClient.post<ILoginResponse>(`${this.usersUrl}/register`, credentials)
+      );
+      localStorage.setItem(TOKEN_KEY, registerRes.token);
+      await this.fetchCurrentUser();
+    } catch (error) {
+      console.error('Error en registro:', error);
+      throw error;
+    }
+  }
 
   // Avisa al back de que se cierra sesión y, pase lo que pase,
   // limpia el token local y el estado del usuario actual
