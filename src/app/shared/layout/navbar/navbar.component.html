@@ -41,7 +41,9 @@
                 <!-- Logged -->
                 <div class="d-flex gap-3 align-items-center">
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
-                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                    <a routerLink="/chats">
+                        <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                    </a>
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
                     @if (currentUser(); as user) {
                     <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>

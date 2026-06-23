@@ -1,0 +1,60 @@
+<app-navbar></app-navbar>
+
+<main class="chat-page">
+    <section class="chat-shell">
+        <header class="chat-header">
+            <a routerLink="/chats" class="chat-back">
+                <i class="bi bi-arrow-left"></i>
+                <span>Mis chats</span>
+            </a>
+            <app-button [text]="'Actualizar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                [iconLeft]="'bi bi-arrow-clockwise'" (click)="loadMessages()" [disabled]="isLoading">
+            </app-button>
+        </header>
+
+        @if (isLoading) {
+        <div class="chat-state">
+            <span class="spinner-border text-primary" aria-hidden="true"></span>
+            <p class="body-medium text-muted">Cargando mensajes...</p>
+        </div>
+        } @else if (errorMessage) {
+        <div class="chat-state">
+            <i class="bi bi-exclamation-circle"></i>
+            <p class="body-medium">{{ errorMessage }}</p>
+            <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadMessages()"></app-button>
+        </div>
+        } @else {
+        <div class="messages-panel" aria-live="polite">
+            @if (messages.length === 0) {
+            <div class="empty-chat">
+                <i class="bi bi-chat-left-text"></i>
+                <h5>Aún no hay mensajes</h5>
+                <p class="body-medium text-muted">Escribe el primer mensaje para empezar la conversación.</p>
+            </div>
+            } @else {
+            @for (message of messages; track message.id) {
+            <article class="message-row" [class.own-message]="isOwnMessage(message)">
+                <div class="message-bubble">
+                    <p class="body-medium">{{ message.message }}</p>
+                    <span class="message-meta">
+                        {{ message.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                        @if (isOwnMessage(message) && message.is_read) {
+                        · Leído
+                        }
+                    </span>
+                </div>
+            </article>
+            }
+            }
+            <div #messagesEnd></div>
+        </div>
+
+        <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
+            <textarea class="form-control" rows="2" placeholder="Escribe un mensaje" formControlName="message"></textarea>
+            <app-button [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-send'" [type]="'submit'"
+                [disabled]="messageForm.invalid || isSending">
+            </app-button>
+        </form>
+        }
+    </section>
+</main>

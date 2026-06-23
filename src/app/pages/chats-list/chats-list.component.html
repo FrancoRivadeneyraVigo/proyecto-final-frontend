@@ -1,0 +1,55 @@
+<app-navbar></app-navbar>
+
+<main class="chats-page">
+    <section class="chats-header">
+        <div>
+            <p class="label-medium text-primary">Mensajes</p>
+            <h3>Mis chats</h3>
+        </div>
+        <app-button [text]="'Actualizar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+            [iconLeft]="'bi bi-arrow-clockwise'" (click)="loadChats()" [disabled]="isLoading">
+        </app-button>
+    </section>
+
+    @if (isLoading) {
+    <section class="chats-state">
+        <span class="spinner-border text-primary" aria-hidden="true"></span>
+        <p class="body-medium text-muted">Cargando chats...</p>
+    </section>
+    } @else if (errorMessage) {
+    <section class="chats-state">
+        <i class="bi bi-exclamation-circle"></i>
+        <p class="body-medium">{{ errorMessage }}</p>
+        <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadChats()"></app-button>
+    </section>
+    } @else if (chats.length === 0) {
+    <section class="chats-state">
+        <i class="bi bi-chat-left-text"></i>
+        <h5>No tienes chats todavía</h5>
+        <p class="body-medium text-muted">Cuando contactes con un vendedor, tus conversaciones aparecerán aquí.</p>
+        <a routerLink="/explore">
+            <app-button [text]="'Explorar productos'" [class]="'btn-primary'" [showIconRight]="true"
+                [iconRight]="'bi bi-arrow-right'"></app-button>
+        </a>
+    </section>
+    } @else {
+    <section class="chats-list" aria-label="Listado de chats">
+        @for (chat of chats; track chat.id) {
+        <a class="chat-item" [routerLink]="['/chats', chat.id]">
+            <div class="chat-icon">
+                <i class="bi bi-chat-dots"></i>
+            </div>
+            <div class="chat-content">
+                <div class="chat-title-row">
+                    <h5>{{ chat.article_title }}</h5>
+                    <span class="label-small text-muted">{{ chat.created_at | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <p class="body-small text-muted">Comprador: {{ chat.buyer_name }}</p>
+                <p class="body-medium chat-price">{{ chat.article_price }} €</p>
+            </div>
+            <i class="bi bi-chevron-right chat-arrow"></i>
+        </a>
+        }
+    </section>
+    }
+</main>
