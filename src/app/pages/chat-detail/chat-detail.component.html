@@ -1,0 +1,119 @@
+<app-navbar></app-navbar>
+
+<main class="chat-page">
+    <header class="page-chat-header">
+        <div class="contact-chip" aria-hidden="true">{{ contactInitials }}</div>
+        <div class="chat-heading">
+            <a routerLink="/chats" class="chat-back-link">Chat con {{ contactName }}</a>
+            <span></span>
+        </div>
+        <div class="header-actions">
+            <app-button [text]="'Reportar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                [iconLeft]="'bi bi-exclamation-circle'"></app-button>
+            <a routerLink="/profile">
+                <app-button [text]="'Ver perfil'" [class]="'btn-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-person-circle'"></app-button>
+            </a>
+        </div>
+    </header>
+
+    <section class="chat-layout">
+        <aside class="article-panel" aria-label="Detalle del articulo">
+            <h5 class="panel-title"><i class="bi bi-watch"></i> Detalle del articulo</h5>
+
+            <img class="article-image" [src]="articleImage" [alt]="articleTitle">
+
+            <div class="article-title-row">
+                <h4>{{ articleTitle }}</h4>
+                <span class="status-pill">{{ getStatusLabel(article?.status) }}</span>
+            </div>
+
+            <p class="article-description">{{ articleDescription }}</p>
+
+            <span class="location-pill"><i class="bi bi-geo-alt"></i> Madrid, Spain</span>
+
+            <p class="article-price">€{{ articlePrice }}</p>
+
+            <dl class="article-specs">
+                <div>
+                    <dt><i class="bi bi-calendar4"></i> Ano</dt>
+                    <dd>{{ article?.year_of_manufacture || 2021 }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-info-circle"></i> Estado</dt>
+                    <dd>{{ getConditionLabel(article?.condition) }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-tag"></i> Estilo</dt>
+                    <dd>{{ article?.style_name || 'Unisex' }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-gear"></i> Movimiento</dt>
+                    <dd>{{ article?.movement_type || 'Automatico' }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-card-text"></i> Referencia</dt>
+                    <dd>{{ article?.reference || '126610LN' }}</dd>
+                </div>
+            </dl>
+
+            <div class="article-actions">
+                <app-button [text]="'Reservado'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-bag-check'"></app-button>
+                <app-button [text]="'Vendido'" [class]="'btn-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-currency-euro'"></app-button>
+            </div>
+        </aside>
+
+        <section class="conversation-panel" aria-label="Detalle del chat">
+            <h5 class="panel-title"><i class="bi bi-chat-square-text"></i> Detalle del chat</h5>
+
+            @if (isLoading) {
+            <div class="chat-state">
+                <span class="spinner-border text-primary" aria-hidden="true"></span>
+                <p class="body-medium text-muted">Cargando mensajes...</p>
+            </div>
+            } @else if (errorMessage) {
+            <div class="chat-state">
+                <i class="bi bi-exclamation-circle"></i>
+                <p class="body-medium">{{ errorMessage }}</p>
+                <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadMessages()"></app-button>
+            </div>
+            } @else {
+            <div class="messages-panel" aria-live="polite">
+                @if (messages.length === 0) {
+                <div class="empty-chat">
+                    <i class="bi bi-chat-left-text"></i>
+                    <h5>Aun no hay mensajes</h5>
+                    <p class="body-medium text-muted">Escribe el primer mensaje para empezar la conversacion.</p>
+                </div>
+                } @else {
+                @for (message of messages; track message.id) {
+                <article class="message-row" [class.own-message]="isOwnMessage(message)">
+                    <div class="message-bubble">
+                        <strong>{{ isOwnMessage(message) ? 'Tu' : contactName }}</strong>
+                        <p>{{ message.message }}</p>
+                        <span class="message-meta">
+                            {{ message.created_at | date: 'dd/MM/yyyy' }}
+                            @if (isOwnMessage(message) && message.is_read) {
+                            · Leido
+                            }
+                        </span>
+                    </div>
+                </article>
+                }
+                }
+                <div #messagesEnd></div>
+            </div>
+
+            <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
+                <input class="form-control" placeholder="Lorem ipsum dolor sit amet consectetur."
+                    formControlName="message">
+                <app-button [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-send'" [type]="'submit'"
+                    [disabled]="messageForm.invalid || isSending">
+                </app-button>
+            </form>
+            }
+        </section>
+    </section>
+</main>
