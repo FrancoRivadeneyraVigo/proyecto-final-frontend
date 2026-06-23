@@ -4,10 +4,13 @@
     gap: 12px;
 }
 
-.status-filter-btn {
+.status-filter app-button {
+    flex-shrink: 0;
+}
+
+.status-filter app-button::ng-deep button {
     width: auto;
     height: auto;
-    flex-shrink: 0;
     white-space: nowrap;
     border-radius: 999px;
     --bs-btn-padding-x: 16px;

@@ -1,13 +1,9 @@
 <div class="status-filter">
     @for (filter of filters; track filter.value) {
-    <button
-        type="button"
-        class="btn status-filter-btn"
-        [class.btn-primary]="activeStatus() === filter.value"
-        [class.btn-outline-primary]="activeStatus() !== filter.value"
+    <app-button
+        [class]="activeStatus() === filter.value ? 'btn-primary' : 'btn-outline-primary'"
+        [text]="filter.label"
         (click)="onFilterClick(filter)"
-    >
-        <span>{{ filter.label }}</span>
-    </button>
+    ></app-button>
     }
 </div>

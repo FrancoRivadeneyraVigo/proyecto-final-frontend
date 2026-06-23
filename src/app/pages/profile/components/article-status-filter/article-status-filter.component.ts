@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 export interface ArticleStatusFilter {
   label: string;
@@ -16,7 +17,7 @@ export const ARTICLE_STATUS_FILTERS: ArticleStatusFilter[] = [
 
 @Component({
   selector: 'app-article-status-filter',
-  imports: [],
+  imports: [ButtonComponent],
   templateUrl: './article-status-filter.component.html',
   styleUrl: './article-status-filter.component.css',
 })
