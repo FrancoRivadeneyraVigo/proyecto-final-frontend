@@ -22,10 +22,11 @@ export class ProfileService {
     }
   }
 
-  async updateById(userId: string, payload: IUpdateProfileRequest): Promise<IProfile> {
+  async updateById(userId: string | undefined, payload: IUpdateProfileRequest): Promise<IProfile> {
+    const url = userId ? `${this.baseUrl}/${userId}` : this.baseUrl;
     try {
       return await lastValueFrom(
-        this.httpClient.put<IProfile>(`${this.baseUrl}`, payload)
+        this.httpClient.put<IProfile>(url, payload)
       );
     } catch (error) {
       console.error('Error actualizando perfil:', error);
