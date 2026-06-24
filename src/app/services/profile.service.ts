@@ -25,7 +25,7 @@ export class ProfileService {
   async updateById(userId: string, payload: IUpdateProfileRequest): Promise<IProfile> {
     try {
       return await lastValueFrom(
-        this.httpClient.put<IProfile>(`${this.baseUrl}/${userId}`, payload)
+        this.httpClient.put<IProfile>(`${this.baseUrl}`, payload)
       );
     } catch (error) {
       console.error('Error actualizando perfil:', error);

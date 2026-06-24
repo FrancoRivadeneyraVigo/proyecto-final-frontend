@@ -10,6 +10,7 @@ export interface IProfile {
     city: string;
     postal_code: string;
     biography: string | null;
+    fk_usuarios_id: number;
 }
 
 export interface IUpdateProfileRequest {

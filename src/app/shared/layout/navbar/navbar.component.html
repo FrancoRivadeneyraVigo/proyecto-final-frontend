@@ -46,7 +46,7 @@
                     </a>
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
                     @if (currentUser(); as user) {
-                    <a [routerLink]="['/profile', user.id]" class="navbar-avatar-link">
+                    <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
                     <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
                     </a>
                     <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-box-arrow-right'"
