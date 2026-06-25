@@ -226,9 +226,13 @@
     </section>
 
     @if (user()) {
+    @if (routeUserId(); as routeId) {
     <section class="profile-activity container-xxl">
-        <app-profile-activity-tabs [userId]="id()!" />
+        @for (activeRouteId of [routeId]; track activeRouteId) {
+        <app-profile-activity-tabs [userId]="activeRouteId" />
+        }
     </section>
+    }
     }
 </div>
 <app-footer></app-footer>

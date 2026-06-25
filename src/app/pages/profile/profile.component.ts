@@ -1,7 +1,8 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
@@ -23,8 +24,8 @@ import { ProfileActivityTabsComponent } from './components/profile-activity-tabs
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit {
-  id = input<string>();
+export class ProfileComponent {
+  routeUserId = signal<string | null>(null);
   user = signal<IProfile | null>(null);
   isEditing = signal(false);
   saving = signal(false);
@@ -48,10 +49,26 @@ export class ProfileComponent implements OnInit {
 
   profileService = inject(ProfileService);
   private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  async ngOnInit() {
-    const userId: string = String(this.id());
+  constructor() {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const userId = params.get('id');
+      if (!userId) {
+        return;
+      }
+
+      this.routeUserId.set(userId);
+      void this.loadProfile(userId);
+    });
+  }
+
+  private async loadProfile(userId: string): Promise<void> {
+    this.resetPhotoEditState();
+    this.isEditing.set(false);
+    this.profileForm.reset();
+
     try {
       this.user.set(await this.profileService.getById(userId));
     } catch (error) {
