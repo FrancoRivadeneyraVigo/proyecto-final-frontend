@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IProfile, IUpdateProfileRequest } from '../shared/models/profile.interface';
+import {
+  IProfile,
+  IUpdateProfileRequest,
+  IUploadPhotoResponse,
+} from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +34,20 @@ export class ProfileService {
       );
     } catch (error) {
       console.error('Error actualizando perfil:', error);
+      throw error;
+    }
+  }
+
+  async uploadPhoto(file: File): Promise<IUploadPhotoResponse> {
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    try {
+      return await lastValueFrom(
+        this.httpClient.post<IUploadPhotoResponse>(`${this.baseUrl}/photo`, formData)
+      );
+    } catch (error) {
+      console.error('Error subiendo foto de perfil:', error);
       throw error;
     }
   }

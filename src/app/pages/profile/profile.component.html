@@ -76,13 +76,26 @@
                 <div class="profile-card section profile-edit-form">
                     <div class="profile-header">
                         <div class="profile-identity">
-                            <div class="profile-avatar profile-edit-avatar-preview">
+                            <button
+                                type="button"
+                                class="profile-avatar profile-edit-avatar-preview profile-avatar-upload"
+                                aria-label="Seleccionar foto de perfil"
+                                (click)="triggerPhotoInput(photoInput)">
                                 @if (editFormPhotoUrl(); as photoUrl) {
                                 <img [src]="photoUrl" alt="" class="profile-avatar-img" />
                                 } @else {
                                 <span class="profile-avatar-initials">{{ editFormInitials() }}</span>
                                 }
-                            </div>
+                                <span class="profile-avatar-upload-overlay" aria-hidden="true">
+                                    <i class="bi bi-plus-lg"></i>
+                                </span>
+                                <input
+                                    #photoInput
+                                    type="file"
+                                    accept="image/*"
+                                    class="profile-avatar-file-input"
+                                    (change)="onPhotoSelected($event)" />
+                            </button>
                             <div class="profile-info">
                                 <h3>Editar perfil</h3>
                                 <p class="body-medium text-muted">Actualiza tu información personal y de contacto</p>
@@ -175,11 +188,6 @@
                                 </div>
                             </div>
                             <div class="profile-edit-grid profile-edit-grid--single">
-                                <div class="profile-edit-field">
-                                    <label for="photo_url" class="form-label">URL de foto</label>
-                                    <input id="photo_url" type="url" class="form-control" formControlName="photo_url"
-                                        placeholder="https://..." />
-                                </div>
                                 <div class="profile-edit-field profile-edit-field--full">
                                     <label for="biography" class="form-label">Biografía</label>
                                     <textarea id="biography" class="form-control" rows="4" formControlName="biography"

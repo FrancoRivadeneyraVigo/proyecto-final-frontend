@@ -13,6 +13,10 @@ export interface IProfile {
     fk_usuarios_id: number;
 }
 
+export interface IUploadPhotoResponse {
+    photo_url: string;
+}
+
 export interface IUpdateProfileRequest {
     username: string;
     photo_url: string | null;

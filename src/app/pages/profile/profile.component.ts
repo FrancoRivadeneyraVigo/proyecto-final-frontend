@@ -28,6 +28,10 @@ export class ProfileComponent implements OnInit {
   user = signal<IProfile | null>(null);
   isEditing = signal(false);
   saving = signal(false);
+  selectedPhotoFile = signal<File | null>(null);
+  photoPreviewUrl = signal<string | null>(null);
+
+  private photoObjectUrl: string | null = null;
 
   profileForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -59,6 +63,7 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(profile: IProfile): void {
+    this.clearSelectedPhoto();
     this.profileForm.patchValue({
       name: profile.name,
       surname: profile.surname,
@@ -74,6 +79,7 @@ export class ProfileComponent implements OnInit {
   }
 
   cancelEditing(): void {
+    this.clearSelectedPhoto();
     this.profileForm.reset();
     this.isEditing.set(false);
   }
@@ -98,13 +104,21 @@ export class ProfileComponent implements OnInit {
       country: formValue.country!,
       city: formValue.city!,
       postal_code: formValue.postal_code!,
-      photo_url: formValue.photo_url?.trim() ? formValue.photo_url : null,
+      photo_url: profile.photo_url,
       biography: formValue.biography?.trim() ? formValue.biography : null,
     };
 
+    const pendingPhoto = this.selectedPhotoFile();
+
     this.saving.set(true);
     try {
-      const updated = await this.profileService.updateById(String(profile.id), payload);
+      let updated = await this.profileService.updateById(String(profile.id), payload);
+
+      if (pendingPhoto) {
+        const uploadResult = await this.profileService.uploadPhoto(pendingPhoto);
+        updated = { ...updated, photo_url: uploadResult.photo_url };
+      }
+
       this.user.set(updated);
 
       const currentUser = this.authService.currentUser();
@@ -112,6 +126,7 @@ export class ProfileComponent implements OnInit {
         this.authService.currentUser.set(updated);
       }
 
+      this.clearSelectedPhoto();
       this.isEditing.set(false);
       toast.success('Perfil actualizado correctamente');
     } catch {
@@ -141,8 +156,51 @@ export class ProfileComponent implements OnInit {
   }
 
   editFormPhotoUrl(): string | null {
+    const preview = this.photoPreviewUrl();
+    if (preview) {
+      return preview;
+    }
+
     const url = this.profileForm.get('photo_url')?.value?.trim();
     return url || null;
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Selecciona un archivo de imagen válido.');
+      input.value = '';
+      return;
+    }
+
+    this.revokePhotoObjectUrl();
+    this.photoObjectUrl = URL.createObjectURL(file);
+    this.selectedPhotoFile.set(file);
+    this.photoPreviewUrl.set(this.photoObjectUrl);
+    input.value = '';
+  }
+
+  triggerPhotoInput(fileInput: HTMLInputElement): void {
+    fileInput.click();
+  }
+
+  private clearSelectedPhoto(): void {
+    this.revokePhotoObjectUrl();
+    this.selectedPhotoFile.set(null);
+    this.photoPreviewUrl.set(null);
+  }
+
+  private revokePhotoObjectUrl(): void {
+    if (this.photoObjectUrl) {
+      URL.revokeObjectURL(this.photoObjectUrl);
+      this.photoObjectUrl = null;
+    }
   }
 
   async onLogout(): Promise<void> {

@@ -253,6 +253,48 @@
     transition: opacity 0.2s ease;
 }
 
+.profile-avatar-upload {
+    position: relative;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-avatar-upload:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+.profile-avatar-file-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.profile-avatar-upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: hsla(226, 70%, 34%, 0.55);
+    color: var(--bs-surface);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.profile-avatar-upload-overlay i {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.profile-avatar-upload:hover .profile-avatar-upload-overlay,
+.profile-avatar-upload:focus-visible .profile-avatar-upload-overlay {
+    opacity: 1;
+}
+
 @media (max-width: 991px) {
     .profile-hero-inner {
         padding-top: 40px;
