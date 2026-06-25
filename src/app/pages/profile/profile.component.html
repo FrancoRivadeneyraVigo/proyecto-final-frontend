@@ -79,7 +79,7 @@
                             <button
                                 type="button"
                                 class="profile-avatar profile-edit-avatar-preview profile-avatar-upload"
-                                aria-label="Seleccionar foto de perfil"
+                                [attr.aria-label]="editFormPhotoUrl() ? 'Cambiar foto de perfil' : 'Añadir foto de perfil'"
                                 (click)="triggerPhotoInput(photoInput)">
                                 @if (editFormPhotoUrl(); as photoUrl) {
                                 <img [src]="photoUrl" alt="" class="profile-avatar-img" />
@@ -87,7 +87,11 @@
                                 <span class="profile-avatar-initials">{{ editFormInitials() }}</span>
                                 }
                                 <span class="profile-avatar-upload-overlay" aria-hidden="true">
+                                    @if (editFormPhotoUrl()) {
+                                    <i class="bi bi-pencil"></i>
+                                    } @else {
                                     <i class="bi bi-plus-lg"></i>
+                                    }
                                 </span>
                                 <input
                                     #photoInput
