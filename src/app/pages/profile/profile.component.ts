@@ -51,6 +51,7 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit() {
     const userId: string = String(this.id());
+    console.log(userId);
     try {
       this.user.set(await this.profileService.getById(userId));
     } catch (error) {
@@ -112,7 +113,7 @@ export class ProfileComponent implements OnInit {
 
     this.saving.set(true);
     try {
-      let updated = await this.profileService.updateById(String(profile.id), payload);
+      let updated = await this.profileService.updateById(String(profile.fk_usuarios_id), payload);
 
       if (pendingPhoto) {
         const uploadResult = await this.profileService.uploadPhoto(pendingPhoto);
