@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit {
   saving = signal(false);
   selectedPhotoFile = signal<File | null>(null);
   photoPreviewUrl = signal<string | null>(null);
+  photoMarkedForDeletion = signal(false);
 
   private photoObjectUrl: string | null = null;
 
@@ -51,7 +52,6 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit() {
     const userId: string = String(this.id());
-    console.log(userId);
     try {
       this.user.set(await this.profileService.getById(userId));
     } catch (error) {
@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(profile: IProfile): void {
-    this.clearSelectedPhoto();
+    this.resetPhotoEditState();
     this.profileForm.patchValue({
       name: profile.name,
       surname: profile.surname,
@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit {
   }
 
   cancelEditing(): void {
-    this.clearSelectedPhoto();
+    this.resetPhotoEditState();
     this.profileForm.reset();
     this.isEditing.set(false);
   }
@@ -110,10 +110,16 @@ export class ProfileComponent implements OnInit {
     };
 
     const pendingPhoto = this.selectedPhotoFile();
+    const markedForDeletion = this.photoMarkedForDeletion();
 
     this.saving.set(true);
     try {
       let updated = await this.profileService.updateById(String(profile.fk_usuarios_id), payload);
+
+      if (markedForDeletion && !pendingPhoto) {
+        await this.profileService.deletePhoto();
+        updated = { ...updated, photo_url: null };
+      }
 
       if (pendingPhoto) {
         const uploadResult = await this.profileService.uploadPhoto(pendingPhoto);
@@ -127,7 +133,7 @@ export class ProfileComponent implements OnInit {
         this.authService.currentUser.set(updated);
       }
 
-      this.clearSelectedPhoto();
+      this.resetPhotoEditState();
       this.isEditing.set(false);
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
@@ -158,6 +164,10 @@ export class ProfileComponent implements OnInit {
   }
 
   editFormPhotoUrl(): string | null {
+    if (this.photoMarkedForDeletion()) {
+      return null;
+    }
+
     const preview = this.photoPreviewUrl();
     if (preview) {
       return preview;
@@ -165,6 +175,18 @@ export class ProfileComponent implements OnInit {
 
     const url = this.profileForm.get('photo_url')?.value?.trim();
     return url || null;
+  }
+
+  markPhotoForDeletion(): void {
+    this.clearSelectedPhoto();
+    this.photoMarkedForDeletion.set(true);
+    this.profileForm.patchValue({ photo_url: '' });
+  }
+
+  onDeletePhotoClick(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.markPhotoForDeletion();
   }
 
   onPhotoSelected(event: Event): void {
@@ -183,6 +205,7 @@ export class ProfileComponent implements OnInit {
 
     this.revokePhotoObjectUrl();
     this.photoObjectUrl = URL.createObjectURL(file);
+    this.photoMarkedForDeletion.set(false);
     this.selectedPhotoFile.set(file);
     this.photoPreviewUrl.set(this.photoObjectUrl);
     input.value = '';
@@ -196,6 +219,11 @@ export class ProfileComponent implements OnInit {
     this.revokePhotoObjectUrl();
     this.selectedPhotoFile.set(null);
     this.photoPreviewUrl.set(null);
+  }
+
+  private resetPhotoEditState(): void {
+    this.clearSelectedPhoto();
+    this.photoMarkedForDeletion.set(false);
   }
 
   private revokePhotoObjectUrl(): void {

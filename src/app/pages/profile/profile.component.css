@@ -252,6 +252,11 @@
     transition: opacity 0.2s ease;
 }
 
+.profile-avatar-edit {
+    position: relative;
+    flex-shrink: 0;
+}
+
 .profile-avatar-upload {
     position: relative;
     padding: 0;
@@ -285,12 +290,50 @@
 }
 
 .profile-avatar-upload-overlay i {
-    font-size: 32px;
     line-height: 1;
+}
+
+.profile-avatar-upload-main-icon {
+    font-size: 32px;
 }
 
 .profile-avatar-upload:hover .profile-avatar-upload-overlay,
 .profile-avatar-upload:focus-visible .profile-avatar-upload-overlay {
+    opacity: 1;
+}
+
+.profile-avatar-delete {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--bs-surface);
+    opacity: 0.85;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.profile-avatar-delete i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.profile-avatar-delete:hover {
+    opacity: 1;
+    background-color: hsla(0, 0%, 100%, 0.15);
+}
+
+.profile-avatar-delete:focus-visible {
+    outline: 2px solid var(--bs-surface);
+    outline-offset: 1px;
     opacity: 1;
 }
 

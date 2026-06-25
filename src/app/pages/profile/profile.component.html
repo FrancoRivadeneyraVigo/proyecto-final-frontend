@@ -76,30 +76,39 @@
                 <div class="profile-card section profile-edit-form">
                     <div class="profile-header">
                         <div class="profile-identity">
-                            <button
-                                type="button"
-                                class="profile-avatar profile-edit-avatar-preview profile-avatar-upload"
-                                [attr.aria-label]="editFormPhotoUrl() ? 'Cambiar foto de perfil' : 'Añadir foto de perfil'"
-                                (click)="triggerPhotoInput(photoInput)">
-                                @if (editFormPhotoUrl(); as photoUrl) {
-                                <img [src]="photoUrl" alt="" class="profile-avatar-img" />
-                                } @else {
-                                <span class="profile-avatar-initials">{{ editFormInitials() }}</span>
-                                }
-                                <span class="profile-avatar-upload-overlay" aria-hidden="true">
-                                    @if (editFormPhotoUrl()) {
-                                    <i class="bi bi-pencil"></i>
+                            <div class="profile-avatar-edit">
+                                <button
+                                    type="button"
+                                    class="profile-avatar profile-edit-avatar-preview profile-avatar-upload"
+                                    [attr.aria-label]="editFormPhotoUrl() ? 'Cambiar foto de perfil' : 'Añadir foto de perfil'"
+                                    (click)="triggerPhotoInput(photoInput)">
+                                    @if (editFormPhotoUrl(); as photoUrl) {
+                                    <img [src]="photoUrl" alt="" class="profile-avatar-img" />
                                     } @else {
-                                    <i class="bi bi-plus-lg"></i>
+                                    <span class="profile-avatar-initials">{{ editFormInitials() }}</span>
                                     }
-                                </span>
-                                <input
-                                    #photoInput
-                                    type="file"
-                                    accept="image/*"
-                                    class="profile-avatar-file-input"
-                                    (change)="onPhotoSelected($event)" />
-                            </button>
+                                    <span class="profile-avatar-upload-overlay">
+                                        @if (editFormPhotoUrl()) {
+                                        <i class="bi bi-pencil profile-avatar-upload-main-icon" aria-hidden="true"></i>
+                                        <button
+                                            type="button"
+                                            class="profile-avatar-delete"
+                                            aria-label="Eliminar foto de perfil"
+                                            (click)="onDeletePhotoClick($event)">
+                                            <i class="bi bi-trash" aria-hidden="true"></i>
+                                        </button>
+                                        } @else {
+                                        <i class="bi bi-plus-lg profile-avatar-upload-main-icon" aria-hidden="true"></i>
+                                        }
+                                    </span>
+                                    <input
+                                        #photoInput
+                                        type="file"
+                                        accept="image/*"
+                                        class="profile-avatar-file-input"
+                                        (change)="onPhotoSelected($event)" />
+                                </button>
+                            </div>
                             <div class="profile-info">
                                 <h3>Editar perfil</h3>
                                 <p class="body-medium text-muted">Actualiza tu información personal y de contacto</p>

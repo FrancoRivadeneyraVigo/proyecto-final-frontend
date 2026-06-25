@@ -51,4 +51,13 @@ export class ProfileService {
       throw error;
     }
   }
+
+  async deletePhoto(): Promise<void> {
+    try {
+      await lastValueFrom(this.httpClient.delete(`${this.baseUrl}/photo`));
+    } catch (error) {
+      console.error('Error eliminando foto de perfil:', error);
+      throw error;
+    }
+  }
 }
