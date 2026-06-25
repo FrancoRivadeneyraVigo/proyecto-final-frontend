@@ -123,7 +123,7 @@ export class ProfileComponent implements OnInit {
       this.user.set(updated);
 
       const currentUser = this.authService.currentUser();
-      if (currentUser?.id === profile.id) {
+      if (currentUser?.fk_usuarios_id === profile.fk_usuarios_id) {
         this.authService.currentUser.set(updated);
       }
 
