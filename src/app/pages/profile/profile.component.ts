@@ -129,6 +129,7 @@ export class ProfileComponent implements OnInit {
 
       this.clearSelectedPhoto();
       this.isEditing.set(false);
+      this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
     } catch {
       toast.error('No se pudo actualizar el perfil. Inténtalo de nuevo.');
@@ -202,6 +203,10 @@ export class ProfileComponent implements OnInit {
       URL.revokeObjectURL(this.photoObjectUrl);
       this.photoObjectUrl = null;
     }
+  }
+
+  private scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async onLogout(): Promise<void> {
