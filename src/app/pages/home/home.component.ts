@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 
 @Component({
@@ -8,4 +8,13 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+
+  //private articleService = inject(ArticleService)
+  searchTerm = signal <string> ('');
+
+  onSearchInput (value: string): void {
+    this.searchTerm.set(value)
+  }
+
+
 }

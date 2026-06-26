@@ -13,7 +13,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;     
-        }
+    }
 }
 
 .navbar-nav .nav-link {
@@ -34,4 +34,21 @@
 
 .navbar-nav .nav-link .bi {
     font-size: 1.1rem;
-    color: inherit; }
+    color: inherit; 
+}
+
+/* Botones del menu en mobile */
+.navbar-toggler-custom {
+    border-radius: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease-in-out;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-toggler-custom .bi-list {
+    font-size: 1.8rem !important; 
+}
