@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IArticleDetail, IArticleSummary } from '../shared/models/article.interface';
+import { IArticleDetail, IArticleSummary } from '../shared/models/article-detail.interface';
 
 @Injectable({
   providedIn: 'root',
