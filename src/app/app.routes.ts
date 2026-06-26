@@ -15,10 +15,11 @@ export const routes: Routes = [
     {path: "home", component: HomeComponent},
     {path: "login", component: LoginFormComponent},
     {path: "register", component: RegisterFormComponent},
-    {path: "profile", component: ProfileComponent},
+    {path: "profile/:id", component: ProfileComponent},
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
     {path: "sell-item", component: SellItemComponent},
+    {path: "404", component: Error404Component},
     {path: "chats", component: ChatsListComponent},
     {path: "chats/:id", component: ChatDetailComponent},
 

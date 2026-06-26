@@ -35,3 +35,13 @@
 .navbar-nav .nav-link .bi {
     font-size: 1.1rem;
     color: inherit; }
+
+.navbar-avatar-link {
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.navbar-avatar-link:hover {
+    opacity: 0.85;
+}

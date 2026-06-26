@@ -1,0 +1,19 @@
+.my-articles {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.my-articles-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.my-articles-state {
+    margin: 0;
+}
+
+.text-danger {
+    color: hsl(0, 72%, 45%);
+}

@@ -1,1 +1,238 @@
-<p>profile works!</p>
+<app-navbar></app-navbar>
+
+<div class="profile-page">
+    <section class="profile-hero">
+        <div class="profile-hero-bg">
+            <img src="images/hero-watch.webp" alt="" class="profile-hero-image" />
+            <div class="profile-hero-tint"></div>
+        </div>
+
+        <div class="profile-hero-inner container-xxl">
+            <header class="profile-hero-text">
+                <h2>Mi perfil</h2>
+                <p class="body-large">
+                    Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
+                </p>
+            </header>
+
+            @if (user(); as profile) {
+                @if (!isEditing()) {
+                <div class="profile-card section">
+                    <div class="profile-header">
+                        <div class="profile-identity">
+                            <div class="profile-avatar">
+                                @if (profile.photo_url) {
+                                <img [src]="profile.photo_url" [alt]="profile.name" class="profile-avatar-img" />
+                                } @else {
+                                <span class="profile-avatar-initials">
+                                    {{ profile.name.charAt(0) }}{{ profile.surname.charAt(0) }}
+                                </span>
+                                }
+                            </div>
+
+                            <div class="profile-info">
+                                <h3>{{ profile.name }} {{ profile.surname }}</h3>
+                                <p class="profile-meta">
+                                    <i class="bi bi-star-fill"></i>
+                                    <span>{{ profile.rating }} (0 valoraciones)</span>
+                                </p>
+                                <p class="profile-meta">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ profile.city }}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-pencil'" (click)="startEditing(profile)">
+                            </app-button>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <span class="profile-stat-label">Ventas</span>
+                            <span class="profile-stat-value">28</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-label">Compras</span>
+                            <span class="profile-stat-value">2</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-label">Miembro desde</span>
+                            <span class="profile-stat-value">2026</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-bio">
+                        <h5>Biografía</h5>
+                        <p class="body-medium text-muted">
+                            {{ profile.biography }}
+                        </p>
+                    </div>
+                </div>
+                } @else {
+                <div class="profile-card section profile-edit-form">
+                    <div class="profile-header">
+                        <div class="profile-identity">
+                            <div class="profile-avatar-edit">
+                                <button
+                                    type="button"
+                                    class="profile-avatar profile-edit-avatar-preview profile-avatar-upload"
+                                    [attr.aria-label]="editFormPhotoUrl() ? 'Cambiar foto de perfil' : 'Añadir foto de perfil'"
+                                    (click)="triggerPhotoInput(photoInput)">
+                                    @if (editFormPhotoUrl(); as photoUrl) {
+                                    <img [src]="photoUrl" alt="" class="profile-avatar-img" />
+                                    } @else {
+                                    <span class="profile-avatar-initials">{{ editFormInitials() }}</span>
+                                    }
+                                    <span class="profile-avatar-upload-overlay">
+                                        @if (editFormPhotoUrl()) {
+                                        <i class="bi bi-pencil profile-avatar-upload-main-icon" aria-hidden="true"></i>
+                                        <button
+                                            type="button"
+                                            class="profile-avatar-delete"
+                                            aria-label="Eliminar foto de perfil"
+                                            (click)="onDeletePhotoClick($event)">
+                                            <i class="bi bi-trash" aria-hidden="true"></i>
+                                        </button>
+                                        } @else {
+                                        <i class="bi bi-plus-lg profile-avatar-upload-main-icon" aria-hidden="true"></i>
+                                        }
+                                    </span>
+                                    <input
+                                        #photoInput
+                                        type="file"
+                                        accept="image/*"
+                                        class="profile-avatar-file-input"
+                                        (change)="onPhotoSelected($event)" />
+                                </button>
+                            </div>
+                            <div class="profile-info">
+                                <h3>Editar perfil</h3>
+                                <p class="body-medium text-muted">Actualiza tu información personal y de contacto</p>
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [type]="'button'"
+                                (click)="cancelEditing()">
+                            </app-button>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-edit-form-body">
+                        <section class="profile-edit-section">
+                            <div class="profile-edit-section-title">
+                                <i class="bi bi-person"></i>
+                                <div>
+                                    <h5>Información personal</h5>
+                                    <p class="body-small text-muted">Datos básicos de tu cuenta</p>
+                                </div>
+                            </div>
+                            <div class="profile-edit-grid">
+                                <div class="profile-edit-field">
+                                    <label for="name" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                    <input id="name" type="text" class="form-control" formControlName="name" />
+                                    @if (checkTouched('name') && checkError('name', 'required')) {
+                                    <small class="text-danger">El nombre es obligatorio.</small>
+                                    }
+                                </div>
+                                <div class="profile-edit-field">
+                                    <label for="surname" class="form-label">Apellidos <span class="text-danger">*</span></label>
+                                    <input id="surname" type="text" class="form-control" formControlName="surname" />
+                                    @if (checkTouched('surname') && checkError('surname', 'required')) {
+                                    <small class="text-danger">Los apellidos son obligatorios.</small>
+                                    }
+                                </div>
+                                <div class="profile-edit-field">
+                                    <label for="username" class="form-label">Nombre de usuario <span class="text-danger">*</span></label>
+                                    <input id="username" type="text" class="form-control" formControlName="username" />
+                                    @if (checkTouched('username') && checkError('username', 'required')) {
+                                    <small class="text-danger">El nombre de usuario es obligatorio.</small>
+                                    }
+                                </div>
+                                <div class="profile-edit-field">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input id="phone" type="tel" class="form-control" formControlName="phone" />
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="profile-edit-section">
+                            <div class="profile-edit-section-title">
+                                <i class="bi bi-geo-alt"></i>
+                                <div>
+                                    <h5>Ubicación</h5>
+                                    <p class="body-small text-muted">Indica dónde te encuentras</p>
+                                </div>
+                            </div>
+                            <div class="profile-edit-grid">
+                                <div class="profile-edit-field">
+                                    <label for="country" class="form-label">País <span class="text-danger">*</span></label>
+                                    <input id="country" type="text" class="form-control" formControlName="country" />
+                                    @if (checkTouched('country') && checkError('country', 'required')) {
+                                    <small class="text-danger">El país es obligatorio.</small>
+                                    }
+                                </div>
+                                <div class="profile-edit-field">
+                                    <label for="city" class="form-label">Ciudad <span class="text-danger">*</span></label>
+                                    <input id="city" type="text" class="form-control" formControlName="city" />
+                                    @if (checkTouched('city') && checkError('city', 'required')) {
+                                    <small class="text-danger">La ciudad es obligatoria.</small>
+                                    }
+                                </div>
+                                <div class="profile-edit-field">
+                                    <label for="postal_code" class="form-label">Código postal <span class="text-danger">*</span></label>
+                                    <input id="postal_code" type="text" class="form-control" formControlName="postal_code" />
+                                    @if (checkTouched('postal_code') && checkError('postal_code', 'required')) {
+                                    <small class="text-danger">El código postal es obligatorio.</small>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="profile-edit-section">
+                            <div class="profile-edit-section-title">
+                                <i class="bi bi-card-text"></i>
+                                <div>
+                                    <h5>Perfil público</h5>
+                                    <p class="body-small text-muted">Información visible para otros usuarios</p>
+                                </div>
+                            </div>
+                            <div class="profile-edit-grid profile-edit-grid--single">
+                                <div class="profile-edit-field profile-edit-field--full">
+                                    <label for="biography" class="form-label">Biografía</label>
+                                    <textarea id="biography" class="form-control" rows="4" formControlName="biography"
+                                        placeholder="Cuéntanos algo sobre ti..."></textarea>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="profile-edit-actions">
+                            <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [type]="'button'"
+                                (click)="cancelEditing()">
+                            </app-button>
+                            <app-button [text]="'Guardar cambios'" [class]="'btn-primary'" [type]="'submit'"
+                                [showIconLeft]="true" [iconLeft]="'bi bi-check-lg'"
+                                [disabled]="profileForm.invalid || saving()">
+                            </app-button>
+                        </div>
+                    </form>
+                </div>
+                }
+            }
+        </div>
+    </section>
+
+    @if (user()) {
+    @if (routeUserId(); as routeId) {
+    <section class="profile-activity container-xxl">
+        @for (activeRouteId of [routeId]; track activeRouteId) {
+        <app-profile-activity-tabs [userId]="activeRouteId" />
+        }
+    </section>
+    }
+    }
+</div>
+<app-footer></app-footer>
