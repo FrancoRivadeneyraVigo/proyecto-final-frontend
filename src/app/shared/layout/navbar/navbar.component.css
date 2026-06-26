@@ -52,3 +52,15 @@
 .navbar-toggler-custom .bi-list {
     font-size: 1.8rem !important; 
 }
+
+    color: inherit; }
+
+.navbar-avatar-link {
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.navbar-avatar-link:hover {
+    opacity: 0.85;
+}

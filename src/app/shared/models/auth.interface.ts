@@ -14,6 +14,11 @@ export interface ILoginRequest {
     password: string;
 }
 
+export interface IRegisterRequest {
+    email: string;
+    password: string;
+}
+
 export interface ILoginResponse {
     token: string;
     user: IAuthUser;

@@ -7,16 +7,21 @@ import { ExploreComponent } from './pages/explore/explore.component';
 import { FavItemsComponent } from './pages/fav-items/fav-items.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SellItemComponent } from './pages/sell-item/sell-item.component';
+import { ChatsListComponent } from './pages/chats-list/chats-list.component';
+import { ChatDetailComponent } from './pages/chat-detail/chat-detail.component';
 
 export const routes: Routes = [
     {path: "", pathMatch: "full", redirectTo: "home"},
     {path: "home", component: HomeComponent},
     {path: "login", component: LoginFormComponent},
     {path: "register", component: RegisterFormComponent},
-    {path: "profile", component: ProfileComponent},
+    {path: "profile/:id", component: ProfileComponent},
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
     {path: "sell-item", component: SellItemComponent},
-    
+    {path: "404", component: Error404Component},
+    {path: "chats", component: ChatsListComponent},
+    {path: "chats/:id", component: ChatDetailComponent},
+
     {path: "**", component: Error404Component}
 ];
