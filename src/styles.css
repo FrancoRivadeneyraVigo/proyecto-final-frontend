@@ -138,6 +138,7 @@ h5 {
     --bs-btn-font-weight: 500;
     --bs-btn-padding-x: 10px;
     --bs-btn-padding-y: 8px;
+    min-width: 42px;
 
     /* =========================================
         ICON BUTTON
