@@ -10,6 +10,21 @@ export interface IProfile {
     city: string;
     postal_code: string;
     biography: string | null;
-    created_at: string;
     fk_usuarios_id: number;
+}
+
+export interface IUploadPhotoResponse {
+    photo_url: string;
+}
+
+export interface IUpdateProfileRequest {
+    username: string;
+    photo_url: string | null;
+    name: string;
+    surname: string;
+    phone: string | null;
+    country: string;
+    city: string;
+    postal_code: string;
+    biography: string | null;
 }
