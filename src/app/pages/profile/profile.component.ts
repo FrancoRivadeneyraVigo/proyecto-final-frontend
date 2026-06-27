@@ -151,35 +151,38 @@ export class ProfileComponent {
     }
 
     const formValue = this.profileForm.value;
-    const payload: IUpdateProfileRequest = {
-      name: formValue.name!,
-      surname: formValue.surname!,
-      username: formValue.username!,
-      phone: formValue.phone?.trim() ? formValue.phone : null,
-      country: formValue.country!,
-      city: formValue.city!,
-      postal_code: formValue.postal_code!,
-      photo_url: profile.photo_url,
-      biography: formValue.biography?.trim() ? formValue.biography : null,
-    };
-
     const pendingPhoto = this.selectedPhotoFile();
     const markedForDeletion = this.photoMarkedForDeletion();
 
     this.saving.set(true);
     try {
-      const userId = this.isMyProfile() ? undefined : String(profile.fk_usuarios_id);
-      let updated = await this.profileService.updateById(userId, payload);
+      let photoUrl = profile.photo_url;
 
       if (markedForDeletion && !pendingPhoto) {
         await this.profileService.deletePhoto();
-        updated = { ...updated, photo_url: null };
+        photoUrl = null;
       }
 
       if (pendingPhoto) {
         const uploadResult = await this.profileService.uploadPhoto(pendingPhoto);
-        updated = { ...updated, photo_url: uploadResult.photo_url };
+        photoUrl = uploadResult.photo_url;
       }
+
+      const payload: IUpdateProfileRequest = {
+        name: formValue.name!,
+        surname: formValue.surname!,
+        username: formValue.username!,
+        phone: formValue.phone?.trim() ? formValue.phone : null,
+        country: formValue.country!,
+        city: formValue.city!,
+        postal_code: formValue.postal_code!,
+        photo_url: photoUrl,
+        biography: formValue.biography?.trim() ? formValue.biography : null,
+      };
+
+      const userId = this.isMyProfile() ? undefined : String(profile.fk_usuarios_id);
+      let updated = await this.profileService.updateById(userId, payload);
+      updated = { ...updated, photo_url: photoUrl };
 
       this.user.set(updated);
 
@@ -192,8 +195,7 @@ export class ProfileComponent {
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
     } catch (error) {
-      console.error('Error actualizando perfil:', error);
-      toast.error('No se pudo actualizar el perfil. Inténtalo de nuevo.');
+      toast.error(`No se pudo actualizar el perfil : ${error} `);
     } finally {
       this.saving.set(false);
     }
