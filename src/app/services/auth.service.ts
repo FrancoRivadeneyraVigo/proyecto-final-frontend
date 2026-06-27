@@ -19,6 +19,9 @@ export class AuthService {
   // Estado reactivo: null = no hay sesión, IProfile = usuario logueado
   currentUser = signal<IProfile | null>(null);
 
+  // Indica si ya se ha completado la comprobación inicial de sesión
+  authChecked = signal(false);
+
   // Envía las credenciales al back, guarda el token recibido
   // y actualiza el estado de sesión (currentUser) con los datos del usuario
   async login(credentials: ILoginRequest): Promise<void> {
@@ -60,14 +63,13 @@ export class AuthService {
     }
   }
 
-  // Si hay un token guardado, pregunta al back quién es el usuario actual
-  // y guarda su perfil en el signal currentUser, combinando el rol (que
-  // viene a nivel raíz de la respuesta) dentro del objeto de perfil.
-  // Si no hay token, o la petición falla, deja el estado como "no logueado"
+  // Comprueba la sesión a partir del token guardado y actualiza
+  // currentUser y authChecked en cualquier caso (con o sin sesión).
   async fetchCurrentUser(): Promise<IProfile | null> {
     const token = this.getToken();
     if (!token) {
       this.currentUser.set(null);
+      this.authChecked.set(true);
       return null;
     }
     try {
@@ -76,11 +78,13 @@ export class AuthService {
       );
       const profile: IProfile = { ...raw.profile, rol: raw.rol };
       this.currentUser.set(profile);
+      this.authChecked.set(true);
       return profile;
     } catch (error) {
       console.error('Error obteniendo usuario actual:', error);
       localStorage.removeItem(TOKEN_KEY);
       this.currentUser.set(null);
+      this.authChecked.set(true);
       return null;
     }
   }
