@@ -44,13 +44,13 @@ export class ProfileComponent {
     }
 
     const missingFields: string[] = [];
-    if (!profile.name.trim()) {
+    if (!(profile.name ?? '').trim()) {
       missingFields.push('nombre');
     }
-    if (!profile.surname.trim()) {
+    if (!(profile.surname ?? '').trim()) {
       missingFields.push('apellidos');
     }
-    if (!profile.city?.trim()) {
+    if (!(profile.city ?? '').trim()) {
       missingFields.push('ciudad');
     }
 
@@ -120,8 +120,8 @@ export class ProfileComponent {
 
     this.resetPhotoEditState();
     this.profileForm.patchValue({
-      name: profile.name,
-      surname: profile.surname,
+      name: profile.name ?? '',
+      surname: profile.surname ?? '',
       username: profile.username,
       phone: profile.phone ?? '',
       country: profile.country,

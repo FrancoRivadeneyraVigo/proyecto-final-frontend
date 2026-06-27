@@ -32,7 +32,7 @@
                                 <img [src]="profile.photo_url" [alt]="profile.name" class="profile-avatar-img" />
                                 } @else {
                                 <span class="profile-avatar-initials">
-                                    {{ profile.name.charAt(0) }}{{ profile.surname.charAt(0) }}
+                                    {{ (profile.name ?? '').charAt(0) }}{{ (profile.surname ?? '').charAt(0) }}
                                 </span>
                                 }
                             </div>
