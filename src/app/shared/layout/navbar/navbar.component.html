@@ -32,9 +32,10 @@
                 @if (!currentUser()) {
                 <!-- Not logged -->
                 <div class="d-flex gap-3 align-items-center">
-                    <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
-                        [iconLeft]="'bi bi-person-circle'">
-                    </app-button>
+                    <a routerLink="/register">
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-person-circle'">
+                        </app-button>                
+                    </a>
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-box-arrow-in-right'">
