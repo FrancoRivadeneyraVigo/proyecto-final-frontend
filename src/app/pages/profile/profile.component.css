@@ -72,6 +72,10 @@
 }
 
 .profile-identity {
+    min-width: 0;
+}
+
+.profile-identity {
     display: flex;
     align-items: center;
     gap: 24px;
@@ -128,6 +132,40 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.profile-actions app-button {
+    flex-shrink: 0;
+}
+
+.profile-actions app-button::ng-deep button {
+    width: auto;
+    height: auto;
+    white-space: nowrap;
+}
+
+.profile-incomplete-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background-color: #fef3e2;
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.profile-incomplete-banner i {
+    flex-shrink: 0;
+    font-size: 20px;
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.profile-incomplete-banner p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 .profile-stats {

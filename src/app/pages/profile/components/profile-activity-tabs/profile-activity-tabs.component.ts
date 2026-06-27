@@ -13,10 +13,15 @@ type ActivityTab = 'articles' | 'ratings' | 'favorites';
 })
 export class ProfileActivityTabsComponent {
   userId = input.required<string>();
+  isMyProfile = input(false);
 
   activeTab = signal<ActivityTab>('articles');
 
   setActiveTab(tab: ActivityTab): void {
+    if (tab === 'favorites' && !this.isMyProfile()) {
+      return;
+    }
+
     this.activeTab.set(tab);
   }
 }

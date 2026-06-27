@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +32,34 @@ export class ProfileComponent {
   selectedPhotoFile = signal<File | null>(null);
   photoPreviewUrl = signal<string | null>(null);
   photoMarkedForDeletion = signal(false);
+  isMyProfile = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const profile = this.user();
+    return !!currentUser && !!profile && currentUser.fk_usuarios_id === profile.fk_usuarios_id;
+  });
+  profileIncompleteMessage = computed(() => {
+    const profile = this.user();
+    if (!profile) {
+      return '';
+    }
+
+    const missingFields: string[] = [];
+    if (!(profile.name ?? '').trim()) {
+      missingFields.push('nombre');
+    }
+    if (!(profile.surname ?? '').trim()) {
+      missingFields.push('apellidos');
+    }
+    if (!(profile.city ?? '').trim()) {
+      missingFields.push('ciudad');
+    }
+
+    if (!missingFields.length) {
+      return '';
+    }
+
+    return `Completa tu perfil añadiendo ${this.formatMissingProfileFields(missingFields)} para empezar a comprar y vender en ATiempo.`;
+  });
 
   private photoObjectUrl: string | null = null;
 
@@ -69,6 +97,11 @@ export class ProfileComponent {
     this.isEditing.set(false);
     this.profileForm.reset();
 
+    if (!this.authService.currentUser()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     try {
       this.user.set(await this.profileService.getById(userId));
     } catch (error) {
@@ -81,14 +114,18 @@ export class ProfileComponent {
   }
 
   startEditing(profile: IProfile): void {
+    if (!this.isMyProfile()) {
+      return;
+    }
+
     this.resetPhotoEditState();
     this.profileForm.patchValue({
-      name: profile.name,
-      surname: profile.surname,
+      name: profile.name ?? '',
+      surname: profile.surname ?? '',
       username: profile.username,
       phone: profile.phone ?? '',
       country: profile.country,
-      city: profile.city,
+      city: profile.city ?? '',
       postal_code: profile.postal_code,
       photo_url: profile.photo_url ?? '',
       biography: profile.biography ?? '',
@@ -109,44 +146,47 @@ export class ProfileComponent {
     }
 
     const profile = this.user();
-    if (!profile) {
+    if (!profile || !this.isMyProfile()) {
       return;
     }
 
     const formValue = this.profileForm.value;
-    const payload: IUpdateProfileRequest = {
-      name: formValue.name!,
-      surname: formValue.surname!,
-      username: formValue.username!,
-      phone: formValue.phone?.trim() ? formValue.phone : null,
-      country: formValue.country!,
-      city: formValue.city!,
-      postal_code: formValue.postal_code!,
-      photo_url: profile.photo_url,
-      biography: formValue.biography?.trim() ? formValue.biography : null,
-    };
-
     const pendingPhoto = this.selectedPhotoFile();
     const markedForDeletion = this.photoMarkedForDeletion();
 
     this.saving.set(true);
     try {
-      let updated = await this.profileService.updateById(String(profile.fk_usuarios_id), payload);
+      let photoUrl = profile.photo_url;
 
       if (markedForDeletion && !pendingPhoto) {
         await this.profileService.deletePhoto();
-        updated = { ...updated, photo_url: null };
+        photoUrl = null;
       }
 
       if (pendingPhoto) {
         const uploadResult = await this.profileService.uploadPhoto(pendingPhoto);
-        updated = { ...updated, photo_url: uploadResult.photo_url };
+        photoUrl = uploadResult.photo_url;
       }
+
+      const payload: IUpdateProfileRequest = {
+        name: formValue.name!,
+        surname: formValue.surname!,
+        username: formValue.username!,
+        phone: formValue.phone?.trim() ? formValue.phone : null,
+        country: formValue.country!,
+        city: formValue.city!,
+        postal_code: formValue.postal_code!,
+        photo_url: photoUrl,
+        biography: formValue.biography?.trim() ? formValue.biography : null,
+      };
+
+      const userId = this.isMyProfile() ? undefined : String(profile.fk_usuarios_id);
+      let updated = await this.profileService.updateById(userId, payload);
+      updated = { ...updated, photo_url: photoUrl };
 
       this.user.set(updated);
 
-      const currentUser = this.authService.currentUser();
-      if (currentUser?.fk_usuarios_id === profile.fk_usuarios_id) {
+      if (this.isMyProfile()) {
         this.authService.currentUser.set(updated);
       }
 
@@ -154,8 +194,8 @@ export class ProfileComponent {
       this.isEditing.set(false);
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
-    } catch {
-      toast.error('No se pudo actualizar el perfil. Inténtalo de nuevo.');
+    } catch (error) {
+      toast.error(`No se pudo actualizar el perfil : ${error} `);
     } finally {
       this.saving.set(false);
     }
@@ -230,6 +270,28 @@ export class ProfileComponent {
 
   triggerPhotoInput(fileInput: HTMLInputElement): void {
     fileInput.click();
+  }
+
+  onContact(): void {
+    this.router.navigate(['/chats']);
+  }
+
+  onReportProfile(): void {
+    toast.success('Gracias, hemos recibido tu reporte sobre este perfil.');
+  }
+
+  private formatMissingProfileFields(fields: string[]): string {
+    const labels = fields.map((field) => (field === 'apellidos' ? 'tus apellidos' : `tu ${field}`));
+
+    if (labels.length === 1) {
+      return labels[0];
+    }
+
+    if (labels.length === 2) {
+      return `${labels[0]} y ${labels[1]}`;
+    }
+
+    return `${labels.slice(0, -1).join(', ')} y ${labels[labels.length - 1]}`;
   }
 
   private clearSelectedPhoto(): void {
