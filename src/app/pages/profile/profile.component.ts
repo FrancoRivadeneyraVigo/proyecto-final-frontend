@@ -37,6 +37,29 @@ export class ProfileComponent {
     const profile = this.user();
     return !!currentUser && !!profile && currentUser.fk_usuarios_id === profile.fk_usuarios_id;
   });
+  profileIncompleteMessage = computed(() => {
+    const profile = this.user();
+    if (!profile) {
+      return '';
+    }
+
+    const missingFields: string[] = [];
+    if (!profile.name.trim()) {
+      missingFields.push('nombre');
+    }
+    if (!profile.surname.trim()) {
+      missingFields.push('apellidos');
+    }
+    if (!profile.city.trim()) {
+      missingFields.push('ciudad');
+    }
+
+    if (!missingFields.length) {
+      return '';
+    }
+
+    return `Completa tu perfil añadiendo ${this.formatMissingProfileFields(missingFields)} para empezar a comprar y vender en ATiempo.`;
+  });
 
   private photoObjectUrl: string | null = null;
 
@@ -243,6 +266,20 @@ export class ProfileComponent {
 
   triggerPhotoInput(fileInput: HTMLInputElement): void {
     fileInput.click();
+  }
+
+  private formatMissingProfileFields(fields: string[]): string {
+    const labels = fields.map((field) => (field === 'apellidos' ? 'tus apellidos' : `tu ${field}`));
+
+    if (labels.length === 1) {
+      return labels[0];
+    }
+
+    if (labels.length === 2) {
+      return `${labels[0]} y ${labels[1]}`;
+    }
+
+    return `${labels.slice(0, -1).join(', ')} y ${labels[labels.length - 1]}`;
   }
 
   private clearSelectedPhoto(): void {

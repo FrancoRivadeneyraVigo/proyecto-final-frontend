@@ -130,6 +130,29 @@
     flex-wrap: wrap;
 }
 
+.profile-incomplete-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background-color: #fef3e2;
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.profile-incomplete-banner i {
+    flex-shrink: 0;
+    font-size: 20px;
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.profile-incomplete-banner p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
 .profile-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

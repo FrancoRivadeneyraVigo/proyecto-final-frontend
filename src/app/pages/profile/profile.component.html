@@ -45,7 +45,7 @@
                                 </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ profile.city }}</span>
+                                    <span>{{ profile.city.trim() || 'Sin localización' }}</span>
                                 </p>
                             </div>
                         </div>
@@ -58,6 +58,13 @@
                         </div>
                         }
                     </div>
+
+                    @if (isMyProfile() && profileIncompleteMessage(); as incompleteMessage) {
+                    <div class="profile-incomplete-banner" role="status">
+                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                        <p>{{ incompleteMessage }}</p>
+                    </div>
+                    }
 
                     <div class="profile-stats">
                         <div class="profile-stat">
