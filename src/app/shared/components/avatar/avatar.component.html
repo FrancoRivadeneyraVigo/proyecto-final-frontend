@@ -1,7 +1,9 @@
 <div class="avatar">
     @if (photoUrl()) {
     <img [src]="photoUrl()" [alt]="name()" class="avatar-img">
-    } @else {
+    } @else if (initials()) {
     <span class="avatar-initials">{{ initials() }}</span>
+    } @else {
+    <i class="bi bi-person avatar-icon"></i>
     }
 </div>
