@@ -168,7 +168,8 @@ export class ProfileComponent {
 
     this.saving.set(true);
     try {
-      let updated = await this.profileService.updateById(String(profile.fk_usuarios_id), payload);
+      const userId = this.isMyProfile() ? undefined : String(profile.fk_usuarios_id);
+      let updated = await this.profileService.updateById(userId, payload);
 
       if (markedForDeletion && !pendingPhoto) {
         await this.profileService.deletePhoto();
@@ -190,7 +191,8 @@ export class ProfileComponent {
       this.isEditing.set(false);
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
-    } catch {
+    } catch (error) {
+      console.error('Error actualizando perfil:', error);
       toast.error('No se pudo actualizar el perfil. Inténtalo de nuevo.');
     } finally {
       this.saving.set(false);
