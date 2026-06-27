@@ -7,7 +7,7 @@ export interface IProfile {
     surname: string;
     phone: string | null;
     country: string;
-    city: string;
+    city: string | null;
     postal_code: string;
     biography: string | null;
     fk_usuarios_id: number;

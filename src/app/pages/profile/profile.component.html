@@ -45,7 +45,7 @@
                                 </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ profile.city.trim() || 'Sin localización' }}</span>
+                                    <span>{{ (profile.city ?? '').trim() || 'Sin localización' }}</span>
                                 </p>
                             </div>
                         </div>
@@ -54,6 +54,15 @@
                         <div class="profile-actions">
                             <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
                                 [iconLeft]="'bi bi-pencil'" (click)="startEditing(profile)">
+                            </app-button>
+                        </div>
+                        } @else {
+                        <div class="profile-actions">
+                            <app-button [text]="'Reportar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-exclamation-circle'" (click)="onReportProfile()">
+                            </app-button>
+                            <app-button [text]="'Contactar'" [class]="'btn-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()">
                             </app-button>
                         </div>
                         }

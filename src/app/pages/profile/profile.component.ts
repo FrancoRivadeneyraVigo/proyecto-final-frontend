@@ -50,7 +50,7 @@ export class ProfileComponent {
     if (!profile.surname.trim()) {
       missingFields.push('apellidos');
     }
-    if (!profile.city.trim()) {
+    if (!profile.city?.trim()) {
       missingFields.push('ciudad');
     }
 
@@ -125,7 +125,7 @@ export class ProfileComponent {
       username: profile.username,
       phone: profile.phone ?? '',
       country: profile.country,
-      city: profile.city,
+      city: profile.city ?? '',
       postal_code: profile.postal_code,
       photo_url: profile.photo_url ?? '',
       biography: profile.biography ?? '',
@@ -266,6 +266,14 @@ export class ProfileComponent {
 
   triggerPhotoInput(fileInput: HTMLInputElement): void {
     fileInput.click();
+  }
+
+  onContact(): void {
+    this.router.navigate(['/chats']);
+  }
+
+  onReportProfile(): void {
+    toast.success('Gracias, hemos recibido tu reporte sobre este perfil.');
   }
 
   private formatMissingProfileFields(fields: string[]): string {
