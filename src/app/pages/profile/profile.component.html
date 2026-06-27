@@ -8,15 +8,22 @@
         </div>
 
         <div class="profile-hero-inner container-xxl">
+            @if (user(); as profile) {
             <header class="profile-hero-text">
+                @if (isMyProfile()) {
                 <h2>Mi perfil</h2>
                 <p class="body-large">
                     Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
                 </p>
+                } @else {
+                <h2>Perfil de {{ profile.name }}</h2>
+                <p class="body-large">
+                    Consulta la información pública, artículos y valoraciones de este usuario.
+                </p>
+                }
             </header>
 
-            @if (user(); as profile) {
-                @if (!isEditing()) {
+                @if (!isEditing() || !isMyProfile()) {
                 <div class="profile-card section">
                     <div class="profile-header">
                         <div class="profile-identity">
@@ -43,11 +50,13 @@
                             </div>
                         </div>
 
+                        @if (isMyProfile()) {
                         <div class="profile-actions">
                             <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
                                 [iconLeft]="'bi bi-pencil'" (click)="startEditing(profile)">
                             </app-button>
                         </div>
+                        }
                     </div>
 
                     <div class="profile-stats">
@@ -229,7 +238,7 @@
     @if (routeUserId(); as routeId) {
     <section class="profile-activity container-xxl">
         @for (activeRouteId of [routeId]; track activeRouteId) {
-        <app-profile-activity-tabs [userId]="activeRouteId" />
+        <app-profile-activity-tabs [userId]="activeRouteId" [isMyProfile]="isMyProfile()" />
         }
     </section>
     }

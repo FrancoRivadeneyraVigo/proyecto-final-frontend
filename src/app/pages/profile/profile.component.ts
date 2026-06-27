@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +32,11 @@ export class ProfileComponent {
   selectedPhotoFile = signal<File | null>(null);
   photoPreviewUrl = signal<string | null>(null);
   photoMarkedForDeletion = signal(false);
+  isMyProfile = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const profile = this.user();
+    return !!currentUser && !!profile && currentUser.fk_usuarios_id === profile.fk_usuarios_id;
+  });
 
   private photoObjectUrl: string | null = null;
 
@@ -69,6 +74,11 @@ export class ProfileComponent {
     this.isEditing.set(false);
     this.profileForm.reset();
 
+    if (!this.authService.currentUser()) {
+      this.router.navigate(['/404']);
+      return;
+    }
+
     try {
       this.user.set(await this.profileService.getById(userId));
     } catch (error) {
@@ -81,6 +91,10 @@ export class ProfileComponent {
   }
 
   startEditing(profile: IProfile): void {
+    if (!this.isMyProfile()) {
+      return;
+    }
+
     this.resetPhotoEditState();
     this.profileForm.patchValue({
       name: profile.name,
@@ -109,7 +123,7 @@ export class ProfileComponent {
     }
 
     const profile = this.user();
-    if (!profile) {
+    if (!profile || !this.isMyProfile()) {
       return;
     }
 
@@ -145,8 +159,7 @@ export class ProfileComponent {
 
       this.user.set(updated);
 
-      const currentUser = this.authService.currentUser();
-      if (currentUser?.fk_usuarios_id === profile.fk_usuarios_id) {
+      if (this.isMyProfile()) {
         this.authService.currentUser.set(updated);
       }
 
