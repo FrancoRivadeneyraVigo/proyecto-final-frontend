@@ -61,8 +61,9 @@ export class AuthService {
   }
 
   // Si hay un token guardado, pregunta al back quién es el usuario actual
-  // y guarda su perfil en el signal currentUser. Si no hay token, o la
-  // petición falla, deja el estado como "no logueado"
+  // y guarda su perfil en el signal currentUser, combinando el rol (que
+  // viene a nivel raíz de la respuesta) dentro del objeto de perfil.
+  // Si no hay token, o la petición falla, deja el estado como "no logueado"
   async fetchCurrentUser(): Promise<IProfile | null> {
     const token = this.getToken();
     if (!token) {
@@ -73,8 +74,9 @@ export class AuthService {
       const raw = await lastValueFrom(
         this.httpClient.get<IMeResponse>(`${this.baseUrl}/me`)
       );
-      this.currentUser.set(raw.profile);
-      return raw.profile;
+      const profile: IProfile = { ...raw.profile, rol: raw.rol };
+      this.currentUser.set(profile);
+      return profile;
     } catch (error) {
       console.error('Error obteniendo usuario actual:', error);
       localStorage.removeItem(TOKEN_KEY);
