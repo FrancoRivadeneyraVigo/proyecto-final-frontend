@@ -99,7 +99,7 @@
 
         <div class="seller-row">
             <div class="seller-chip" aria-hidden="true">
-                {{ (article.seller.name?.charAt(0) ?? '') + (article.seller.surname?.charAt(0) ?? '') }}
+                {{ article.seller.name.charAt(0) }}{{ article.seller.surname.charAt(0) }}
             </div>
 
             <div class="seller-identity">
