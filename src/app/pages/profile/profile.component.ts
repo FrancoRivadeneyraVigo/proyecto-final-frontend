@@ -75,7 +75,7 @@ export class ProfileComponent {
     this.profileForm.reset();
 
     if (!this.authService.currentUser()) {
-      this.router.navigate(['/404']);
+      this.router.navigate(['/login']);
       return;
     }
 
