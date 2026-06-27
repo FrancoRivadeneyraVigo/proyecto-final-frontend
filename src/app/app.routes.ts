@@ -16,7 +16,6 @@ export const routes: Routes = [
     {path: "home", component: HomeComponent},
     {path: "login", component: LoginFormComponent},
     {path: "register", component: RegisterFormComponent},
-    {path: "profile", component: ProfileComponent},
     {path: "profile/:userId", component: ProfileComponent},
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
