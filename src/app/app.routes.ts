@@ -10,6 +10,7 @@ import { SellItemComponent } from './pages/sell-item/sell-item.component';
 import { ChatsListComponent } from './pages/chats-list/chats-list.component';
 import { ChatDetailComponent } from './pages/chat-detail/chat-detail.component';
 import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
     {path: "", pathMatch: "full", redirectTo: "home"},
@@ -24,6 +25,6 @@ export const routes: Routes = [
     {path: "chats", component: ChatsListComponent},
     {path: "chats/:id", component: ChatDetailComponent},
     {path: "articles/:id", component: ArticleDetailComponent},
-
+    {path: "admin", component: AdminComponent},
     {path: "**", component: Error404Component}
 ];
