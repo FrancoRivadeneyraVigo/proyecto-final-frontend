@@ -29,3 +29,8 @@ export interface IUpdateProfileRequest {
     postal_code: string;
     biography: string | null;
 }
+
+export interface IAdminProfile extends IProfile {
+    rol: string;
+    status: string;
+}
