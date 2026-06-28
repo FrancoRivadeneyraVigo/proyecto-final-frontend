@@ -195,7 +195,13 @@ export class ProfileComponent {
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
     } catch (error) {
-      toast.error(`No se pudo actualizar el perfil : ${error} `);
+      let message = 'No se pudo actualizar el perfil : ';
+       if (error instanceof HttpErrorResponse) {
+         message += error.error.message;
+       } else {
+        message += error;
+       }
+      toast.error(message);
     } finally {
       this.saving.set(false);
     }
