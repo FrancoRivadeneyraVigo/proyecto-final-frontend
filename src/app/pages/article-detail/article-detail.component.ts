@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
-import { ArticleService } from '../../services/article-detail.service';
+import { ArticleService } from '../../services/article.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
