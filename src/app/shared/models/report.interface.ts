@@ -1,5 +1,5 @@
 export type ReportReason =
-  | 'fake_article'
+  | 'fake_item'
   | 'scam_attempt'
   | 'suspicious_price'
   | 'spam'

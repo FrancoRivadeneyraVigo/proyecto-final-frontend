@@ -17,7 +17,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { ICreateReportRequest, ReportReason } from '../../../shared/models/report.interface';
 
 const REASON_LIST: { value: ReportReason; label: string }[] = [
-  { value: 'fake_article', label: 'Artículo falso' },
+  { value: 'fake_item', label: 'Artículo falso' },
   { value: 'scam_attempt', label: 'Fraude' },
   { value: 'suspicious_price', label: 'Precio sospechoso' },
   { value: 'spam', label: 'Spam' },
