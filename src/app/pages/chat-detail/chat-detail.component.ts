@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
@@ -24,11 +24,11 @@ export class ChatDetailComponent implements OnInit {
   @ViewChild('messagesEnd') messagesEnd?: ElementRef<HTMLDivElement>;
 
   chatId = '';
-  chat?: IChatDetail;
-  messages: IChatMessage[] = [];
-  isLoading = true;
-  isSending = false;
-  errorMessage = '';
+  chat = signal<IChatDetail | undefined>(undefined);
+  messages = signal<IChatMessage[]>([]);
+  isLoading = signal(true);
+  isSending = signal(false);
+  errorMessage = signal('');
 
   messageForm = new FormGroup({
     message: new FormControl('', [
@@ -47,11 +47,11 @@ export class ChatDetailComponent implements OnInit {
   }
 
   get article(): IChatArticleDetail | null {
-    return this.chat?.article ?? null;
+    return this.chat()?.article ?? null;
   }
 
   get contactName(): string {
-    return this.chat?.contact_name || 'Ana Garcia';
+    return this.chat()?.contact_name || 'Ana Garcia';
   }
 
   get contactInitials(): string {
@@ -124,28 +124,28 @@ export class ChatDetailComponent implements OnInit {
 
   async loadMessages(): Promise<void> {
     if (!this.chatId) {
-      this.errorMessage = 'Chat no encontrado.';
-      this.isLoading = false;
+      this.errorMessage.set('Chat no encontrado.');
+      this.isLoading.set(false);
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     try {
       const result = await this.chatService.getChatMessages(this.chatId);
-      this.chat = result.chat;
-      this.messages = result.messages ?? [];
+      this.chat.set(result.chat);
+      this.messages.set(result.messages ?? []);
       this.scrollToBottom();
     } catch (_error) {
-      this.errorMessage = 'No se pudo cargar este chat.';
+      this.errorMessage.set('No se pudo cargar este chat.');
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
   async sendMessage(): Promise<void> {
-    if (this.messageForm.invalid || this.isSending) {
+    if (this.messageForm.invalid || this.isSending()) {
       this.messageForm.markAllAsTouched();
       return;
     }
@@ -155,17 +155,17 @@ export class ChatDetailComponent implements OnInit {
       return;
     }
 
-    this.isSending = true;
+    this.isSending.set(true);
 
     try {
       const createdMessage = await this.chatService.sendMessage(this.chatId, message);
-      this.messages = [...this.messages, createdMessage];
+      this.messages.set([...this.messages(), createdMessage]);
       this.messageForm.reset();
       this.scrollToBottom();
     } catch (_error) {
       toast.error('No se pudo enviar el mensaje');
     } finally {
-      this.isSending = false;
+      this.isSending.set(false);
     }
   }
 
@@ -175,3 +175,4 @@ export class ChatDetailComponent implements OnInit {
     });
   }
 }
+

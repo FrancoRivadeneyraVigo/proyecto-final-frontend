@@ -7,22 +7,22 @@
             <h3>Mis chats</h3>
         </div>
         <app-button [text]="'Actualizar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-            [iconLeft]="'bi bi-arrow-clockwise'" (click)="loadChats()" [disabled]="isLoading">
+            [iconLeft]="'bi bi-arrow-clockwise'" (click)="loadChats()" [disabled]="isLoading()">
         </app-button>
     </section>
 
-    @if (isLoading) {
+    @if (isLoading()) {
     <section class="chats-state">
         <span class="spinner-border text-primary" aria-hidden="true"></span>
         <p class="body-medium text-muted">Cargando chats...</p>
     </section>
-    } @else if (errorMessage) {
+    } @else if (errorMessage()) {
     <section class="chats-state">
         <i class="bi bi-exclamation-circle"></i>
-        <p class="body-medium">{{ errorMessage }}</p>
+        <p class="body-medium">{{ errorMessage() }}</p>
         <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadChats()"></app-button>
     </section>
-    } @else if (chats.length === 0) {
+    } @else if (chats().length === 0) {
     <section class="chats-state">
         <i class="bi bi-chat-left-text"></i>
         <h5>No tienes chats todavía</h5>
@@ -34,7 +34,7 @@
     </section>
     } @else {
     <section class="chats-list" aria-label="Listado de chats">
-        @for (chat of chats; track chat.id) {
+        @for (chat of chats(); track chat.id) {
         <a class="chat-item" [routerLink]="['/chats', chat.id]">
             <div class="chat-icon">
                 <i class="bi bi-chat-dots"></i>
@@ -53,3 +53,4 @@
     </section>
     }
 </main>
+

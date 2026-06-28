@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
 import { ArticleService } from '../../services/article-detail.service';
+import { ChatService } from '../../services/chat.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
@@ -19,6 +20,7 @@ export class ArticleDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private articleService = inject(ArticleService);
+  private chatService = inject(ChatService);
   private authService = inject(AuthService);
 
   articleId = '';
@@ -30,6 +32,7 @@ export class ArticleDetailComponent implements OnInit {
 
   isLoading = signal(true);
   isDeleting = signal(false);
+  isContacting = signal(false);
   errorMessage = signal('');
 
   currentUser = this.authService.currentUser;
@@ -170,8 +173,27 @@ export class ArticleDetailComponent implements OnInit {
     this.router.navigate(['/sell-item'], { queryParams: { id: this.articleId } });
   }
 
-  onContact(): void {
-    this.router.navigate(['/chats']);
+  async onContact(): Promise<void> {
+    const article = this.article();
+    if (!article || this.isContacting()) {
+      return;
+    }
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.isContacting.set(true);
+
+    try {
+      const chat = await this.chatService.createChat(article.id);
+      this.router.navigate(['/chats', chat.id]);
+    } catch (_error) {
+      toast.error('No se pudo abrir el chat');
+    } finally {
+      this.isContacting.set(false);
+    }
   }
 
   onReportArticle(): void {

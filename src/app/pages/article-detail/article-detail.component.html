@@ -87,7 +87,7 @@
                         [iconLeft]="'bi bi-person-circle'" [fullWidth]="true"></app-button>
                 </a>
                 <app-button [text]="'Contactar'" [class]="'btn-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()" [fullWidth]="true"></app-button>
+                    [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()" [disabled]="isContacting()" [fullWidth]="true"></app-button>
                 }
             </div>
         </div>
@@ -161,3 +161,4 @@
 </main>
 
 <app-footer></app-footer>
+

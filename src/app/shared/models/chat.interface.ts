@@ -44,6 +44,12 @@ export interface IChatMessagesResponse {
     messages: IChatMessage[];
 }
 
+export interface ICreateChatResponse {
+    id: number;
+    message: string;
+}
+
 export interface ISendMessageRequest {
     message: string;
 }
+

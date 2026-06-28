@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -15,24 +15,25 @@ import { IChatSummary } from '../../shared/models/chat.interface';
 export class ChatsListComponent implements OnInit {
   private chatService = inject(ChatService);
 
-  chats: IChatSummary[] = [];
-  isLoading = true;
-  errorMessage = '';
+  chats = signal<IChatSummary[]>([]);
+  isLoading = signal(true);
+  errorMessage = signal('');
 
   async ngOnInit(): Promise<void> {
     await this.loadChats();
   }
 
   async loadChats(): Promise<void> {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     try {
-      this.chats = await this.chatService.getChats();
+      this.chats.set(await this.chatService.getChats());
     } catch (_error) {
-      this.errorMessage = 'No se pudieron cargar tus chats.';
+      this.errorMessage.set('No se pudieron cargar tus chats.');
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 }
+

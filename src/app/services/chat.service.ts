@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IChatMessage, IChatMessagesResponse, IChatSummary, ISendMessageRequest } from '../shared/models/chat.interface';
+import { IChatMessage, IChatMessagesResponse, IChatSummary, ICreateChatResponse, ISendMessageRequest } from '../shared/models/chat.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,12 @@ export class ChatService {
     return chats ?? [];
   }
 
+  async createChat(articleId: number | string): Promise<ICreateChatResponse> {
+    return lastValueFrom(
+      this.httpClient.post<ICreateChatResponse>(this.baseUrl, { fk_articles_id: Number(articleId) }),
+    );
+  }
+
   async getChatMessages(chatId: number | string): Promise<IChatMessagesResponse> {
     return lastValueFrom(
       this.httpClient.get<IChatMessagesResponse>(`${this.baseUrl}/${chatId}/mensajes`),
@@ -33,3 +39,4 @@ export class ChatService {
     );
   }
 }
+
