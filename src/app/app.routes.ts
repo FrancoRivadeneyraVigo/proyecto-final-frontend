@@ -12,6 +12,7 @@ import { ChatDetailComponent } from './pages/chat-detail/chat-detail.component';
 import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { adminGuard } from './shared/guards/admin-guard';
+import { ProfileDetailComponent } from './pages/admin/profile-detail/profile-detail.component';
 
 export const routes: Routes = [
     {path: "", pathMatch: "full", redirectTo: "home"},
@@ -27,5 +28,6 @@ export const routes: Routes = [
     {path: "chats/:id", component: ChatDetailComponent},
     {path: "articles/:id", component: ArticleDetailComponent},
     {path: "admin", component: AdminComponent, canActivate: [adminGuard]},
+    {path: "admin/profile/:id", component: ProfileDetailComponent, canActivate: [adminGuard]},
     {path: "**", component: Error404Component}
 ];

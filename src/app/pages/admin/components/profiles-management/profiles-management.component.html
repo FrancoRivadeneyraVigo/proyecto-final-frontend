@@ -13,7 +13,7 @@
     </app-button>
 </div>
 
-<section class="profiles-list">
+<section class="section">
     @if (loading()) {
     <p class="text-muted text-center py-4">Cargando perfiles...</p>
     } @else if (profiles().length === 0) {
@@ -21,7 +21,7 @@
     } @else {
         <ul class="list-group">
             @for (profile of profiles(); track profile.id) {
-            <li class="list-group-item list-group-item-action profile-row" [routerLink]="['/profile', profile.fk_usuarios_id]">
+            <li class="list-group-item list-group-item-action profile-row" [routerLink]="['/admin/profile', profile.fk_usuarios_id]">
                 <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
                 <div class="profile-info">
                     <h5>{{ profile.name }} {{ profile.surname }}</h5>

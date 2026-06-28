@@ -34,3 +34,10 @@ export interface IAdminProfile extends IProfile {
     rol: string;
     status: string;
 }
+
+export interface IProfileDetailUser extends IProfile {
+    email: string;
+    status: string;
+    created_at: string;
+    last_login: string;
+}

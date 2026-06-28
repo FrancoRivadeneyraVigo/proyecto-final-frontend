@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IAdminProfile } from '../shared/models/profile.interface';
+import { IAdminProfile, IProfileDetailUser } from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +40,15 @@ export class AdminService {
     return lastValueFrom(
       this.httpClient.get<IAdminProfile[]>(`${this.baseUrl}?rol=${rol}`)
     );
+  }
+
+  // Trae el detalle completo de un usuario (vista admin). Por ahora solo
+  // se usa la parte "user" de la respuesta; el resto (compras, reportes...)
+  // queda pendiente de añadir cuando se necesite.
+  async getProfileDetail(userId: number): Promise<IProfileDetailUser> {
+    const response = await lastValueFrom(
+      this.httpClient.get<{ user: IProfileDetailUser }>(`${this.baseUrl}/${userId}/detail`)
+    );
+    return response.user;
   }
 }
