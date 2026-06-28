@@ -99,11 +99,14 @@
 
         <div class="seller-row">
             <div class="seller-chip" aria-hidden="true">
-                {{ (article.seller.name?.charAt(0) ?? '') + (article.seller.surname?.charAt(0) ?? '') }}
+                {{
+                (article.seller.name?.charAt(0) || article.seller.username?.charAt(0) || '') +
+                (article.seller.surname?.charAt(0) || '')
+                }}
             </div>
 
             <div class="seller-identity">
-                <strong>{{ article.seller.name }} {{ article.seller.surname }}</strong>
+                <strong>{{ article.seller.name || article.seller.username }} {{ article.seller.surname || '' }}</strong>
                 <span class="seller-rating"><i class="bi bi-star-fill"></i> {{ article.seller.rating }}@if (article.seller.rating_count) { ({{ article.seller.rating_count }} valoraciones) }</span>
             </div>
 

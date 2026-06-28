@@ -27,7 +27,7 @@ export interface IArticleDetail {
   status?: string | null;
   images: string[];
   is_favorite?: boolean;
-  fk_usuarios_id: number;
+  fk_users_id: number;
   seller?: IArticleSeller | null;
 }
 

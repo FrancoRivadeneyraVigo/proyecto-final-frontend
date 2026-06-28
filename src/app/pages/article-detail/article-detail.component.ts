@@ -49,7 +49,7 @@ export class ArticleDetailComponent implements OnInit {
 
   get isOwner(): boolean {
     const userId = this.currentUser()?.fk_usuarios_id;
-    return !!userId && userId === this.article()?.fk_usuarios_id;
+    return !!userId && userId === this.article()?.fk_users_id;
   }
 
   get isLoggedIn(): boolean {
