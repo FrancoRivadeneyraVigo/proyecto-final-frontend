@@ -44,3 +44,11 @@ export interface IArticleSummary {
   cover?: string | null;
   is_favorite?: boolean;
 }
+
+export interface IArticlesPaginatedResponse {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  data: IArticleSummary[];
+}

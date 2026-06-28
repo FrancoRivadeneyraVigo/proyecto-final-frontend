@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +8,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-detail',
@@ -20,10 +21,12 @@ export class ArticleDetailComponent implements OnInit {
   private router = inject(Router);
   private articleService = inject(ArticleService);
   private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   articleId = '';
 
-
+  // App zoneless (sin zone.js): el estado que pinta la plantilla DEBE ser signal,
+  // si no, Angular no se entera de que cambió tras un await y no repinta.
   article = signal<IArticleDetail | undefined>(undefined);
   similarArticles = signal<IArticleSummary[]>([]);
   currentImageIndex = signal(0);
@@ -35,8 +38,13 @@ export class ArticleDetailComponent implements OnInit {
   currentUser = this.authService.currentUser;
 
   async ngOnInit(): Promise<void> {
-    this.articleId = this.route.snapshot.paramMap.get('id') ?? '';
-    await this.loadArticle();
+    // Si vienes de otro /articles/:id (p.ej. clic en "Relojes similares"),
+    // Angular reutiliza este mismo componente y NO vuelve a llamar a ngOnInit.
+    // Por eso hay que escuchar los cambios de paramMap explícitamente.
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.articleId = params.get('id') ?? '';
+      this.loadArticle();
+    });
   }
 
   get isOwner(): boolean {
@@ -176,5 +184,32 @@ export class ArticleDetailComponent implements OnInit {
 
   onReportArticle(): void {
     toast.success('Gracias, hemos recibido tu reporte sobre este articulo.');
+  }
+
+  async onSimilarFavoriteToggled(summary: IArticleSummary): Promise<void> {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const wasFavorite = !!summary.is_favorite;
+    const updated = this.similarArticles().map((item) =>
+      item.id === summary.id ? { ...item, is_favorite: !wasFavorite } : item,
+    );
+    this.similarArticles.set(updated);
+
+    try {
+      if (wasFavorite) {
+        await this.articleService.removeFavorite(summary.id);
+      } else {
+        await this.articleService.addFavorite(summary.id);
+      }
+    } catch (_error) {
+      const reverted = this.similarArticles().map((item) =>
+        item.id === summary.id ? { ...item, is_favorite: wasFavorite } : item,
+      );
+      this.similarArticles.set(reverted);
+      toast.error('No se pudo actualizar tus favoritos');
+    }
   }
 }

@@ -104,7 +104,7 @@
 
             <div class="seller-identity">
                 <strong>{{ article.seller.name }} {{ article.seller.surname }}</strong>
-                <span class="seller-rating"><i class="bi bi-star-fill"></i> {{ article.seller.rating }} ({{ article.seller.rating_count }} valoraciones)</span>
+                <span class="seller-rating"><i class="bi bi-star-fill"></i> {{ article.seller.rating }}@if (article.seller.rating_count) { ({{ article.seller.rating_count }} valoraciones) }</span>
             </div>
 
             <div class="seller-stat">
@@ -152,7 +152,7 @@
 
         <div class="similar-grid">
             @for (similar of similarArticles(); track similar.id) {
-            <app-product-card [article]="similar"></app-product-card>
+            <app-product-card [article]="similar" (favoriteToggled)="onSimilarFavoriteToggled($event)"></app-product-card>
             }
         </div>
     </section>
