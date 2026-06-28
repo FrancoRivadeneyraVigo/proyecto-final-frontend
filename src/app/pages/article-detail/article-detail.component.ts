@@ -21,8 +21,7 @@ export class ArticleDetailComponent implements OnInit {
   private articleService = inject(ArticleService);
   private authService = inject(AuthService);
 
-  articleId = '';
-
+  articleId = 0;
 
   article = signal<IArticleDetail | undefined>(undefined);
   similarArticles = signal<IArticleSummary[]>([]);
@@ -35,7 +34,9 @@ export class ArticleDetailComponent implements OnInit {
   currentUser = this.authService.currentUser;
 
   async ngOnInit(): Promise<void> {
-    this.articleId = this.route.snapshot.paramMap.get('id') ?? '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.articleId = idParam ? Number(idParam) : 0;
+    
     await this.loadArticle();
   }
 
@@ -80,6 +81,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   async loadArticle(): Promise<void> {
+    // Si el ID es 0 o no es válido, manejamos el error
     if (!this.articleId) {
       this.errorMessage.set('Articulo no encontrado.');
       this.isLoading.set(false);
@@ -101,9 +103,12 @@ export class ArticleDetailComponent implements OnInit {
 
     this.isLoading.set(false);
 
-    // Los relojes similares son un extra: si fallan, no deben tumbar la página de detalle.
-    const similar = await this.articleService.getSimilarArticles(this.articleId);
-    this.similarArticles.set(similar);
+    try {
+      const similar = await this.articleService.getSimilarArticles(this.articleId);
+      this.similarArticles.set(similar);
+    } catch (_error) {
+      console.error('Error cargando artículos similares', _error);
+    }
   }
 
   prevImage(): void {

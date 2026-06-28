@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './shared/guards/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { Error404Component } from './pages/error404/error404.component';
@@ -19,7 +20,7 @@ export const routes: Routes = [
     {path: "profile/:id", component: ProfileComponent},
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
-    {path: "articles/sell", component: ArticleFormComponent},
+    {path: "articles/sell", component: ArticleFormComponent, canActivate: [authGuard]},
     {path: "articles/:id/edit", component: ArticleFormComponent},
     {path: "404", component: Error404Component},
     {path: "chats", component: ChatsListComponent},
