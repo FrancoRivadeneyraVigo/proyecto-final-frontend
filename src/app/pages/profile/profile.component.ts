@@ -84,6 +84,7 @@ export class ProfileComponent {
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const userId = params.get('id');
       if (!userId) {
+        this.router.navigate(['/404']);
         return;
       }
 
