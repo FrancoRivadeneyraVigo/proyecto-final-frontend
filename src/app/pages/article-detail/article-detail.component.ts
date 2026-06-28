@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
@@ -22,14 +22,15 @@ export class ArticleDetailComponent implements OnInit {
   private authService = inject(AuthService);
 
   articleId = '';
-  article?: IArticleDetail;
-  similarArticles: IArticleSummary[] = [];
 
-  currentImageIndex = 0;
 
-  isLoading = true;
-  isDeleting = false;
-  errorMessage = '';
+  article = signal<IArticleDetail | undefined>(undefined);
+  similarArticles = signal<IArticleSummary[]>([]);
+  currentImageIndex = signal(0);
+
+  isLoading = signal(true);
+  isDeleting = signal(false);
+  errorMessage = signal('');
 
   currentUser = this.authService.currentUser;
 
@@ -40,7 +41,7 @@ export class ArticleDetailComponent implements OnInit {
 
   get isOwner(): boolean {
     const userId = this.currentUser()?.fk_usuarios_id;
-    return !!userId && userId === this.article?.fk_usuarios_id;
+    return !!userId && userId === this.article()?.fk_usuarios_id;
   }
 
   get isLoggedIn(): boolean {
@@ -48,21 +49,22 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   get images(): string[] {
-    return this.article?.images?.length ? this.article.images : ['images/hero-watch.webp'];
+    const article = this.article();
+    return article?.images?.length ? article.images : ['images/hero-watch.webp'];
   }
 
   get currentImage(): string {
-    return this.images[this.currentImageIndex] ?? this.images[0];
+    return this.images[this.currentImageIndex()] ?? this.images[0];
   }
 
   get locationLabel(): string {
-    const city = this.article?.city || 'Madrid';
-    const country = this.article?.country || 'Spain';
+    const city = this.article()?.city || 'Madrid';
+    const country = this.article()?.country || 'Spain';
     return `${city}, ${country}`;
   }
 
   get formattedPrice(): string {
-    const price = this.article?.price ?? 0;
+    const price = this.article()?.price ?? 0;
     return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 }).format(Number(price));
   }
 
@@ -79,36 +81,44 @@ export class ArticleDetailComponent implements OnInit {
 
   async loadArticle(): Promise<void> {
     if (!this.articleId) {
-      this.errorMessage = 'Articulo no encontrado.';
-      this.isLoading = false;
+      this.errorMessage.set('Articulo no encontrado.');
+      this.isLoading.set(false);
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     try {
-      this.article = await this.articleService.getArticleById(this.articleId);
-      this.currentImageIndex = 0;
-      this.similarArticles = await this.articleService.getSimilarArticles(this.articleId);
+      const article = await this.articleService.getArticleById(this.articleId);
+      this.article.set(article);
+      this.currentImageIndex.set(0);
     } catch (_error) {
-      this.errorMessage = 'No se pudo cargar este articulo.';
-    } finally {
-      this.isLoading = false;
+      this.errorMessage.set('No se pudo cargar este articulo.');
+      this.isLoading.set(false);
+      return;
     }
+
+    this.isLoading.set(false);
+
+    // Los relojes similares son un extra: si fallan, no deben tumbar la página de detalle.
+    const similar = await this.articleService.getSimilarArticles(this.articleId);
+    this.similarArticles.set(similar);
   }
 
   prevImage(): void {
-    this.currentImageIndex =
-      (this.currentImageIndex - 1 + this.images.length) % this.images.length;
+    const length = this.images.length;
+    this.currentImageIndex.set((this.currentImageIndex() - 1 + length) % length);
   }
 
   nextImage(): void {
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+    const length = this.images.length;
+    this.currentImageIndex.set((this.currentImageIndex() + 1) % length);
   }
 
   async toggleFavorite(): Promise<void> {
-    if (!this.article) {
+    const article = this.article();
+    if (!article) {
       return;
     }
 
@@ -117,23 +127,24 @@ export class ArticleDetailComponent implements OnInit {
       return;
     }
 
-    const wasFavorite = !!this.article.is_favorite;
-    this.article.is_favorite = !wasFavorite;
+    const wasFavorite = !!article.is_favorite;
+    this.article.set({ ...article, is_favorite: !wasFavorite });
 
     try {
       if (wasFavorite) {
-        await this.articleService.removeFavorite(this.article.id);
+        await this.articleService.removeFavorite(article.id);
       } else {
-        await this.articleService.addFavorite(this.article.id);
+        await this.articleService.addFavorite(article.id);
       }
     } catch (_error) {
-      this.article.is_favorite = wasFavorite;
+      this.article.set({ ...article, is_favorite: wasFavorite });
       toast.error('No se pudo actualizar tus favoritos');
     }
   }
 
   async onDeleteArticle(): Promise<void> {
-    if (!this.article || this.isDeleting) {
+    const article = this.article();
+    if (!article || this.isDeleting()) {
       return;
     }
 
@@ -142,16 +153,16 @@ export class ArticleDetailComponent implements OnInit {
       return;
     }
 
-    this.isDeleting = true;
+    this.isDeleting.set(true);
 
     try {
-      await this.articleService.deleteArticle(this.article.id);
+      await this.articleService.deleteArticle(article.id);
       toast.success('Articulo eliminado correctamente');
       this.router.navigate(['/explore']);
     } catch (_error) {
       toast.error('No se pudo eliminar el articulo');
     } finally {
-      this.isDeleting = false;
+      this.isDeleting.set(false);
     }
   }
 
