@@ -10,13 +10,22 @@ import { IChatMessage, IChatMessagesResponse, IChatSummary, ICreateChatResponse,
 export class ChatService {
   private httpClient = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/chats`;
+  private profileChatsUrl = `${environment.apiUrl}/profiles/chats`;
 
   async getChats(): Promise<IChatSummary[]> {
     const chats = await lastValueFrom(
-      this.httpClient.get<IChatSummary[] | null>(this.baseUrl),
+      this.httpClient.get<IChatSummary[] | null>(this.profileChatsUrl),
     );
 
-    return chats ?? [];
+    return (chats ?? []).map((chat) => ({
+      ...chat,
+      id: chat.id ?? chat.chat_id,
+      chat_id: chat.chat_id ?? chat.id,
+      created_at: chat.created_at ?? chat.last_message_at ?? '',
+      contact_name: chat.contact_name ?? chat.contact_username,
+      buyer_name: chat.buyer_name ?? '',
+      article_price: chat.article_price ?? '',
+    }));
   }
 
   async createChat(articleId: number | string): Promise<ICreateChatResponse> {
@@ -39,4 +48,3 @@ export class ChatService {
     );
   }
 }
-
