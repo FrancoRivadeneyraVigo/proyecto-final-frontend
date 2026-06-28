@@ -1,0 +1,47 @@
+<div class="filter-tabs">
+    <app-button [text]="'User'" [class]="activeFilter() === 'user' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('user')">
+    </app-button>
+    <app-button [text]="'Moderador'" [class]="activeFilter() === 'moderator' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('moderator')">
+    </app-button>
+    <app-button [text]="'Administrador'" [class]="activeFilter() === 'admin' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('admin')">
+    </app-button>
+    <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('all')">
+    </app-button>
+</div>
+
+<section class="profiles-list">
+    @if (loading()) {
+    <p class="text-muted text-center py-4">Cargando perfiles...</p>
+    } @else if (profiles().length === 0) {
+    <p class="text-muted text-center py-4">No hay perfiles para este filtro</p>
+    } @else {
+        <ul class="list-group">
+            @for (profile of profiles(); track profile.id) {
+            <li class="list-group-item list-group-item-action profile-row" [routerLink]="['/profile', profile.fk_usuarios_id]">
+                <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
+                <div class="profile-info">
+                    <h5>{{ profile.name }} {{ profile.surname }}</h5>
+                    <p class="body-medium text-muted">{{ profile.username }}</p>
+                </div>
+                <span class="body-medium profile-rol">{{ profile.rol }}</span>
+                <div class="profile-badge-warpper">
+                    <span class="badge" [class.badge-active]="profile.status === 'ACTIVE'"
+                        [class.badge-blocked]="profile.status === 'BLOCKED'"
+                        [class.badge-deleted]="profile.status === 'DELETED'">
+                        @switch (profile.status) {
+                        @case ('ACTIVE') { Activo }
+                        @case ('BLOCKED') { Bloqueado }
+                        @case ('DELETED') { Baja }
+                        @default { Desconocido }
+                        }
+                    </span>
+                </div>
+            </li>
+            }   
+        </ul>
+    }
+</section>

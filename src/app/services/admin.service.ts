@@ -11,15 +11,28 @@ export class AdminService {
   private httpClient = inject(HttpClient);
   private baseUrl: string = `${environment.apiUrl}/profiles`;
 
-  // Trae todos los perfiles combinando los 3 roles, ya que el endpoint
-  // sin filtro no incluye el campo "rol" en la respuesta
+  // Trae todos los perfiles combinando los 3 roles, agrupando duplicados
+  // (un mismo usuario puede tener varios roles) y concatenando sus roles con coma
   async getAllProfilesWithRole(): Promise<IAdminProfile[]> {
     const [users, moderators, admins] = await Promise.all([
       this.getProfilesByRole('user'),
       this.getProfilesByRole('moderator'),
       this.getProfilesByRole('admin'),
     ]);
-    return [...users, ...moderators, ...admins];
+
+    const combined = [...users, ...moderators, ...admins];
+    const grouped = new Map<number, IAdminProfile>();
+
+    for (const profile of combined) {
+      const existing = grouped.get(profile.id);
+      if (existing) {
+        existing.rol = `${existing.rol}, ${profile.rol}`;
+      } else {
+        grouped.set(profile.id, { ...profile });
+      }
+    }
+
+    return Array.from(grouped.values());
   }
 
   // Trae los perfiles de un rol concreto (sí incluye "rol" en la respuesta)

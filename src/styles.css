@@ -29,8 +29,15 @@
     --bs-light-active: hsla(0, 0%, 30%, 1);
     --bs-light-text-emphasis: hsla(0, 0%, 12%, 1);
 
+    --bs-dark: hsla(0, 0%, 40%, 1);
+    --bs-dark-rgb: 51, 51, 51;
+    --bs-dark-hover: hsla(0, 0%, 30%, 1);
+    --bs-dark-active: hsla(0, 0%, 20%, 1);
+    --bs-dark-text-emphasis: hsla(0, 0%, 95%, 1);
+
     --bs-surface: hsla(0, 0%, 100%, 1);
     --bs-surface-var: hsla(0, 0%, 97%, 1);
+
 }
 
 /*Reset*/
@@ -180,6 +187,7 @@ h5 {
     BUTTON PRIMARY OUTLINE
    ========================================= */
 .btn-outline-primary {
+    --bs-btn-bg: var(--bs-surface); 
     --bs-btn-color: var(--bs-primary);
     --bs-btn-border-color: var(--bs-primary);
 
