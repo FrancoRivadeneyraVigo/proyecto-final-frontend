@@ -29,14 +29,6 @@
                     <small class="text-danger">La contraseña es obligatoria.</small>
                     }
 
-                    <!-- Keep session -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="rememberMe" />
-                        <label class="form-check-label" for="rememberMe">
-                            Mantener mi sesión abierta
-                        </label>
-                    </div>
-
                     <!-- Submit -->
                     <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconRight]="true"
                         [iconRight]="'bi bi-arrow-right'" [type]="'submit'" [disabled]="loginForm.invalid"
@@ -47,6 +39,14 @@
                     <p class="text-center text-muted body-medium">¿Aún no tienes cuenta en ATiempo?</p>
                     <a routerLink="/register">
                         <app-button [text]="'Crear cuenta'" [class]="'btn-link'"></app-button>
+                    </a>
+
+                    <!-- Link to home -->
+                    <hr>
+                    <p class="text-center text-muted body-medium">Explora la mejor selección de relojes de segunda mano</p>
+                    <a routerLink="/home">
+                        <app-button [text]="'Ir al inicio'" [class]="'btn-outline-primary'" [showIconRight]="true" [iconRight]="'bi bi-house'" [fullWidth]="true">
+                        </app-button>
                     </a>
                 </form>
             </div>
