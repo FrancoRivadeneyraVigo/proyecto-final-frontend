@@ -1,18 +1,18 @@
 .brand-icon img.brand-logo {
     height: 40px;
-    width: auto; 
+    width: auto;
 }
 
 .navbar {
     width: 100%;
     padding: 2rem 2rem;
     background-color: var(--bs-surface);
-    
+
     .container-fluid {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;     
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 
@@ -34,7 +34,7 @@
 
 .navbar-nav .nav-link .bi {
     font-size: 1.1rem;
-    color: inherit; 
+    color: inherit;
 }
 
 /* Botones del menu en mobile */
@@ -50,10 +50,9 @@
 }
 
 .navbar-toggler-custom .bi-list {
-    font-size: 1.8rem !important; 
+    font-size: 1.8rem;
+    color: inherit;
 }
-
-    color: inherit; }
 
 .navbar-avatar-link {
     display: inline-flex;

@@ -23,9 +23,6 @@ export interface IArticle {
   fk_buyer_id: number | null;
   fk_styles_id: number;
   fk_models_id: number;
-  images: IArticleImage[];
-  coverImage?: string;
-  isFavorite?: boolean;
 }
 
 export interface IArticlesPaginatedResponse {
@@ -34,15 +31,4 @@ export interface IArticlesPaginatedResponse {
   total: number;
   total_pages: number;
   data: IArticle[];
-}
-
-export interface IArticleImage {
-  id: number;
-  image_url: string;
-  is_cover: boolean;
-  fk_articles_id: number;
-}
-
-export interface IArticlesWithFavorite extends IArticle {
-  isFavorite: boolean;
 }

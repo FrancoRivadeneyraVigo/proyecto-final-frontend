@@ -46,39 +46,10 @@
 
         <div class="grid-watch">
             @for (article of arrArticles(); track $index) {
-            <div class="card-watch d-flex flex-column">
-                <div class="img-container position-relative p-3 d-flex- justify-content-center bg-light">
-                    <img src="images/hero-watch.webp" class="img-fluid" [alt]="article.title">
-                    <span
-                        class="brand-badge label-small position-absolute bottom-0 start-0 ms-3 mb-3 text-white py-2 px-2 rounded-2 d-inline-flex align-items-center gap-1">
-                        <i class="bi bi-patch-check"></i>Marca
-                    </span>
-
-                    <button
-                        class="favorite-btn position-absolute top-0 end-0 mt-3 me-3 bg-white border-0 rounded-3 d-flex justify-content-center align-items-center"
-                        [class.active]="article.isFavorite" (click)="toggleFavorite(article)">
-                        <i [class]="article.isFavorite ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
-
-                    </button>
-                </div>
-
-                <div class="info d-flex flex-column">
-                    <h5>{{article.title}}</h5>
-                    <p class="description">{{article.description}}</p>
-                    <div class="specs d-flex align-items-center gap-2">
-                        <span>{{article.year_of_manufacture}}</span>
-                        <span>•</span>
-                        <span>{{article.condition}}</span>
-                        <span>•</span>
-                        <span>{{article.case_material}}</span>
-                    </div>
-                    <div class="location d-inline-flex align-items-center gap-1 bg-body-secondary px-2 py-1 rounded-2">
-                        <i class="bi bi-geo-alt"></i>
-                        <span>Madrid, Spain</span>
-                    </div>
-                    <strong class="text-primary fs-2">€{{article.price}}</strong>
-                </div>
-            </div>
+                <app-product-card
+                    [article]="article"
+                    (favoriteToggled)="toggleFavorite($event)">
+                </app-product-card>
             }
 
         </div>
@@ -95,7 +66,7 @@
                     Ver todo <i class="bi bi-arrow-right-short"></i>
                 </a>
             </div>
-            <p class="text mt-3 fs-6 mb-0 text-muted">
+            <p class="text mt-3 fs-6 mb-0 col-12 col-md-6 text-muted">
                 Explora nuestra selección de marcas de relojes más populares, reconocidas por su calidad, diseño
                 y precisión.
             </p>
@@ -105,7 +76,7 @@
             @for (brand of brands(); track brand.id) {
             <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
                 <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-1">
-                    <img [src]="brand.logo_url" class="img-fluid brand-img" [alt]="brand.name">
+                    <img [src]="getBrandLogo(brand)" class="img-fluid brand-img" [alt]="brand.name">
                 </div>
             </div>
             }
