@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 
 import { ArticleService } from '../../../services/article.service';
@@ -11,6 +12,7 @@ import { StyleService } from '../../../services/styles.service';
 
 import { IBrand } from '../../models/ibrand.interface';
 import { IModel } from '../../models/imodel.interface';
+import { IProfile } from '../../models/profile.interface';
 import { IStyle } from '../../models/istyle.interface';
 
 import { ICreateArticle, ArticleCondition } from '../../models/icreate-article.component';
@@ -23,7 +25,7 @@ const MAX_IMAGES = 5;
 
 @Component({
   selector: 'app-article-form',
-  imports: [ReactiveFormsModule, ButtonComponent, FooterComponent, NavbarComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent, NavbarComponent],
   templateUrl: './article-form.component.html',
   styleUrl: './article-form.component.css',
 })
@@ -117,7 +119,28 @@ export class ArticleFormComponent {
 
   // Constructor
   constructor() {
+
+    const currentUser = this.authService.currentUser();
+
+    if (!currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.isProfileCompleteEnoughToSell(currentUser)) {
+      void this.goToOwnProfile();
+      return;
+    }
+
     void this.loadInitialData();
+  }
+
+  // Comprueba que el perfil tenga los datos mínimos para poder vender
+  // (mismos campos que ProfileComponent usa para el aviso de perfil incompleto)
+  private isProfileCompleteEnoughToSell(profile: IProfile): boolean {
+    return !!(profile.name ?? '').trim()
+      && !!(profile.surname ?? '').trim()
+      && !!(profile.city ?? '').trim();
   }
 
   // Carga inicial
@@ -135,9 +158,25 @@ export class ArticleFormComponent {
 
     } catch (error) {
 
-      toast.error('Error cargando datos');
+      toast.error(this.getErrorMessage(error, 'Error cargando datos'));
 
     }
+
+  }
+
+  // Extrae el mensaje real del backend (HttpErrorResponse.error.message)
+  // y cae a un mensaje genérico solo si no hay nada útil que mostrar
+  private getErrorMessage(error: unknown, fallback: string): string {
+
+    if (error instanceof HttpErrorResponse) {
+      return error.error?.message ?? error.message ?? fallback;
+    }
+
+    if (error instanceof Error) {
+      return error.message || fallback;
+    }
+
+    return fallback;
 
   }
 
@@ -186,7 +225,7 @@ export class ArticleFormComponent {
 
   }
 
-  // Estado del reloj 
+  // Estado del reloj (pills)
   selectCondition(value: string) {
     this.articleForm.patchValue({ condition: value });
   }
@@ -239,11 +278,9 @@ export class ArticleFormComponent {
     return remaining > 0 ? Array.from({ length: remaining }) : [];
   }
 
-  /**
-   * Construye el payload que espera el backend, descartando los campos
-   * que son solo de uso interno del formulario 
-   * (brand, movement_type, gender no existen como columnas en articles)
-   *  */ 
+  // Construye el payload que espera el backend, descartando los campos
+  // que son solo de uso interno del formulario (brand, movement_type,
+  // gender no existen como columnas en articles)
   private buildPayload(publish: boolean): ICreateArticle {
 
     const raw = this.articleForm.getRawValue();
@@ -266,7 +303,8 @@ export class ArticleFormComponent {
 
   }
 
-  // Navega al perfil del usuario logueado
+  // Navega al perfil del usuario logueado. El :id de la ruta profile/:id
+  // debe ser el id real del usuario (fk_usuarios_id), no el literal ":id".
   private goToOwnProfile(): Promise<boolean> {
 
     const userId = this.authService.currentUser()?.fk_usuarios_id;
@@ -305,7 +343,7 @@ export class ArticleFormComponent {
 
     } catch (error) {
 
-      toast.error('Error al publicar el anuncio');
+      toast.error(this.getErrorMessage(error, 'Error al publicar el anuncio'));
 
     }
 
@@ -337,7 +375,7 @@ export class ArticleFormComponent {
 
     } catch (error) {
 
-      toast.error('Error al guardar el borrador');
+      toast.error(this.getErrorMessage(error, 'Error al guardar el borrador'));
 
     }
 
