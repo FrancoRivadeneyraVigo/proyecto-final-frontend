@@ -1,0 +1,59 @@
+.auth-hero {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.auth-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+}
+
+.auth-hero-tint {
+    position: absolute;
+    inset: 0;
+    background: var(--bs-primary-active);
+    mix-blend-mode: multiply;
+}
+
+.auth-hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px;
+    gap: 16px;
+    color: var(--bs-surface);
+}
+
+.auth-hero-logo {
+    width: 218px;
+    height: auto;
+}
+
+@media (max-width: 991px) {
+    .auth-hero {
+        min-height: auto;
+        height: 220px;
+        grid-row: 1;
+        grid-column: 1;
+    }
+
+    .auth-hero-overlay {
+        padding: 48px 24px;
+    }
+
+    .auth-hero-logo {
+        width: 120px;
+        height: auto;
+        margin-bottom: 8px;
+    }
+}

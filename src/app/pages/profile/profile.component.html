@@ -8,15 +8,22 @@
         </div>
 
         <div class="profile-hero-inner container-xxl">
+            @if (user(); as profile) {
             <header class="profile-hero-text">
+                @if (isMyProfile()) {
                 <h2>Mi perfil</h2>
                 <p class="body-large">
                     Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
                 </p>
+                } @else {
+                <h2>Perfil de {{ profile.name }}</h2>
+                <p class="body-large">
+                    Consulta la información pública, artículos y valoraciones de este usuario.
+                </p>
+                }
             </header>
 
-            @if (user(); as profile) {
-                @if (!isEditing()) {
+                @if (!isEditing() || !isMyProfile()) {
                 <div class="profile-card section">
                     <div class="profile-header">
                         <div class="profile-identity">
@@ -25,7 +32,7 @@
                                 <img [src]="profile.photo_url" [alt]="profile.name" class="profile-avatar-img" />
                                 } @else {
                                 <span class="profile-avatar-initials">
-                                    {{ profile.name.charAt(0) }}{{ profile.surname.charAt(0) }}
+                                    {{ (profile.name ?? '').charAt(0) }}{{ (profile.surname ?? '').charAt(0) }}
                                 </span>
                                 }
                             </div>
@@ -38,17 +45,35 @@
                                 </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ profile.city }}</span>
+                                    <span>{{ (profile.city ?? '').trim() || 'Sin localización' }}</span>
                                 </p>
                             </div>
                         </div>
 
+                        @if (isMyProfile()) {
                         <div class="profile-actions">
                             <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
                                 [iconLeft]="'bi bi-pencil'" (click)="startEditing(profile)">
                             </app-button>
                         </div>
+                        } @else {
+                        <div class="profile-actions">
+                            <app-button [text]="'Reportar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-exclamation-circle'" (click)="onReportProfile()">
+                            </app-button>
+                            <app-button [text]="'Contactar'" [class]="'btn-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()">
+                            </app-button>
+                        </div>
+                        }
                     </div>
+
+                    @if (isMyProfile() && profileIncompleteMessage(); as incompleteMessage) {
+                    <div class="profile-incomplete-banner" role="status">
+                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                        <p>{{ incompleteMessage }}</p>
+                    </div>
+                    }
 
                     <div class="profile-stats">
                         <div class="profile-stat">
@@ -229,7 +254,7 @@
     @if (routeUserId(); as routeId) {
     <section class="profile-activity container-xxl">
         @for (activeRouteId of [routeId]; track activeRouteId) {
-        <app-profile-activity-tabs [userId]="activeRouteId" />
+        <app-profile-activity-tabs [userId]="activeRouteId" [isMyProfile]="isMyProfile()" />
         }
     </section>
     }

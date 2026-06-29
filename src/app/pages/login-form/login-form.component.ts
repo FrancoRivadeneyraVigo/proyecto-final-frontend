@@ -5,10 +5,11 @@ import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
+import { AuthHeroComponent } from '../../shared/components/auth-hero/auth-hero.component';
 
 @Component({
   selector: 'app-login-form',
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent, AuthHeroComponent],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css',
 })
@@ -39,10 +40,21 @@ export class LoginFormComponent {
 
   async onSubmit() {
     const { email, password } = this.loginForm.value;
+    
     try {
       await this.authService.login({ email, password });
       const profile = this.authService.currentUser();
-      toast.success(`Bienvenido, ${profile?.name} ${profile?.surname}`);
+
+      const fullName = [profile?.name, profile?.surname]
+      .filter(Boolean)
+      .join(' ');
+
+      const message = fullName
+        ? `Te damos la bienvenida, ${fullName}`
+        : 'Te damos la bienvenida';
+
+
+      toast.success(message);
       this.router.navigate(['/']);
     } catch (error: any) {
       toast.error('Email o contraseña incorrectos');

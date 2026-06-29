@@ -1,0 +1,163 @@
+<app-navbar></app-navbar>
+
+<main class="article-page">
+    @if (isLoading()) {
+    <div class="page-state">
+        <span class="spinner-border text-primary" aria-hidden="true"></span>
+        <p class="body-medium text-muted">Cargando articulo...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="page-state">
+        <i class="bi bi-exclamation-circle"></i>
+        <p class="body-medium">{{ errorMessage() }}</p>
+        <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadArticle()"></app-button>
+    </div>
+    } @else if (article(); as article) {
+    <nav class="breadcrumb-row" aria-label="breadcrumb">
+        <a routerLink="/home">Inicio</a>
+        <i class="bi bi-chevron-right"></i>
+        <span class="breadcrumb-current">Detalle artículo</span>
+    </nav>
+
+    <section class="article-main">
+        <div class="gallery">
+            <img class="gallery-image" [src]="currentImage" [alt]="article.title">
+            @if (images.length > 1) {
+            <button type="button" class="gallery-nav gallery-nav-prev" (click)="prevImage()" aria-label="Imagen anterior">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button type="button" class="gallery-nav gallery-nav-next" (click)="nextImage()" aria-label="Imagen siguiente">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+            }
+        </div>
+
+        <div class="article-info">
+            <div class="info-top-row">
+                <span class="brand-pill"><i class="bi bi-patch-check"></i> Marca</span>
+
+                @if (isLoggedIn && !isOwner) {
+                <button type="button" class="favorite-btn" (click)="toggleFavorite()"
+                    [class.is-favorite]="article.is_favorite" aria-label="Guardar en favoritos">
+                    <i class="bi" [class.bi-heart-fill]="article.is_favorite" [class.bi-heart]="!article.is_favorite"></i>
+                </button>
+                }
+            </div>
+
+            <h3 class="article-title">{{ article.title }}</h3>
+            <p class="article-description">{{ article.description || 'Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget. Lectus interdum urna' }}</p>
+
+            <span class="location-pill"><i class="bi bi-geo-alt"></i> {{ locationLabel }}</span>
+
+            <p class="article-price">€{{ formattedPrice }}</p>
+
+            <dl class="article-specs">
+                <div>
+                    <dt><i class="bi bi-calendar4"></i> Año</dt>
+                    <dd>{{ article.year_of_manufacture || 2021 }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-info-circle"></i> Estado</dt>
+                    <dd>{{ getConditionLabel(article.condition) }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-tag"></i> Estilo</dt>
+                    <dd>{{ article.style_name || 'Unisex' }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-gear"></i> Movimiento</dt>
+                    <dd>{{ article.movement_type || 'Automático' }}</dd>
+                </div>
+                <div>
+                    <dt><i class="bi bi-card-text"></i> Referencia</dt>
+                    <dd>{{ article.reference || '126610LN' }}</dd>
+                </div>
+            </dl>
+
+            <div class="article-actions">
+                @if (isOwner) {
+                <app-button [text]="'Eliminar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-trash3'" [disabled]="isDeleting()" (click)="onDeleteArticle()"
+                    [fullWidth]="true"></app-button>
+                <app-button [text]="'Editar'" [class]="'btn-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-pencil'" (click)="onEditArticle()" [fullWidth]="true"></app-button>
+                } @else {
+                <a [routerLink]="['/profile', article.seller?.id]" class="action-link">
+                    <app-button [text]="'Ver perfil'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-person-circle'" [fullWidth]="true"></app-button>
+                </a>
+                <app-button [text]="'Contactar'" [class]="'btn-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()" [fullWidth]="true"></app-button>
+                }
+            </div>
+        </div>
+    </section>
+
+    @if (!isOwner && article.seller) {
+    <section class="info-card seller-card">
+        <h5 class="card-title"><i class="bi bi-people"></i> Información del vendedor</h5>
+
+        <div class="seller-row">
+            <div class="seller-chip" aria-hidden="true">
+                {{ article.seller.name.charAt(0) }}{{ article.seller.surname.charAt(0) }}
+            </div>
+
+            <div class="seller-identity">
+                <strong>{{ article.seller.name }} {{ article.seller.surname }}</strong>
+                <span class="seller-rating"><i class="bi bi-star-fill"></i> {{ article.seller.rating }} ({{ article.seller.rating_count }} valoraciones)</span>
+            </div>
+
+            <div class="seller-stat">
+                <span class="stat-label">Ventas</span>
+                <span class="stat-value">{{ article.seller.sales_count }}</span>
+            </div>
+
+            <div class="seller-stat">
+                <span class="stat-label">Compras</span>
+                <span class="stat-value">{{ article.seller.purchases_count }}</span>
+            </div>
+
+            <div class="seller-stat">
+                <span class="stat-label">Miembro desde</span>
+                <span class="stat-value">{{ article.seller.member_since }}</span>
+            </div>
+
+            <a [routerLink]="['/profile', article.seller.id]" class="seller-link" aria-label="Ver perfil del vendedor">
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+        </div>
+    </section>
+    }
+
+    <section class="info-card">
+        <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> Descripción del producto</h5>
+        <p class="card-text">{{ article.description || 'Lorem ipsum dolor sit amet consectetur. Massa magna vel posuere tristique consequat. Libero ornare ultricies tortor venenatis tincidunt pulvinar consequat amet. Rutrum odio tortor tincidunt placerat vestibulum adipiscing in et lacus. Ultrices urna amet nam nunc vel ipsum. Lectus dolor lobortis euismod cras.' }}</p>
+    </section>
+
+    @if (!isOwner) {
+    <section class="info-card report-card">
+        <div class="report-text">
+            <h6 class="report-title"><i class="bi bi-exclamation-circle"></i> ¿Has detectado algún problema con este producto?</h6>
+            <p class="card-text">Puedes notificarnos si detectas información incorrecta, contenido inapropiado o cualquier otro problema con este anuncio.</p>
+        </div>
+        <app-button [text]="'Reportar producto'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+            [iconLeft]="'bi bi-flag'" (click)="onReportArticle()"></app-button>
+    </section>
+    }
+
+    @if (similarArticles().length) {
+    <section class="similar-section">
+        <h2>Relojes similares</h2>
+        <p class="similar-subtitle">Descubre artículos similares seleccionados por su estilo, calidad y características.</p>
+
+        <div class="similar-grid">
+            @for (similar of similarArticles(); track similar.id) {
+            <app-product-card [article]="similar"></app-product-card>
+            }
+        </div>
+    </section>
+    }
+    }
+</main>
+
+<app-footer></app-footer>

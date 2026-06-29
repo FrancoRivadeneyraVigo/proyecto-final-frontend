@@ -1,25 +1,25 @@
 <div class="register-page">
-    <section class="register-hero">
-        <img src="images/hero-watch.webp" alt="" class="register-hero-image" />
-        <div class="register-hero-tint"></div>
-        <div class="register-hero-overlay">
-            <img src="images/logo-login.svg" alt="" class="register-hero-logo" />
-            <p class="body-large">
-                Únete a ATiempo para comprar y vender relojes con confianza.
-            </p>
-        </div>
-    </section>
+    <!-- Hero compartido -->
+    <app-auth-hero></app-auth-hero>
 
+    <!-- Contenido del formulario -->
     <section class="register-content">
         <div class="register-card">
+
             <div class="d-flex flex-column gap-1">
                 <h3>Crear cuenta</h3>
-                <p class="text-muted body-medium">Empieza a publicar, guardar favoritos y contactar con vendedores</p>
+                <p class="text-muted body-medium">
+                    Únete a ATiempo y accede al mercado de relojes de segunda mano
+                </p>
             </div>
+
             <div class="section">
                 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+                    <!-- Email -->
                     <label for="email" class="form-label">Email</label>
-                    <input id="email" type="email" class="form-control" placeholder="tu@email.com" formControlName="email" />
+                    <input id="email" type="email" class="form-control" placeholder="tu@email.com"
+                        formControlName="email" />
                     @if (checkTouched('email') && checkError('email', 'required')) {
                     <small class="text-danger">El email es obligatorio.</small>
                     }
@@ -27,30 +27,41 @@
                     <small class="text-danger">Introduce un email válido.</small>
                     }
 
+                    <!-- Password -->
                     <label for="password" class="form-label">Contraseña</label>
                     <input id="password" type="password" class="form-control" formControlName="password" />
                     @if (checkTouched('password') && checkError('password', 'required')) {
                     <small class="text-danger">La contraseña es obligatoria.</small>
                     }
-                    @if (checkTouched('password') && checkError('password', 'minlength')) {
-                    <small class="text-danger">La contraseña debe tener al menos 6 caracteres.</small>
-                    }
 
-                    <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
-                    <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword" />
-                    @if (checkTouched('confirmPassword') && checkError('confirmPassword', 'required')) {
-                    <small class="text-danger">Confirma tu contraseña.</small>
+                    <!-- Repeat Password -->
+                    <label for="repeatPassword" class="form-label">Repetir contraseña</label>
+                    <input id="repeatPassword" type="password" class="form-control" formControlName="confirmPassword" />
+                    @if (checkTouched('repeatPassword') && checkError('repeatPassword', 'required')) {
+                    <small class="text-danger">Debes repetir la contraseña.</small>
                     }
-                    @if (passwordsDoNotMatch()) {
+                    @if (checkError('repeatPassword', 'passwordMismatch')) {
                     <small class="text-danger">Las contraseñas no coinciden.</small>
                     }
 
-                    <app-button [text]="isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'" [class]="'btn-primary'"
-                        [showIconRight]="true" [iconRight]="'bi bi-arrow-right'" [type]="'submit'"
-                        [disabled]="registerForm.invalid || isSubmitting" [fullWidth]="true">
+                    <!-- Terms -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" formControlName="terms" />
+                        <label class="form-check-label" for="terms">
+                            He leído y acepto la Política de privacidad y Términos y condiciones
+                        </label>
+                    </div>
+                    @if (checkTouched('terms') && checkError('terms', 'required')) {
+                    <small class="text-danger">Debes aceptar los términos.</small>
+                    }
+
+                    <!-- Submit -->
+                    <app-button [text]="'Crear cuenta'" [class]="'btn-primary'" [showIconRight]="true" [iconRight]="'bi bi-arrow-right'"
+                        [type]="'submit'" [disabled]="registerForm.invalid" [fullWidth]="true">
                     </app-button>
 
-                    <p class="text-center text-muted body-medium">¿Ya tienes cuenta en ATiempo?</p>
+                    <!-- Link to login -->
+                    <p class="text-center text-muted body-medium">¿Ya tienes cuenta?</p>
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-link'"></app-button>
                     </a>
