@@ -69,9 +69,9 @@ export class HomeComponent implements OnInit {
   async loadBrands() {
     try{
       const response = await this.brandService.getAll(1, this.limit());
-
       this.brands.set(response.data);
-    }catch (error) {
+
+    } catch (error) {
       console.error('Error al cargar las marcas:', error)
     }
   }

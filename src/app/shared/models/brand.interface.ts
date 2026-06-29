@@ -2,7 +2,7 @@
 export interface IBrand {
     id: number;
     name: string;
-    logo_url: string;
+    logo_url: string | null;
 }
 
 export interface IBrandResponse {
