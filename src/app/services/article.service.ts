@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { IArticle } from '../shared/models/article.interface';
 import { IArticlesPaginatedResponse } from '../shared/models/article.interface';
-import { IArticleDetail, IArticleSeller, IArticleSummary } from '../shared/models/article-detail.interface';
+import { IArticleDetail, IArticleSummary } from '../shared/models/article-detail.interface';
 import { ICreateArticle } from '../shared/models/icreate-article.component';
 
 @Injectable({
@@ -13,6 +13,7 @@ import { ICreateArticle } from '../shared/models/icreate-article.component';
 export class ArticleService {
   private httpClient = inject(HttpClient);
   private apiUrl = environment.apiUrl;
+  private articlesUrl = `${environment.apiUrl}/articles`;
 
   async getByUserId(
     userId: string,
@@ -47,22 +48,22 @@ export class ArticleService {
 
   async getSimilarArticles(id: number | string): Promise<IArticleSummary[]> {
     const articles = await lastValueFrom(
-      this.httpClient.get<IArticleSummary[] | null>(`${this.apiUrl}/${id}/similares`),
+      this.httpClient.get<IArticleSummary[] | null>(`${this.articlesUrl}/${id}/similares`),
     );
 
     return articles ?? [];
   }
 
   deleteArticle(id: number | string): Promise<void> {
-    return lastValueFrom(this.httpClient.delete<void>(`${this.apiUrl}/${id}`));
+    return lastValueFrom(this.httpClient.delete<void>(`${this.articlesUrl}/${id}`));
   }
 
   async addFavorite(id: number | string): Promise<void> {
-    await lastValueFrom(this.httpClient.post<void>(`${this.apiUrl}/${id}/favoritos`, {}));
+    await lastValueFrom(this.httpClient.post<void>(`${this.articlesUrl}/${id}/favoritos`, {}));
   }
 
   async removeFavorite(id: number | string): Promise<void> {
-    await lastValueFrom(this.httpClient.delete<void>(`${this.apiUrl}/${id}/favoritos`));
+    await lastValueFrom(this.httpClient.delete<void>(`${this.articlesUrl}/${id}/favoritos`));
   }
 
   async createArticle(article: ICreateArticle): Promise<IArticle> {
