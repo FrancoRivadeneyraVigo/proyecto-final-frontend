@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
@@ -10,14 +10,17 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
+import { ReportArticleComponent } from './report-article/report-article.component';
 
 @Component({
   selector: 'app-article-detail',
-  imports: [RouterLink, ButtonComponent, ProductCardComponent, NavbarComponent, FooterComponent],
+  imports: [RouterLink, ButtonComponent, ProductCardComponent, NavbarComponent, FooterComponent, ReportArticleComponent],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.css',
 })
 export class ArticleDetailComponent implements OnInit {
+  @ViewChild(ReportArticleComponent) reportArticleModal?: ReportArticleComponent;
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private articleService = inject(ArticleService);
@@ -198,6 +201,6 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   onReportArticle(): void {
-    toast.success('Gracias, hemos recibido tu reporte sobre este articulo.');
+    this.reportArticleModal?.open();
   }
 }

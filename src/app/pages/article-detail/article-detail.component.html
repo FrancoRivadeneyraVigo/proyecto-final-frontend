@@ -157,6 +157,10 @@
         </div>
     </section>
     }
+
+    @if (!isOwner) {
+    <app-report-article [articleId]="article.id" [articleTitle]="article.title"></app-report-article>
+    }
     }
 </main>
 
