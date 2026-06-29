@@ -68,27 +68,27 @@
         <section class="conversation-panel" aria-label="Detalle del chat">
             <h5 class="panel-title"><i class="bi bi-chat-square-text"></i> Detalle del chat</h5>
 
-            @if (isLoading) {
+            @if (isLoading()) {
             <div class="chat-state">
                 <span class="spinner-border text-primary" aria-hidden="true"></span>
                 <p class="body-medium text-muted">Cargando mensajes...</p>
             </div>
-            } @else if (errorMessage) {
+            } @else if (errorMessage()) {
             <div class="chat-state">
                 <i class="bi bi-exclamation-circle"></i>
-                <p class="body-medium">{{ errorMessage }}</p>
+                <p class="body-medium">{{ errorMessage() }}</p>
                 <app-button [text]="'Reintentar'" [class]="'btn-primary'" (click)="loadMessages()"></app-button>
             </div>
             } @else {
             <div class="messages-panel" aria-live="polite">
-                @if (messages.length === 0) {
+                @if (messages().length === 0) {
                 <div class="empty-chat">
                     <i class="bi bi-chat-left-text"></i>
                     <h5>Aun no hay mensajes</h5>
                     <p class="body-medium text-muted">Escribe el primer mensaje para empezar la conversacion.</p>
                 </div>
                 } @else {
-                @for (message of messages; track message.id) {
+                @for (message of messages(); track message.id) {
                 <article class="message-row" [class.own-message]="isOwnMessage(message)">
                     <div class="message-bubble">
                         <strong>{{ isOwnMessage(message) ? 'Tu' : contactName }}</strong>
@@ -110,10 +110,11 @@
                 <input class="form-control" placeholder="Lorem ipsum dolor sit amet consectetur."
                     formControlName="message">
                 <app-button [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-send'" [type]="'submit'"
-                    [disabled]="messageForm.invalid || isSending">
+                    [disabled]="messageForm.invalid || isSending()">
                 </app-button>
             </form>
             }
         </section>
     </section>
 </main>
+
