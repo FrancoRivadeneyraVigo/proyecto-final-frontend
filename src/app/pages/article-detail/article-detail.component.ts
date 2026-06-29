@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
-import { ArticleService } from '../../services/article-detail.service';
 import { ChatService } from '../../services/chat.service';
+import { ArticleService } from '../../services/article.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
@@ -27,8 +27,7 @@ export class ArticleDetailComponent implements OnInit {
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
 
-  articleId = '';
-
+  articleId = 0;
 
   article = signal<IArticleDetail | undefined>(undefined);
   similarArticles = signal<IArticleSummary[]>([]);
@@ -42,7 +41,9 @@ export class ArticleDetailComponent implements OnInit {
   currentUser = this.authService.currentUser;
 
   async ngOnInit(): Promise<void> {
-    this.articleId = this.route.snapshot.paramMap.get('id') ?? '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.articleId = idParam ? Number(idParam) : 0;
+
     await this.loadArticle();
   }
 
@@ -87,6 +88,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   async loadArticle(): Promise<void> {
+    // Si el ID es 0 o no es válido, manejamos el error
     if (!this.articleId) {
       this.errorMessage.set('Articulo no encontrado.');
       this.isLoading.set(false);
@@ -108,9 +110,12 @@ export class ArticleDetailComponent implements OnInit {
 
     this.isLoading.set(false);
 
-    // Los relojes similares son un extra: si fallan, no deben tumbar la página de detalle.
-    const similar = await this.articleService.getSimilarArticles(this.articleId);
-    this.similarArticles.set(similar);
+    try {
+      const similar = await this.articleService.getSimilarArticles(this.articleId);
+      this.similarArticles.set(similar);
+    } catch (_error) {
+      console.error('Error cargando artículos similares', _error);
+    }
   }
 
   prevImage(): void {

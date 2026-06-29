@@ -1,0 +1,365 @@
+<app-navbar></app-navbar>
+
+<div class="article-form">
+    <div class="container">
+
+        <!-- CABECERA -->
+        <header class="article-header">
+            <i class="bi bi-hourglass-split"></i>
+            <h1>Vender reloj</h1>
+            <p>
+                Publica tu anuncio en pocos minutos y conecta con compradores interesados.
+                Añade fotos, una descripción detallada y el precio para mostrar tu reloj de la mejor manera.
+            </p>
+        </header>
+
+        <div class="article-card">
+
+            <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
+
+                <!-- FOTOGRAFÍAS -->
+                <section class="article-section">
+
+                    <div class="article-section-title">
+                        <i class="bi bi-images"></i>
+
+                        <div>
+                            <h5>Fotografías</h5>
+                            <p>Sube hasta {{ maxImages }} fotos. La primera será la imagen principal.</p>
+                        </div>
+                    </div>
+
+                    <input #imageInput hidden type="file" multiple accept="image/*"
+                        (change)="onImagesSelected($event)">
+
+                    <div class="article-images-grid">
+
+                        @for(image of imagePreviews(); track $index){
+
+                        <div class="article-image-slot article-image-slot--filled">
+
+                            <img [src]="image" alt="Imagen del reloj">
+
+                            @if($index === 0){
+                            <span class="article-image-main-badge">Principal</span>
+                            }
+
+                            <button type="button" class="article-image-remove" (click)="removeImage($index)">
+                                <i class="bi bi-x"></i>
+                            </button>
+
+                        </div>
+
+                        }
+
+                        @if(imagePreviews().length < maxImages){
+
+                        <button type="button" class="article-image-slot article-image-slot--add"
+                            (click)="triggerImageInput(imageInput)">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>Añadir foto</span>
+                        </button>
+
+                        }
+
+                        @for(slot of emptyImageSlots; track $index){
+
+                        <div class="article-image-slot article-image-slot--empty">
+                            <i class="bi bi-image"></i>
+                        </div>
+
+                        }
+
+                    </div>
+
+                </section>
+
+                <!-- INFORMACIÓN DEL ANUNCIO -->
+                <section class="article-section">
+
+                    <div class="article-section-title">
+
+                        <i class="bi bi-card-text"></i>
+
+                        <div>
+                            <h5>Información del anuncio</h5>
+                            <p>Rellena el título y la descripción del anuncio</p>
+                        </div>
+
+                    </div>
+
+                    <div class="row g-4">
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+                                Título <span class="required">*</span>
+                            </label>
+
+                            <input class="form-control" placeholder="Ej. Omega Speedmaster Professional"
+                                formControlName="title">
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+                                Descripción <span class="required">*</span>
+                            </label>
+
+                            <textarea rows="4" class="form-control"
+                                placeholder="Describe el estado, la historia y los detalles de tu reloj"
+                                formControlName="description"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- INFORMACIÓN DEL RELOJ -->
+                <section class="article-section">
+
+                    <div class="article-section-title">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        <div>
+                            <h5>Información del reloj</h5>
+                            <p>Rellena los datos generales del reloj</p>
+                        </div>
+
+                    </div>
+
+                    <div class="row g-4">
+
+                        <!-- Marca -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Marca <span class="required">*</span>
+                            </label>
+
+                            <select class="form-select" formControlName="brand" (change)="onBrandChange()">
+
+                                <option [ngValue]="null">Seleccionar</option>
+
+                                @for(brand of brands(); track brand.id){
+                                <option [ngValue]="brand.id">{{ brand.name }}</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <!-- Modelo -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Modelo <span class="required">*</span>
+                            </label>
+
+                            <select class="form-select" formControlName="fk_models_id" (change)="onModelChange()">
+
+                                <option [ngValue]="null">Seleccionar</option>
+
+                                @for(model of models(); track model.id){
+                                <option [ngValue]="model.id">{{ model.name }}</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <!-- Estilo -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Estilo <span class="required">*</span>
+                            </label>
+
+                            <select class="form-select" formControlName="fk_styles_id">
+
+                                <option [ngValue]="null">Seleccionar</option>
+
+                                @for(style of styles(); track style.id){
+                                <option [ngValue]="style.id">{{ style.name }}</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <!-- Tipo de movimiento -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">Tipo movimiento</label>
+
+                            <input class="form-control" readonly placeholder="Automático según el modelo"
+                                formControlName="movement_type">
+
+                        </div>
+
+                        <!-- Año -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Año de fabricación <span class="required">*</span>
+                            </label>
+
+                            <input type="number" class="form-control" placeholder="2024"
+                                formControlName="year_of_manufacture">
+
+                        </div>
+
+                        <!-- Género -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">Género</label>
+
+                            <input class="form-control" readonly placeholder="Automático según el modelo"
+                                formControlName="gender">
+
+                        </div>
+
+                        <!-- Material de la caja -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">Material de la caja</label>
+
+                            <input class="form-control" placeholder="Ej. Acero inoxidable"
+                                formControlName="case_material">
+
+                        </div>
+
+                        <!-- Material del brazalete -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">Material del brazalete</label>
+
+                            <input class="form-control" placeholder="Ej. Piel, acero, caucho..."
+                                formControlName="bracelet_material">
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- PRECIO Y CONDICIONES -->
+                <section class="article-section">
+
+                    <div class="article-section-title">
+
+                        <i class="bi bi-tag"></i>
+
+                        <div>
+                            <h5>Precio y condiciones</h5>
+                            <p>Rellena el precio e indica el estado del reloj</p>
+                        </div>
+
+                    </div>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Precio (€) <span class="required">*</span>
+                            </label>
+
+                            <input type="number" class="form-control" placeholder="0,00" formControlName="price">
+
+                        </div>
+
+                    </div>
+
+                    <div class="article-condition mt-4">
+
+                        <label class="form-label">
+                            Estado del reloj <span class="required">*</span>
+                        </label>
+
+                        <div class="article-condition-options">
+
+                            @for(option of conditionOptions; track option.value){
+
+                            <button type="button" class="article-condition-pill"
+                                [class.active]="articleForm.value.condition === option.value"
+                                (click)="selectCondition(option.value)">
+                                {{ option.label }}
+                            </button>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- DOCUMENTACIÓN Y ENVÍO -->
+                <section class="article-section article-section--last">
+
+                    <div class="article-section-title">
+
+                        <i class="bi bi-file-earmark-check"></i>
+
+                        <div>
+                            <h5>Documentación y envío</h5>
+                            <p>¿Qué documentación u accesorios incluye?</p>
+                        </div>
+
+                    </div>
+
+                    <div class="article-checks">
+
+                        <label class="article-check">
+                            <input class="form-check-input" type="checkbox" formControlName="original_box">
+                            <span>Caja original</span>
+                        </label>
+
+                        <label class="article-check">
+                            <input class="form-check-input" type="checkbox" formControlName="original_papers">
+                            <span>Papeles originales</span>
+                        </label>
+
+                    </div>
+
+                    <div class="article-shipping mt-4">
+
+                        <div>
+                            <p class="article-shipping-title">Envío disponible</p>
+                            <p class="article-shipping-text">El comprador puede recibir el reloj a domicilio</p>
+                        </div>
+
+                        <label class="article-switch">
+                            <input class="form-check-input" type="checkbox" formControlName="shipping_available">
+                            <span class="article-switch-track"></span>
+                        </label>
+
+                    </div>
+
+                </section>
+
+                <!-- BOTONES -->
+                <div class="article-actions">
+
+                    <app-button [text]="'Guardar borrador'" [type]="'button'" [class]="'btn-outline-primary'"
+                        [showIconLeft]="true" [iconLeft]="'bi bi-file-earmark'" (click)="saveDraft()">
+                    </app-button>
+
+                    <app-button [text]="'Publicar artículo'" [type]="'submit'" [class]="'btn-primary'"
+                        [showIconLeft]="true" [iconLeft]="'bi bi-rocket'">
+                    </app-button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<app-footer></app-footer>
