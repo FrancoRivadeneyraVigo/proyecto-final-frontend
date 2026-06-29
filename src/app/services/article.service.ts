@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IArticlesPaginatedResponse } from '../shared/models/article.interface';
+import { IArticle, IArticlesPaginatedResponse } from '../shared/models/article.interface';
+
 
 @Injectable({
   providedIn: 'root',
@@ -37,4 +38,22 @@ export class ArticleService {
       throw error;
     }
   }
+  
+  async getAll(limit?: number): Promise<IArticlesPaginatedResponse> {
+    return await lastValueFrom(
+      this.httpClient.get<IArticlesPaginatedResponse>(`${environment.apiUrl}/articles?limit=${limit}`)
+    );
+
+  }
+
+  async searchArticles (term:string): Promise<IArticle[]> {
+    return await lastValueFrom(
+      this.httpClient.get<IArticle[]>(`${environment.apiUrl}/articles/search/${term}`)
+    );
+  }
+
+
+
 }
+
+

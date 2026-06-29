@@ -1,4 +1,7 @@
-<app-navbar></app-navbar>
+<header>
+    <app-navbar></app-navbar>
+</header>
+
 <section class="hero-section position-relative d-flex align-items-start justify-content-start">
     <div class="container d-flex flex-column align-items-start text-center w-100 mx-auto" style=" max-width: 700px;">
         <h1 class="text-white"> Estás a tiempo de encontrar tu reloj ideal</h1>
@@ -8,9 +11,11 @@
 
         <div class="search input-group bg-white position-relative mx-auto">
 
-            <input type="text" class="form-control border-0" placeholder="Buscar marca, modelo o estilo...">
+            <input type="text" class="form-control border-0" placeholder="Buscar marca, modelo o estilo..."
+                (input)="onSearchInput($event)" (keyup.enter)="onSearch()">
 
-            <button class="btn btn-light border-0 d-flex align-items-center justify-content-center gap-2">
+            <button (click)="onSearch()"
+                class="btn btn-light border-0 d-flex align-items-center justify-content-center gap-2">
                 <i class="bi bi-search"></i>Buscar
             </button>
         </div>
@@ -23,128 +28,58 @@
         <div class="section-header w-100 mb-4">
             <div class="row align-items-center g-2">
                 <div class="col col-md-auto">
-                    <h3 class="m-0">Novedades</h3>
+                    <h3 class="m-0">{{ searchTerm() ? 'Resultados de búsqueda' : 'Novedades' }}</h3>
                 </div>
                 <div class="col-auto ms-auto text-end">
-                    <a href="#" class="view-all-link fw-semibold text-nowrap"> Ver todo <i
+                    <a routerLink="/explore" class="view-all-link fw-semibold text-nowrap"> Ver todo <i
                             class="bi bi-arrow-right-short"></i>
                     </a>
                 </div>
 
                 <div class="col-12">
-                    <p class="text mt-1 fs-6 mb-0 mobile">Nuevas piezas disponibles cada día para coleccionistas y
-                        aficionados.
+                    <p class="text mt-1 fs-6 mb-0 mobile">
+                        {{ searchTerm() ? 'Resultados para "' + searchTerm() + '"' : 'Nuevas piezas disponibles cada día para coleccionistas y aficionados.' }}
                     </p>
                 </div>
             </div>
         </div>
 
-
         <div class="grid-watch">
-            <div class="card-watch">
+            @for (article of arrArticles(); track $index) {
+            <div class="card-watch d-flex flex-column">
                 <div class="img-container position-relative p-3 d-flex- justify-content-center bg-light">
-                    <img src="images/hero-watch.webp" class="img-fluid" alt="">
-
+                    <img src="images/hero-watch.webp" class="img-fluid" [alt]="article.title">
                     <span
-                        class="brand-badge label-small position-absolute bottom-0 start-0 ms-3 mb-3 text-white py-2 px-2 rounded-2 d-inline-flex align-items-center gap-1"><i
-                            class="bi bi-patch-check"></i>Marca</span>
+                        class="brand-badge label-small position-absolute bottom-0 start-0 ms-3 mb-3 text-white py-2 px-2 rounded-2 d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-patch-check"></i>Marca
+                    </span>
 
                     <button
-                        class="favorite-btn position-absolute top-0 end-0 mt-3 me-3 bg-white border-0 rounded-3 d-flex justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </button>
+                        class="favorite-btn position-absolute top-0 end-0 mt-3 me-3 bg-white border-0 rounded-3 d-flex justify-content-center align-items-center"
+                        [class.active]="article.isFavorite" (click)="toggleFavorite(article)">
+                        <i [class]="article.isFavorite ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
 
+                    </button>
                 </div>
 
-                <div class="info d-flex flex-column gap-3 p-3">
-                    <h5>Title</h5>
-                    <p class="description">Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget. Lectus
-                        interdum urna quam pretium
-                        mattis posuere sed volutpat id.</p>
+                <div class="info d-flex flex-column">
+                    <h5>{{article.title}}</h5>
+                    <p class="description">{{article.description}}</p>
                     <div class="specs d-flex align-items-center gap-2">
-                        <span>2021</span>
+                        <span>{{article.year_of_manufacture}}</span>
                         <span>•</span>
-                        <span>Excelente</span>
+                        <span>{{article.condition}}</span>
                         <span>•</span>
-                        <span>41mm</span>
+                        <span>{{article.case_material}}</span>
                     </div>
                     <div class="location d-inline-flex align-items-center gap-1 bg-body-secondary px-2 py-1 rounded-2">
                         <i class="bi bi-geo-alt"></i>
                         <span>Madrid, Spain</span>
                     </div>
-                    <strong class="text-primary fs-2">€12.500</strong>
+                    <strong class="text-primary fs-2">€{{article.price}}</strong>
                 </div>
             </div>
-
-            <div class="card-watch">
-                <div class="img-container position-relative p-3 d-flex- justify-content-center bg-light">
-                    <img src="images/hero-watch.webp" class="img-fluid" alt="">
-
-                    <span
-                        class="brand-badge label-small position-absolute bottom-0 start-0  ms-3 mb-3 text-white py-2 px-2 rounded-2 d-inline-flex align-items-center gap-1"><i
-                            class="bi bi-patch-check"></i>Marca</span>
-
-                    <button
-                        class="favorite-btn position-absolute top-0 end-0 mt-3 me-3 bg-white border-0 rounded-3 d-flex justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="info d-flex flex-column gap-3 p-3">
-                    <h5>Title</h5>
-                    <p class="description">Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget. Lectus
-                        interdum urna quam pretium
-                        mattis posuere sed volutpat id.</p>
-                    <div class="specs d-flex align-items-center gap-2">
-                        <span>2021</span>
-                        <span>•</span>
-                        <span>Excelente</span>
-                        <span>•</span>
-                        <span>41mm</span>
-                    </div>
-                    <div class="location d-inline-flex align-items-center gap-1 bg-body-secondary px-2 py-1 rounded-2">
-                        <i class="bi bi-geo-alt"></i>
-                        <span>Madrid, Spain</span>
-                    </div>
-                    <strong class="text-primary fs-2">€12.500</strong>
-                </div>
-            </div>
-
-            <div class="card-watch">
-                <div class="img-container position-relative p-3 d-flex- justify-content-center bg-light">
-                    <img src="images/hero-watch.webp" class="img-fluid" alt="">
-
-                    <span
-                        class="brand-badge label-small position-absolute bottom-0 start-0  ms-3 mb-3 text-white py-2 px-2 rounded-2 d-inline-flex align-items-center gap-1"><i
-                            class="bi bi-patch-check"></i>Marca</span>
-
-                    <button
-                        class="favorite-btn position-absolute top-0 end-0 mt-3 me-3 bg-white border-0 rounded-3 d-flex justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="info d-flex flex-column gap-3 p-3">
-                    <h5>Title</h5>
-                    <p class="description">Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget. Lectus
-                        interdum urna quam pretium
-                        mattis posuere sed volutpat id.</p>
-                    <div class="specs d-flex align-items-center gap-2">
-                        <span>2021</span>
-                        <span>•</span>
-                        <span>Excelente</span>
-                        <span>•</span>
-                        <span>41mm</span>
-                    </div>
-                    <div class="location d-inline-flex align-items-center gap-1 bg-body-secondary px-2 py-1 rounded-2">
-                        <i class="bi bi-geo-alt"></i>
-                        <span>Madrid, Spain</span>
-                    </div>
-                    <strong class="text-primary fs-2">€12.500</strong>
-                </div>
-            </div>
+            }
 
         </div>
     </div>
@@ -167,47 +102,44 @@
         </div>
 
         <div class="row g-4 justify-content-center align-items-center mt-3">
-
+            @for (brand of brands(); track brand.id) {
             <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
                 <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-1">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
+                    <img [src]="brand.logo_url" class="img-fluid brand-img" [alt]="brand.name">
                 </div>
             </div>
-            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
-                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-3">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
-                </div>
-            </div>
-            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
-                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-3">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
-                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-3">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
-                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-3">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
-                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-3">
-                    <img src="images/hero-watch.webp" class="img-fluid brand-img" alt="">
-                </div>
-            </div>
+            }
         </div>
-
     </div>
 </section>
+
 <section>
+    <app-stats></app-stats>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 text-center">
+                <img src="images/icon-reloj.svg" alt="Icono de reloj" class="top-icon">
+                <h3 class="cta-title">¿Tienes un reloj para vender?</h3>
+                <p class="cta-description">
+                    Únete a miles de vendedores y conecta con compradores de todo el mundo. Publica tus relojes de forma
+                    sencilla, amplía tu alcance y accede a una comunidad global de entusiastas y coleccionistas que
+                    buscan piezas únicas cada día.
+                </p>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary cta-button" routerLink="/sell-item">
+                        Publicar artículo <i class="bi bi-arrow-right-short"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </section>
-<section>
 
-</section>
+<footer>
+    <app-footer></app-footer>
+</footer>
