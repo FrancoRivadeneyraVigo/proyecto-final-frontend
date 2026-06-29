@@ -25,7 +25,7 @@ const MAX_IMAGES = 5;
 
 @Component({
   selector: 'app-article-form',
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent, NavbarComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, FooterComponent, NavbarComponent],
   templateUrl: './article-form.component.html',
   styleUrl: './article-form.component.css',
 })
