@@ -9,6 +9,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
+import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 
 @Component({
   selector: 'app-article-detail',
@@ -189,8 +190,8 @@ export class ArticleDetailComponent implements OnInit {
     try {
       const chat = await this.chatService.createChat(article.id);
       this.router.navigate(['/chats', chat.id]);
-    } catch (_error) {
-      toast.error('No se pudo abrir el chat');
+    } catch (error) {
+      toast.error(getHttpErrorMessage(error, 'No se pudo abrir el chat'));
     } finally {
       this.isContacting.set(false);
     }

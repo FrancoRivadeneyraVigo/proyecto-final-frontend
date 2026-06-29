@@ -9,6 +9,7 @@ import { ChatService } from '../../services/chat.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
+import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 
 @Component({
   selector: 'app-chat-detail',
@@ -137,8 +138,8 @@ export class ChatDetailComponent implements OnInit {
       this.chat.set(result.chat);
       this.messages.set(result.messages ?? []);
       this.scrollToBottom();
-    } catch (_error) {
-      this.errorMessage.set('No se pudo cargar este chat.');
+    } catch (error) {
+      this.errorMessage.set(getHttpErrorMessage(error, 'No se pudo cargar este chat.'));
     } finally {
       this.isLoading.set(false);
     }

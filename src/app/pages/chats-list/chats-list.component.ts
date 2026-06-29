@@ -7,7 +7,8 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { IChatSummary } from '../../shared/models/chat.interface';
 
 type ChatMode = 'sales' | 'purchases';
-type ChatFilter = 'PUBLISHED' | 'RESERVED' | 'SOLD' | 'BOUGHT' | 'NOT_BOUGHT' | 'ALL';
+type ArticleStatus = 'PUBLISHED' | 'RESERVED' | 'SOLD';
+type ChatFilter = ArticleStatus | 'BOUGHT' | 'NOT_BOUGHT' | 'ALL';
 
 @Component({
   selector: 'app-chats-list',
@@ -71,11 +72,17 @@ export class ChatsListComponent implements OnInit {
   }
 
   chatStatus(chat: IChatSummary): ChatFilter {
-    if (chat.article_status) {
-      return chat.article_status;
+    const status = chat.article_status;
+
+    if (this.chatRole(chat) === 'BUYER') {
+      if (status === 'BOUGHT' || status === 'NOT_BOUGHT') {
+        return status;
+      }
+
+      return status === 'SOLD' ? 'BOUGHT' : 'NOT_BOUGHT';
     }
 
-    return this.chatRole(chat) === 'BUYER' ? 'BOUGHT' : 'PUBLISHED';
+    return isArticleStatus(status) ? status : 'PUBLISHED';
   }
 
   statusLabel(chat: IChatSummary): string {
@@ -110,4 +117,8 @@ export class ChatsListComponent implements OnInit {
   chatImage(chat: IChatSummary): string {
     return chat.article_cover || 'images/hero-watch.webp';
   }
+}
+
+function isArticleStatus(status: IChatSummary['article_status']): status is ArticleStatus {
+  return status === 'PUBLISHED' || status === 'RESERVED' || status === 'SOLD';
 }
