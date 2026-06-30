@@ -55,7 +55,7 @@ export interface IArticleDetail {
   status?: string | null;
   images: IArticleImage[];
   is_favorite?: boolean;
-  fk_usuarios_id: number;
+  fk_users_id: number;
   seller?: IArticleSeller | null;
   brand?: IArticleBrand | null;
   model?: IArticleModel | null;
@@ -74,4 +74,12 @@ export interface IArticleSummary {
   diameter_mm?: number | null;
   cover?: string | null;
   is_favorite?: boolean;
+}
+
+export interface IArticlesPaginatedResponse {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  data: IArticleSummary[];
 }

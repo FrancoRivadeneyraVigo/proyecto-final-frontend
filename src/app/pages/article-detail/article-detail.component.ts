@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
@@ -11,6 +12,7 @@ import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from './report-article/report-article.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-detail',
@@ -26,6 +28,7 @@ export class ArticleDetailComponent implements OnInit {
   private articleService = inject(ArticleService);
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   articleId = 0;
 
@@ -67,9 +70,9 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   get locationLabel(): string {
-    const city = this.article()?.city || 'Madrid';
-    const country = this.article()?.country || 'Spain';
-    return `${city}, ${country}`;
+    const city = this.article()?.city;
+    const country = this.article()?.country;
+    return [city, country].filter(Boolean).join(', ');
   }
 
   get formattedPrice(): string {
@@ -88,6 +91,25 @@ export class ArticleDetailComponent implements OnInit {
     return condition ? labels[condition] ?? condition : 'Como nuevo';
   }
 
+  // El backend devuelve { message, error } en sus respuestas de error.
+  private getBackendErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendError = error.error;
+
+      if (typeof backendError === 'string') {
+        return backendError;
+      }
+
+      if (Array.isArray(backendError)) {
+        return backendError.join(', ');
+      }
+
+      return backendError?.message || backendError?.error || fallback;
+    }
+
+    return fallback;
+  }
+
   async loadArticle(): Promise<void> {
     // Si el ID es 0 o no es válido, manejamos el error
     if (!this.articleId) {
@@ -103,20 +125,16 @@ export class ArticleDetailComponent implements OnInit {
       const article = await this.articleService.getArticleById(this.articleId);
       this.article.set(article);
       this.currentImageIndex.set(0);
-    } catch (_error) {
-      this.errorMessage.set('No se pudo cargar este articulo.');
+    } catch (error) {
+      this.errorMessage.set(this.getBackendErrorMessage(error, 'No se pudo cargar este articulo.'));
       this.isLoading.set(false);
       return;
     }
 
     this.isLoading.set(false);
 
-    try {
-      const similar = await this.articleService.getSimilarArticles(this.articleId);
-      this.similarArticles.set(similar);
-    } catch (_error) {
-      console.error('Error cargando artículos similares', _error);
-    }
+    const similar = await this.articleService.getSimilarArticles(this.articleId);
+    this.similarArticles.set(similar);
   }
 
   prevImage(): void {
@@ -149,9 +167,9 @@ export class ArticleDetailComponent implements OnInit {
       } else {
         await this.articleService.addFavorite(article.id);
       }
-    } catch (_error) {
+    } catch (error) {
       this.article.set({ ...article, is_favorite: wasFavorite });
-      toast.error('No se pudo actualizar tus favoritos');
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo actualizar tus favoritos'));
     }
   }
 
@@ -172,8 +190,8 @@ export class ArticleDetailComponent implements OnInit {
       await this.articleService.deleteArticle(article.id);
       toast.success('Articulo eliminado correctamente');
       this.router.navigate(['/explore']);
-    } catch (_error) {
-      toast.error('No se pudo eliminar el articulo');
+    } catch (error) {
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo eliminar el articulo'));
     } finally {
       this.isDeleting.set(false);
     }
@@ -208,5 +226,32 @@ export class ArticleDetailComponent implements OnInit {
 
   onReportArticle(): void {
     this.reportArticleModal?.open();
+  }
+
+  async onSimilarFavoriteToggled(summary: IArticleSummary): Promise<void> {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const wasFavorite = !!summary.is_favorite;
+    const updated = this.similarArticles().map((item) =>
+      item.id === summary.id ? { ...item, is_favorite: !wasFavorite } : item,
+    );
+    this.similarArticles.set(updated);
+
+    try {
+      if (wasFavorite) {
+        await this.articleService.removeFavorite(summary.id);
+      } else {
+        await this.articleService.addFavorite(summary.id);
+      }
+    } catch (error) {
+      const reverted = this.similarArticles().map((item) =>
+        item.id === summary.id ? { ...item, is_favorite: wasFavorite } : item,
+      );
+      this.similarArticles.set(reverted);
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo actualizar tus favoritos'));
+    }
   }
 }
