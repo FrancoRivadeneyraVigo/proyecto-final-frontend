@@ -123,9 +123,6 @@ export class ArticleService {
     );
   }
 
-}
-
-
   async updateArticle(
     articleId: number,
     article: IUpdateArticle
