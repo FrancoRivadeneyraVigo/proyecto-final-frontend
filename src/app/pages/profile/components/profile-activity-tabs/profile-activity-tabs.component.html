@@ -6,7 +6,7 @@
             [class.active]="activeTab() === 'articles'"
             (click)="setActiveTab('articles')"
         >
-            Mis artículos
+            Artículos
         </button>
         <button
             type="button"
@@ -16,6 +16,7 @@
         >
             Valoraciones
         </button>
+        @if (isMyProfile()) {
         <button
             type="button"
             class="profile-activity-nav-link"
@@ -24,18 +25,21 @@
         >
             Favoritos
         </button>
+        }
     </nav>
 
     <div class="profile-activity-panel">
         @switch (activeTab()) {
             @case ('articles') {
-            <app-my-articles [userId]="userId()" />
+            <app-my-articles [userId]="userId()" [isOwner]="isMyProfile()" />
             }
             @case ('ratings') {
             <app-ratings />
             }
             @case ('favorites') {
+            @if (isMyProfile()) {
             <app-favorites />
+            }
             }
         }
     </div>

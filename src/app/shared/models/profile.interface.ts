@@ -3,11 +3,11 @@ export interface IProfile {
     username: string;
     rating: string;
     photo_url: string | null;
-    name: string;
-    surname: string;
+    name: string | null;
+    surname: string | null;
     phone: string | null;
     country: string;
-    city: string;
+    city: string | null;
     postal_code: string;
     biography: string | null;
     fk_usuarios_id: number;

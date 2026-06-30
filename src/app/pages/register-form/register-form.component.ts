@@ -5,6 +5,7 @@ import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
+import { AuthHeroComponent } from '../../shared/components/auth-hero/auth-hero.component';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -19,7 +20,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-register-form',
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, FooterComponent, AuthHeroComponent],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
 })
@@ -42,6 +43,9 @@ export class RegisterFormComponent {
         ]),
         confirmPassword: new FormControl('', [
           Validators.required,
+        ]),
+        terms: new FormControl(false, [
+          Validators.requiredTrue,
         ]),
       },
       { validators: passwordsMatch },

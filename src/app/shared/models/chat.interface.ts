@@ -1,10 +1,21 @@
 export interface IChatSummary {
     id: number;
+    chat_id: number;
     created_at: string;
+    article_id?: number;
     article_title: string;
     article_price: number | string;
+    article_cover?: string | null;
+    article_status?: 'PUBLISHED' | 'RESERVED' | 'SOLD' | 'BOUGHT' | 'NOT_BOUGHT' | 'ALL';
     buyer_name: string;
     contact_name?: string | null;
+    contact_username?: string | null;
+    contact_photo?: string | null;
+    my_role?: 'BUYER' | 'SELLER' | null;
+    last_message?: string | null;
+    last_message_at?: string | null;
+    last_sender_id?: number | null;
+    unread_count?: number;
 }
 
 export interface IChatMessage {
@@ -42,6 +53,11 @@ export interface IChatMessagesResponse {
     chatId: number | string;
     chat?: IChatDetail;
     messages: IChatMessage[];
+}
+
+export interface ICreateChatResponse {
+    id: number;
+    message: string;
 }
 
 export interface ISendMessageRequest {

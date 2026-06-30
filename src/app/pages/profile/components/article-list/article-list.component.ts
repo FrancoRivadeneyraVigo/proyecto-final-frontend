@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { IArticle } from '../../../../shared/models/article.interface';
 import { ArticleCardComponent } from '../article-card/article-card.component';
 
@@ -11,4 +11,7 @@ import { ArticleCardComponent } from '../article-card/article-card.component';
 export class ArticleListComponent {
   articles = input.required<IArticle[]>();
   total = input.required<number>();
+  isOwner = input(false);
+
+  deleted = output<number>();
 }
