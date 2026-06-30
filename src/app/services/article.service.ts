@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IArticle } from '../shared/models/article.interface';
-import { IArticlesPaginatedResponse } from '../shared/models/article.interface';
+import { IArticle, IArticlesPaginatedResponse } from '../shared/models/article.interface';
 import { IArticleDetail, IArticleSummary } from '../shared/models/article-detail.interface';
 import { ICreateArticle } from '../shared/models/icreate-article.component';
+
 
 @Injectable({
   providedIn: 'root',
@@ -109,5 +109,20 @@ export class ArticleService {
 
     return createdArticle;
   }
+  
+  async getAll(limit?: number): Promise<IArticlesPaginatedResponse> {
+    return await lastValueFrom(
+      this.httpClient.get<IArticlesPaginatedResponse>(`${environment.apiUrl}/articles?limit=${limit}`)
+    );
+
+  }
+
+  async searchArticles (term:string): Promise<IArticle[]> {
+    return await lastValueFrom(
+      this.httpClient.get<IArticle[]>(`${environment.apiUrl}/articles/search/${term}`)
+    );
+  }
 
 }
+
+

@@ -1,1 +1,116 @@
-<app-navbar></app-navbar>
+<header>
+    <app-navbar></app-navbar>
+</header>
+
+<section class="hero-section position-relative d-flex align-items-start justify-content-start">
+    <div class="container d-flex flex-column align-items-start text-center w-100 mx-auto" style=" max-width: 700px;">
+        <h1 class="text-white"> Estás a tiempo de encontrar tu reloj ideal</h1>
+
+        <p class="text-white"> Encuentra el reloj que encaja contigo entre una selección cuidada de piezas únicas.
+            Compra con confianza, sin complicaciones</p>
+
+        <div class="search input-group bg-white position-relative mx-auto">
+
+            <input type="text" class="form-control border-0" placeholder="Buscar marca, modelo o estilo..."
+                (input)="onSearchInput($event)" (keyup.enter)="onSearch()">
+
+            <button (click)="onSearch()"
+                class="btn btn-light border-0 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-search"></i>Buscar
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="new-arrivals mx-auto my-5 px-4" style="max-width: 1300px;">
+    <div class="container">
+
+        <div class="section-header w-100 mb-4">
+            <div class="row align-items-center g-2">
+                <div class="col col-md-auto">
+                    <h3 class="m-0">{{ searchTerm() ? 'Resultados de búsqueda' : 'Novedades' }}</h3>
+                </div>
+                <div class="col-auto ms-auto text-end">
+                    <a routerLink="/explore" class="view-all-link fw-semibold text-nowrap"> Ver todo <i
+                            class="bi bi-arrow-right-short"></i>
+                    </a>
+                </div>
+
+                <div class="col-12">
+                    <p class="text mt-1 fs-6 mb-0 mobile">
+                        {{ searchTerm() ? 'Resultados para "' + searchTerm() + '"' : 'Nuevas piezas disponibles cada día para coleccionistas y aficionados.' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-watch">
+            @for (article of arrArticles(); track $index) {
+                <app-product-card
+                    [article]="article"
+                    (favoriteToggled)="toggleFavorite($event)">
+                </app-product-card>
+            }
+
+        </div>
+    </div>
+</section>
+
+<section class="popular-brands mx-auto my-5 px-4" style="max-width: 1300px;">
+    <div class="container">
+
+        <div class="section-header w-100 mb-2">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <h3 class="m-0">Marcas populares</h3>
+                <a href="#" class="view-all-link fw-semibold text-nowrap">
+                    Ver todo <i class="bi bi-arrow-right-short"></i>
+                </a>
+            </div>
+            <p class="text mt-3 fs-6 mb-0 col-12 col-md-6 text-muted">
+                Explora nuestra selección de marcas de relojes más populares, reconocidas por su calidad, diseño
+                y precisión.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center align-items-center mt-3">
+            @for (brand of brands(); track brand.id) {
+            <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
+                <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-1">
+                    <img [src]="getBrandLogo(brand)" class="img-fluid brand-img" [alt]="brand.name">
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section>
+    <app-stats></app-stats>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 text-center">
+                <img src="images/icon-reloj.svg" alt="Icono de reloj" class="top-icon">
+                <h3 class="cta-title">¿Tienes un reloj para vender?</h3>
+                <p class="cta-description">
+                    Únete a miles de vendedores y conecta con compradores de todo el mundo. Publica tus relojes de forma
+                    sencilla, amplía tu alcance y accede a una comunidad global de entusiastas y coleccionistas que
+                    buscan piezas únicas cada día.
+                </p>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary cta-button" [routerLink]="['/articles/sell']">
+                        Publicar artículo <i class="bi bi-arrow-right-short"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<footer>
+    <app-footer></app-footer>
+</footer>

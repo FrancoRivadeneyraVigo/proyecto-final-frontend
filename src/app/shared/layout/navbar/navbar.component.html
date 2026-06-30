@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-custom py-4 bg-white">
     <div class="container-fluid">
         <div class="container-xxl d-flex flex-wrap justify-content-between align-items-center px-0 py-0">
             <!-- Logo -->
@@ -11,7 +11,8 @@
             <button class="btn btn-light navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <i class="bi bi-list"></i>
             </button>
-            <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+            <div class="collapse navbar-collapse justify-content-between bg-whitemt-2 mt-lg-0 pt-3 p-lg-0"
+                id="mainNavbar">
                 <!-- Menu -->
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
@@ -28,6 +29,8 @@
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']">Administrar</a>
                     </li>                       }           
                 </ul>
+
+                <hr class="text-black-50 my-2 w-100 d-lg-none">
 
                 @if (!currentUser()) {
                 <!-- Not logged -->
@@ -47,15 +50,17 @@
                 <div class="d-flex gap-3 align-items-center">
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
                     <a routerLink="/chats">
-                        <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                        <app-button [class]="'btn-light'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-envelope'"></app-button>
                     </a>
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
                     @if (currentUser(); as user) {
                     <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
-                    <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
+                        <app-avatar [name]="user.name" [surname]="user.surname"
+                            [photoUrl]="user.photo_url"></app-avatar>
                     </a>
-                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-box-arrow-right'"
-                        (click)="onLogout()"></app-button>
+                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()"></app-button>
                     }
                 </div>
                 }
