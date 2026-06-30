@@ -1,0 +1,68 @@
+<div class="filter-tabs">
+    <app-button [text]="'Pendientes'"
+        [class]="activeFilter() === 'PENDING' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="loadReports('PENDING')">
+    </app-button>
+    <app-button [text]="'En revisión'"
+        [class]="activeFilter() === 'UNDER_REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="loadReports('UNDER_REVIEW')">
+    </app-button>
+    <app-button [text]="'Resueltos'"
+        [class]="activeFilter() === 'RESOLVED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="loadReports('RESOLVED')">
+    </app-button>
+    <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadReports('all')">
+    </app-button>
+</div>
+
+<section class="section">
+    @if (loading()) {
+    <p class="text-muted text-center py-4">Cargando reportes...</p>
+    } @else if (reports().length === 0) {
+    <p class="text-muted text-center py-4">No hay reportes para este filtro</p>
+    } @else {
+    <ul class="list-group">
+        @for (report of reports(); track report.id) {
+        <li class="list-group-item report-row">
+            <div class="report-main">
+                <p class="body-medium text-muted report-reporter">
+                    Reportado por: {{ report.name }} {{ report.surname }}
+                </p>
+                <h5 class="report-reason">{{ getReasonLabel(report.reason) }}</h5>
+                <p class="body-medium report-article-id">
+                    <i class="bi bi-tag-fill"></i>
+                    ID Artículo: {{ report.article_id }}
+                </p>
+                <p class="body-medium text-muted report-comments">{{ report.comments }}</p>
+            </div>
+            <div class="report-meta">
+                <p class="body-medium report-date">
+                    Creado: {{ report.created_at | date:'dd/MM/yyyy' }}
+                </p>
+                <p class="body-medium report-date">
+                    Resuelto:
+                    @if (report.resolved_at) {
+                    {{ report.resolved_at | date:'dd/MM/yyyy' }}
+                    } @else {
+                    —
+                    }
+                </p>
+            </div>
+            <div class="report-badge-wrapper">
+                <span class="badge" [class.badge-active]="report.status === 'RESOLVED'"
+                    [class.badge-blocked]="report.status === 'PENDING'"
+                    [class.badge-deleted]="report.status === 'UNDER_REVIEW'">
+                    @switch (report.status) {
+                    @case ('PENDING') { Pendiente }
+                    @case ('UNDER_REVIEW') { En revisión }
+                    @case ('RESOLVED') { Resuelto }
+                    @default { Desconocido }
+                    }
+                </span>
+            </div>
+        </li>
+        }
+    </ul>
+    }
+</section>

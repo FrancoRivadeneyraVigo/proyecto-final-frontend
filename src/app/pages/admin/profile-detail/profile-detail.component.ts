@@ -5,7 +5,6 @@ import { IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/mode
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
-import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
@@ -17,7 +16,7 @@ type ConfirmAction = 'block' | 'unblock' | 'delete' | null;
 
 @Component({
   selector: 'app-profile-detail',
-  imports: [RouterLink, CommonModule, AvatarComponent, ButtonComponent, NavbarComponent, FooterComponent, ProfileActivityTabsComponent, ConfirmModalComponent],
+  imports: [RouterLink, CommonModule, ButtonComponent, NavbarComponent, FooterComponent, ProfileActivityTabsComponent, ConfirmModalComponent],
   templateUrl: './profile-detail.component.html',
   styleUrl: './profile-detail.component.css',
 })
