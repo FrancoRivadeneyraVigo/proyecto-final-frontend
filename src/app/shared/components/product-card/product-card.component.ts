@@ -26,7 +26,7 @@ export class ProductCardComponent {
 
   get locationLabel(): string {
     const { city, country } = this.article();
-    return [city, country].filter(Boolean).join(', ') || 'Madrid, Spain';
+    return [city, country].filter(Boolean).join(', ');
   }
 
   get metaLabel(): string {

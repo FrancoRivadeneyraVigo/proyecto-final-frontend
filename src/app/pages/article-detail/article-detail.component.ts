@@ -1,4 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
@@ -25,8 +26,6 @@ export class ArticleDetailComponent implements OnInit {
 
   articleId = '';
 
-  // App zoneless (sin zone.js): el estado que pinta la plantilla DEBE ser signal,
-  // si no, Angular no se entera de que cambió tras un await y no repinta.
   article = signal<IArticleDetail | undefined>(undefined);
   similarArticles = signal<IArticleSummary[]>([]);
   currentImageIndex = signal(0);
@@ -38,9 +37,6 @@ export class ArticleDetailComponent implements OnInit {
   currentUser = this.authService.currentUser;
 
   async ngOnInit(): Promise<void> {
-    // Si vienes de otro /articles/:id (p.ej. clic en "Relojes similares"),
-    // Angular reutiliza este mismo componente y NO vuelve a llamar a ngOnInit.
-    // Por eso hay que escuchar los cambios de paramMap explícitamente.
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.articleId = params.get('id') ?? '';
       this.loadArticle();
@@ -66,9 +62,9 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   get locationLabel(): string {
-    const city = this.article()?.city || 'Madrid';
-    const country = this.article()?.country || 'Spain';
-    return `${city}, ${country}`;
+    const city = this.article()?.city;
+    const country = this.article()?.country;
+    return [city, country].filter(Boolean).join(', ');
   }
 
   get formattedPrice(): string {
@@ -87,6 +83,25 @@ export class ArticleDetailComponent implements OnInit {
     return condition ? labels[condition] ?? condition : 'Como nuevo';
   }
 
+  // El backend devuelve { message, error } en sus respuestas de error.
+  private getBackendErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendError = error.error;
+
+      if (typeof backendError === 'string') {
+        return backendError;
+      }
+
+      if (Array.isArray(backendError)) {
+        return backendError.join(', ');
+      }
+
+      return backendError?.message || backendError?.error || fallback;
+    }
+
+    return fallback;
+  }
+
   async loadArticle(): Promise<void> {
     if (!this.articleId) {
       this.errorMessage.set('Articulo no encontrado.');
@@ -101,15 +116,14 @@ export class ArticleDetailComponent implements OnInit {
       const article = await this.articleService.getArticleById(this.articleId);
       this.article.set(article);
       this.currentImageIndex.set(0);
-    } catch (_error) {
-      this.errorMessage.set('No se pudo cargar este articulo.');
+    } catch (error) {
+      this.errorMessage.set(this.getBackendErrorMessage(error, 'No se pudo cargar este articulo.'));
       this.isLoading.set(false);
       return;
     }
 
     this.isLoading.set(false);
 
-    // Los relojes similares son un extra: si fallan, no deben tumbar la página de detalle.
     const similar = await this.articleService.getSimilarArticles(this.articleId);
     this.similarArticles.set(similar);
   }
@@ -144,9 +158,9 @@ export class ArticleDetailComponent implements OnInit {
       } else {
         await this.articleService.addFavorite(article.id);
       }
-    } catch (_error) {
+    } catch (error) {
       this.article.set({ ...article, is_favorite: wasFavorite });
-      toast.error('No se pudo actualizar tus favoritos');
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo actualizar tus favoritos'));
     }
   }
 
@@ -167,8 +181,8 @@ export class ArticleDetailComponent implements OnInit {
       await this.articleService.deleteArticle(article.id);
       toast.success('Articulo eliminado correctamente');
       this.router.navigate(['/explore']);
-    } catch (_error) {
-      toast.error('No se pudo eliminar el articulo');
+    } catch (error) {
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo eliminar el articulo'));
     } finally {
       this.isDeleting.set(false);
     }
@@ -204,12 +218,12 @@ export class ArticleDetailComponent implements OnInit {
       } else {
         await this.articleService.addFavorite(summary.id);
       }
-    } catch (_error) {
+    } catch (error) {
       const reverted = this.similarArticles().map((item) =>
         item.id === summary.id ? { ...item, is_favorite: wasFavorite } : item,
       );
       this.similarArticles.set(reverted);
-      toast.error('No se pudo actualizar tus favoritos');
+      toast.error(this.getBackendErrorMessage(error, 'No se pudo actualizar tus favoritos'));
     }
   }
 }
