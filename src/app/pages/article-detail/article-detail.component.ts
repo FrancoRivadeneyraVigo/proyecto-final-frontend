@@ -1,28 +1,33 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { AuthService } from '../../services/auth.service';
-import { ArticleService } from '../../services/article-detail.service';
+import { ChatService } from '../../services/chat.service';
+import { ArticleService } from '../../services/article.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
+import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
+import { ReportArticleComponent } from './report-article/report-article.component';
 
 @Component({
   selector: 'app-article-detail',
-  imports: [RouterLink, ButtonComponent, ProductCardComponent, NavbarComponent, FooterComponent],
+  imports: [RouterLink, ButtonComponent, ProductCardComponent, NavbarComponent, FooterComponent, ReportArticleComponent],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.css',
 })
 export class ArticleDetailComponent implements OnInit {
+  @ViewChild(ReportArticleComponent) reportArticleModal?: ReportArticleComponent;
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private articleService = inject(ArticleService);
+  private chatService = inject(ChatService);
   private authService = inject(AuthService);
 
-  articleId = '';
-
+  articleId = 0;
 
   article = signal<IArticleDetail | undefined>(undefined);
   similarArticles = signal<IArticleSummary[]>([]);
@@ -30,12 +35,15 @@ export class ArticleDetailComponent implements OnInit {
 
   isLoading = signal(true);
   isDeleting = signal(false);
+  isContacting = signal(false);
   errorMessage = signal('');
 
   currentUser = this.authService.currentUser;
 
   async ngOnInit(): Promise<void> {
-    this.articleId = this.route.snapshot.paramMap.get('id') ?? '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.articleId = idParam ? Number(idParam) : 0;
+
     await this.loadArticle();
   }
 
@@ -80,6 +88,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   async loadArticle(): Promise<void> {
+    // Si el ID es 0 o no es válido, manejamos el error
     if (!this.articleId) {
       this.errorMessage.set('Articulo no encontrado.');
       this.isLoading.set(false);
@@ -101,9 +110,12 @@ export class ArticleDetailComponent implements OnInit {
 
     this.isLoading.set(false);
 
-    // Los relojes similares son un extra: si fallan, no deben tumbar la página de detalle.
-    const similar = await this.articleService.getSimilarArticles(this.articleId);
-    this.similarArticles.set(similar);
+    try {
+      const similar = await this.articleService.getSimilarArticles(this.articleId);
+      this.similarArticles.set(similar);
+    } catch (_error) {
+      console.error('Error cargando artículos similares', _error);
+    }
   }
 
   prevImage(): void {
@@ -170,11 +182,30 @@ export class ArticleDetailComponent implements OnInit {
     this.router.navigate(['/sell-item'], { queryParams: { id: this.articleId } });
   }
 
-  onContact(): void {
-    this.router.navigate(['/chats']);
+  async onContact(): Promise<void> {
+    const article = this.article();
+    if (!article || this.isContacting()) {
+      return;
+    }
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.isContacting.set(true);
+
+    try {
+      const chat = await this.chatService.createChat(article.id);
+      this.router.navigate(['/chats', chat.id]);
+    } catch (error) {
+      toast.error(getHttpErrorMessage(error, 'No se pudo abrir el chat'));
+    } finally {
+      this.isContacting.set(false);
+    }
   }
 
   onReportArticle(): void {
-    toast.success('Gracias, hemos recibido tu reporte sobre este articulo.');
+    this.reportArticleModal?.open();
   }
 }

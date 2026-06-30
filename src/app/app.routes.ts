@@ -6,10 +6,10 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
 import { ExploreComponent } from './pages/explore/explore.component';
 import { FavItemsComponent } from './pages/fav-items/fav-items.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { SellItemComponent } from './pages/sell-item/sell-item.component';
 import { ChatsListComponent } from './pages/chats-list/chats-list.component';
 import { ChatDetailComponent } from './pages/chat-detail/chat-detail.component';
 import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
+import { ArticleFormComponent } from './shared/components/article-form/article-form.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { adminGuard } from './shared/guards/admin-guard';
 import { ProfileDetailComponent } from './pages/admin/profile-detail/profile-detail.component';
@@ -22,7 +22,8 @@ export const routes: Routes = [
     {path: "profile/:id", component: ProfileComponent},
     {path: "explore", component: ExploreComponent},
     {path: "fav-items", component: FavItemsComponent},
-    {path: "sell-item", component: SellItemComponent},
+    {path: "articles/sell", component: ArticleFormComponent},
+    {path: "articles/:id/edit", component: ArticleFormComponent},
     {path: "404", component: Error404Component},
     {path: "chats", component: ChatsListComponent},
     {path: "chats/:id", component: ChatDetailComponent},

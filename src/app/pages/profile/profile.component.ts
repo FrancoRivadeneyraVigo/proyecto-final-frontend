@@ -84,6 +84,7 @@ export class ProfileComponent {
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const userId = params.get('id');
       if (!userId) {
+        this.router.navigate(['/404']);
         return;
       }
 
@@ -195,7 +196,13 @@ export class ProfileComponent {
       this.scrollToTop();
       toast.success('Perfil actualizado correctamente');
     } catch (error) {
-      toast.error(`No se pudo actualizar el perfil : ${error} `);
+      let message = 'No se pudo actualizar el perfil : ';
+       if (error instanceof HttpErrorResponse) {
+         message += error.error.message;
+       } else {
+        message += error;
+       }
+      toast.error(message);
     } finally {
       this.saving.set(false);
     }
