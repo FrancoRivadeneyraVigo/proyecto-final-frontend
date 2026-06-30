@@ -39,3 +39,26 @@
     align-items: flex-end;
     width: 92px;
 }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--bs-surface, #fff);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--bs-body-color, #1a1a2e);
+}
+
+.search-input::placeholder {
+    color: var(--bs-dark);
+}

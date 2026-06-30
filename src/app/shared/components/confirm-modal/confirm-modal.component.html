@@ -1,0 +1,30 @@
+<div class="confirm-modal-backdrop" (click)="onCancel()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <div class="confirm-modal-header">
+            <h5>
+                <i [class]="icon()"></i>
+                {{ title() }}
+            </h5>
+            <button type="button" class="confirm-modal-close" (click)="onCancel()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="confirm-modal-body">
+            @if (subtitle()) {
+            <div>
+                <h5 class="confirm-modal-name">{{ subtitle() }}</h5>
+                @if (subtitleId()) {
+                <span class="body-medium text-muted">ID: {{ subtitleId() }}</span>
+                }
+            </div>
+            }
+            <p class="body-medium">{{ message() }}</p>
+        </div>
+        <div class="confirm-modal-footer">
+            <app-button [text]="cancelText()" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                [iconLeft]="'bi bi-x'" [disabled]="processing()" (click)="onCancel()"></app-button>
+            <app-button [text]="confirmText()" [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="confirmIcon()"
+                [disabled]="processing()" (click)="onConfirm()"></app-button>
+        </div>
+    </div>
+</div>

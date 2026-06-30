@@ -13,35 +13,47 @@
     </app-button>
 </div>
 
+<div class="search-bar">
+    <input type="text" class="search-input" placeholder="Buscar por nombre, ID o nombre de usuario"
+        [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)"
+        (keyup.enter)="onSearchChange(searchTerm())" />
+    <app-button [text]="'Buscar'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-search'"
+        (click)="onSearchChange(searchTerm())">
+    </app-button>
+</div>
+
+
 <section class="section">
+
     @if (loading()) {
     <p class="text-muted text-center py-4">Cargando perfiles...</p>
-    } @else if (profiles().length === 0) {
+    } @else if (filteredProfiles().length === 0) {
     <p class="text-muted text-center py-4">No hay perfiles para este filtro</p>
     } @else {
-        <ul class="list-group">
-            @for (profile of profiles(); track profile.id) {
-            <li class="list-group-item list-group-item-action profile-row" [routerLink]="['/admin/profile', profile.fk_usuarios_id]">
-                <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
-                <div class="profile-info">
-                    <h5>{{ profile.name }} {{ profile.surname }}</h5>
-                    <p class="body-medium text-muted">{{ profile.username }}</p>
-                </div>
-                <span class="body-medium profile-rol">{{ profile.rol }}</span>
-                <div class="profile-badge-warpper">
-                    <span class="badge" [class.badge-active]="profile.status === 'ACTIVE'"
-                        [class.badge-blocked]="profile.status === 'BLOCKED'"
-                        [class.badge-deleted]="profile.status === 'DELETED'">
-                        @switch (profile.status) {
-                        @case ('ACTIVE') { Activo }
-                        @case ('BLOCKED') { Bloqueado }
-                        @case ('DELETED') { Baja }
-                        @default { Desconocido }
-                        }
-                    </span>
-                </div>
-            </li>
-            }   
-        </ul>
+    <ul class="list-group">
+        @for (profile of filteredProfiles(); track profile.id) {
+        <li class="list-group-item list-group-item-action profile-row"
+            [routerLink]="['/admin/profile', profile.fk_usuarios_id]">
+            <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
+            <div class="profile-info">
+                <h5>{{ profile.name }} {{ profile.surname }}</h5>
+                <p class="body-medium text-muted">{{ profile.username }}</p>
+            </div>
+            <span class="body-medium profile-rol">{{ profile.rol }}</span>
+            <div class="profile-badge-warpper">
+                <span class="badge" [class.badge-active]="profile.status === 'ACTIVE'"
+                    [class.badge-blocked]="profile.status === 'BLOCKED'"
+                    [class.badge-deleted]="profile.status === 'DELETED'">
+                    @switch (profile.status) {
+                    @case ('ACTIVE') { Activo }
+                    @case ('BLOCKED') { Bloqueado }
+                    @case ('DELETED') { Baja }
+                    @default { Desconocido }
+                    }
+                </span>
+            </div>
+        </li>
+        }
+    </ul>
     }
 </section>

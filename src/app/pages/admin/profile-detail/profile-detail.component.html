@@ -51,8 +51,7 @@
                     </div>
                     <div class="profile-detail-actions">
                         <span class="badge" [class.badge-active]="profile()!.status === 'ACTIVE'"
-                            [class.badge-blocked]="profile()!.status === 'BLOCKED'"
-                            [class.badge-deleted]="profile()!.status === 'DELETED'">
+                            [class.badge-blocked]="profile()!.status === 'BLOCKED'" [class.badge-deleted]="profile()!.status === 'DELETED'">
                             @switch (profile()!.status) {
                             @case ('ACTIVE') { Activo }
                             @case ('BLOCKED') { Bloqueado }
@@ -60,10 +59,18 @@
                             @default { Desconocido }
                             }
                         </span>
-                        <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-lock'"></app-button>
-                        <app-button [text]="'Dar de baja'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-trash'"></app-button>
+                    
+                        @if (profile()!.status !== 'DELETED') {
+                        @if (profile()!.status === 'ACTIVE') {
+                        <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-lock'"
+                            (click)="openConfirm('block')"></app-button>
+                        } @else if (profile()!.status === 'BLOCKED') {
+                        <app-button [text]="'Desbloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-unlock'"
+                            (click)="openConfirm('unblock')"></app-button>
+                        }
+                        <app-button [text]="'Dar de baja'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
+                            (click)="openConfirm('delete')"></app-button>
+                        }              
                     </div>
                 </div>
                 <div class="profile-detail-bio">
@@ -78,5 +85,18 @@
         </div>
     </div>
 </main>
+
+@if (confirmAction(); as action) {
+<app-confirm-modal
+    [title]="action === 'block' ? 'Bloquear perfil' : action === 'unblock' ? 'Desbloquear perfil' : 'Dar de baja'"
+    [icon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'"
+    [iconColor]="action === 'delete' ? 'danger' : 'success'"
+    [subtitle]="(profile()!.name || '') + ' ' + (profile()!.surname || '')" [subtitleId]="profile()!.id"
+    [message]="action === 'block' ? '¿Estás seguro que deseas bloquear el perfil seleccionado?' : action === 'unblock' ? '¿Estás seguro que deseas desbloquear el perfil seleccionado?' : '¿Estás seguro que deseas dar de baja el perfil seleccionado? Esta acción no se puede deshacer.'"
+    [confirmText]="action === 'block' ? 'Bloquear' : action === 'unblock' ? 'Desbloquear' : 'Dar de baja'"
+    [confirmIcon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'" [processing]="processingAction()"
+    (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
+</app-confirm-modal>   
+}
 
 <app-footer></app-footer>

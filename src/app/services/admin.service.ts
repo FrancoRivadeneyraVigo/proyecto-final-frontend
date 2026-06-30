@@ -47,4 +47,24 @@ export class AdminService {
       this.httpClient.get<IAdminProfileDetail>(`${this.baseUrl}/${userId}/detail`)
     );
 }
+
+// Bloquear usuario
+async blockProfile(userId: number): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.patch<{ message: string }>(`${this.baseUrl}/${userId}/block`, {})
+  );
+}
+// Desbloquear usuario
+async unblockProfile(userId: number): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.patch<{ message: string }>(`${this.baseUrl}/${userId}/unblock`, {})
+  );
+}
+// Dar de baja
+async deleteProfile(userId: number): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.delete<{ message: string }>(`${this.baseUrl}/${userId}`)
+  );
+}
+
 }
