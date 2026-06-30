@@ -3,25 +3,22 @@
 <main class="admin-page">
     <div class="container-fluid">
         <div class="container-xxl px-0 admin-content">
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a routerLink="/admin">Administrar</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <span class="breadcrumb-active-pill">Detalle del perfil</span>
-                </li>
-            </ol>
-        </nav>
-
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a routerLink="/admin">Administrar</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span class="breadcrumb-active-pill">Detalle del perfil</span>
+                    </li>
+                </ol>
+            </nav>
             @if (loading()) {
             <p class="text-muted text-center py-4">Cargando perfil...</p>
             } @else if (!profile()) {
             <p class="text-muted text-center py-4">No se encontró el perfil</p>
             } @else {
             <section class="section profile-card">
-
                 <div class="profile-detail-header">
                     <div class="profile-avatar">
                         @if (profile()!.photo_url) {
@@ -30,9 +27,8 @@
                         <span class="profile-avatar-initials">
                             {{ (profile()!.name ?? '').charAt(0) }}{{ (profile()!.surname ?? '').charAt(0) }}
                         </span>
-                        }              
+                        }
                     </div>
-
                     <div class="profile-detail-info">
                         <h3>{{ profile()!.name }} {{ profile()!.surname }}</h3>
                         <p class="profile-meta">
@@ -49,9 +45,10 @@
                         </p>
                         <p class="profile-meta">
                             <i class="bi bi-clock-fill"></i>
-                            <span>Último login: {{ profile()!.last_login ? (profile()!.last_login | date:'dd/MM/yyyy HH:mm') : 'Nunca' }}</span>                    </p>
+                            <span>Último login: {{ profile()!.last_login ? (profile()!.last_login | date:'dd/MM/yyyy
+                                HH:mm') : 'Nunca' }}</span>
+                        </p>
                     </div>
-
                     <div class="profile-detail-actions">
                         <span class="badge" [class.badge-active]="profile()!.status === 'ACTIVE'"
                             [class.badge-blocked]="profile()!.status === 'BLOCKED'"
@@ -69,80 +66,15 @@
                             [iconLeft]="'bi bi-trash'"></app-button>
                     </div>
                 </div>
-
                 <div class="profile-detail-bio">
                     <h5>Sobre {{ profile()!.name }}</h5>
                     <p>{{ profile()!.biography || 'Sin biografía' }}</p>
                 </div>
-
             </section>
-
-            <nav class="admin-tabs-nav">
-                <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'sales'"
-                    (click)="setActiveTab('sales')">Ventas</button>
-                <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'purchases'"
-                    (click)="setActiveTab('purchases')">Compras</button>
-                <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reviews'"
-                    (click)="setActiveTab('reviews')">Valoraciones</button>
-                <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'favorites'"
-                    (click)="setActiveTab('favorites')">Favoritos</button>
-                <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reports'"
-                    (click)="setActiveTab('reports')">Reportes</button>
-            </nav>
-            
-            <section class="section admin-tabs-section">
-            
-                <div class="admin-tabs-panel">
-                    @switch (activeTab()) {
-                    @case ('sales') {
-                    @if (sales().length === 0) {
-                    <p class="text-muted text-center py-4">Sin ventas</p>
-                    } @else {
-                    @for (item of sales(); track item.title) {
-                    <div class="article-row">{{ item.title }} — {{ item.status }}</div>
-                    }
-                    }
-                    }
-                    @case ('purchases') {
-                    @if (purchases().length === 0) {
-                    <p class="text-muted text-center py-4">Sin compras</p>
-                    } @else {
-                    @for (item of purchases(); track item.title) {
-                    <div class="article-row">{{ item.title }} — {{ item.status }}</div>
-                    }
-                    }
-                    }
-                    @case ('reviews') {
-                    @if (reviews().length === 0) {
-                    <p class="text-muted text-center py-4">Sin valoraciones</p>
-                    } @else {
-                    @for (item of reviews(); track item.fk_article_id) {
-                    <div class="article-row">⭐ {{ item.stars }} — {{ item.comentario }}</div>
-                    }
-                    }
-                    }
-                    @case ('favorites') {
-                    @if (favorites().length === 0) {
-                    <p class="text-muted text-center py-4">Sin favoritos</p>
-                    } @else {
-                    @for (item of favorites(); track item.fk_articles_id) {
-                    <div class="article-row">Artículo #{{ item.fk_articles_id }}</div>
-                    }
-                    }
-                    }
-                    @case ('reports') {
-                    @if (reports().length === 0) {
-                    <p class="text-muted text-center py-4">Sin reportes</p>
-                    } @else {
-                    @for (item of reports(); track item.fk_articles_id) {
-                    <div class="article-row">{{ item.reason }} — {{ item.comments }} ({{ item.status }})</div>
-                    }
-                    }
-                    }
-                    }
-                </div>  </section>
+            <app-profile-activity-tabs [sales]="sales()" [purchases]="purchases()" [reviews]="reviews()"
+                [favorites]="favorites()" [reports]="reports()">
+            </app-profile-activity-tabs>
             }
-
         </div>
     </div>
 </main>

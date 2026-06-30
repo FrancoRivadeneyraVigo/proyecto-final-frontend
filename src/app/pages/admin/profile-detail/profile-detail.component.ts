@@ -8,12 +8,13 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
+import { ProfileActivityTabsComponent } from '../components/profile-activity-tabs/profile-activity-tabs.component';
 
 type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
 
 @Component({
   selector: 'app-profile-detail',
-  imports: [RouterLink, CommonModule, AvatarComponent, ButtonComponent, NavbarComponent, FooterComponent],
+  imports: [RouterLink, CommonModule, AvatarComponent, ButtonComponent, NavbarComponent, FooterComponent, ProfileActivityTabsComponent],
   templateUrl: './profile-detail.component.html',
   styleUrl: './profile-detail.component.css',
 })

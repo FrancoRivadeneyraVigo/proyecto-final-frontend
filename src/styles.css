@@ -305,3 +305,18 @@ h5 {
     display: inline-flex;
     align-items: center;
 }
+
+/*==Filter tabs===*/
+.filter-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+    .filter-tabs {
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
