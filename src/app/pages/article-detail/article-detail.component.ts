@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
@@ -12,7 +12,6 @@ import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from './report-article/report-article.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-detail',
@@ -52,7 +51,7 @@ export class ArticleDetailComponent implements OnInit {
 
   get isOwner(): boolean {
     const userId = this.currentUser()?.fk_usuarios_id;
-    return !!userId && userId === this.article()?.fk_usuarios_id;
+    return !!userId && userId === this.article()?.fk_users_id;
   }
 
   get isLoggedIn(): boolean {

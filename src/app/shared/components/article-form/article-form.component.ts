@@ -227,7 +227,7 @@ export class ArticleFormComponent {
 
     const currentUserId = this.authService.currentUser()?.fk_usuarios_id;
 
-    if (currentUserId !== article.fk_usuarios_id) {
+    if (currentUserId !== article.fk_users_id) {
       toast.error('No tienes permiso para editar este artículo');
       await this.goToOwnProfile();
       return;
