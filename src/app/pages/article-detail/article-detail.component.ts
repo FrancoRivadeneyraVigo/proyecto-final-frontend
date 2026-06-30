@@ -58,7 +58,8 @@ export class ArticleDetailComponent implements OnInit {
 
   get images(): string[] {
     const article = this.article();
-    return article?.images?.length ? article.images : ['images/hero-watch.webp'];
+    const urls = article?.images?.map((image) => image.image_url) ?? [];
+    return urls.length ? urls : ['images/hero-watch.webp'];
   }
 
   get currentImage(): string {
@@ -179,7 +180,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   onEditArticle(): void {
-    this.router.navigate(['/sell-item'], { queryParams: { id: this.articleId } });
+    this.router.navigate(['/articles', this.articleId, 'edit']);
   }
 
   async onContact(): Promise<void> {

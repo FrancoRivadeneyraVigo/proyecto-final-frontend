@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { IArticle } from '../shared/models/article.interface';
 import { IArticlesPaginatedResponse } from '../shared/models/article.interface';
 import { IArticleDetail, IArticleSummary } from '../shared/models/article-detail.interface';
-import { ICreateArticle } from '../shared/models/icreate-article.component';
+import { ICreateArticle, IUpdateArticle } from '../shared/models/icreate-article.component';
 
 @Injectable({
   providedIn: 'root',
@@ -108,6 +108,70 @@ export class ArticleService {
     }
 
     return createdArticle;
+  }
+
+  async updateArticle(
+    articleId: number,
+    article: IUpdateArticle
+  ): Promise<IArticle> {
+
+    const response = await lastValueFrom(
+      this.httpClient.put<{ article: IArticle }>(
+        `${this.articlesUrl}/${articleId}`,
+        article
+      )
+    );
+
+    return response.article;
+  }
+
+  async deleteArticleImages(
+    articleId: number,
+    imageIds: number[]
+  ): Promise<void> {
+
+    await lastValueFrom(
+      this.httpClient.delete(
+        `${this.articlesUrl}/${articleId}/images`,
+        { body: { image_ids: imageIds } }
+      )
+    );
+  }
+
+  // Agrupa, igual que al crear, la actualización de los datos del
+  // artículo junto con la subida de imágenes nuevas y la eliminación
+  // de las imágenes existentes que el usuario haya quitado
+  async updateArticleWithImages(
+    articleId: number,
+    article: IUpdateArticle,
+    newImages: File[],
+    removedImageIds: number[]
+  ): Promise<IArticle> {
+
+    const updatedArticle = await this.updateArticle(articleId, article);
+
+    if (removedImageIds.length > 0) {
+      await this.deleteArticleImages(articleId, removedImageIds);
+    }
+
+    if (newImages.length > 0) {
+      await this.uploadImages(articleId, newImages);
+    }
+
+    return updatedArticle;
+  }
+
+  // Saca un artículo del estado DRAFT y lo pasa a PUBLISHED
+  async publishArticle(articleId: number): Promise<IArticle> {
+
+    const response = await lastValueFrom(
+      this.httpClient.patch<{ article: IArticle }>(
+        `${this.articlesUrl}/${articleId}/publish`,
+        {}
+      )
+    );
+
+    return response.article;
   }
 
 }
