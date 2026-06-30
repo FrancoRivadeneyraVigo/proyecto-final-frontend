@@ -1,19 +1,19 @@
 .brand-icon img.brand-logo {
     height: 40px;
-    width: auto; 
+    width: auto;
 }
 
 .navbar {
     width: 100%;
     padding: 2rem 2rem;
     background-color: var(--bs-surface);
-    
+
     .container-fluid {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;     
-        }
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 .navbar-nav .nav-link {
@@ -34,7 +34,25 @@
 
 .navbar-nav .nav-link .bi {
     font-size: 1.1rem;
-    color: inherit; }
+    color: inherit;
+}
+
+/* Botones del menu en mobile */
+.navbar-toggler-custom {
+    border-radius: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease-in-out;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-toggler-custom .bi-list {
+    font-size: 1.8rem;
+    color: inherit;
+}
 
 .navbar-avatar-link {
     display: inline-flex;
