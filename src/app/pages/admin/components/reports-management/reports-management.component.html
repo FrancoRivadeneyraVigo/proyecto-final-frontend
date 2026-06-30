@@ -64,5 +64,18 @@
         </li>
         }
     </ul>
+    @if (response() && response()!.total_pages > 1) {
+    <div class="pagination">
+        <app-button [text]="'Anterior'" [class]="'btn-outline-primary'" [disabled]="currentPage() <= 1"
+            (click)="goToPreviousPage()">
+        </app-button>
+        <span class="pagination-info">
+            Página {{ currentPage() }} de {{ response()!.total_pages }}
+        </span>
+        <app-button [text]="'Siguiente'" [class]="'btn-outline-primary'"
+            [disabled]="currentPage() >= response()!.total_pages" (click)="goToNextPage()">
+        </app-button>
+    </div>
+    }
     }
 </section>

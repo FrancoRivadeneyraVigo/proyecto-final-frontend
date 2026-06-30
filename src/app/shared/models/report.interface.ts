@@ -28,3 +28,11 @@ export interface IAdminReport {
   surname: string;
   email: string;
 }
+
+export interface IReportsPaginatedResponse {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  data: IAdminReport[];
+}

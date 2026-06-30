@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ReportService } from '../../../../services/report.service';
 import {
-  IAdminReport,
+  IReportsPaginatedResponse,
   ReportReason,
   ReportStatusFilter,
 } from '../../../../shared/models/report.interface';
@@ -26,25 +26,44 @@ const REASON_LABELS: Record<ReportReason, string> = {
 export class ReportsManagementComponent implements OnInit {
   private reportService = inject(ReportService);
 
-  reports = signal<IAdminReport[]>([]);
+  readonly pageSize = 10;
+
+  response = signal<IReportsPaginatedResponse | null>(null);
   activeFilter = signal<ReportStatusFilter>('PENDING');
+  currentPage = signal(1);
   loading = signal(false);
+
+  reports = computed(() => this.response()?.data ?? []);
 
   ngOnInit(): void {
     this.loadReports('PENDING');
   }
 
-  async loadReports(filter: ReportStatusFilter): Promise<void> {
+  async loadReports(filter: ReportStatusFilter, page = 1): Promise<void> {
     this.activeFilter.set(filter);
+    this.currentPage.set(page);
     this.loading.set(true);
     try {
-      const result = await this.reportService.getReports(filter);
-      this.reports.set(result);
+      const result = await this.reportService.getReports(filter, page, this.pageSize);
+      this.response.set(result);
     } catch (error) {
       console.error('Error al cargar reportes:', error);
-      this.reports.set([]);
+      this.response.set(null);
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage() > 1) {
+      this.loadReports(this.activeFilter(), this.currentPage() - 1);
+    }
+  }
+
+  goToNextPage(): void {
+    const totalPages = this.response()?.total_pages ?? 1;
+    if (this.currentPage() < totalPages) {
+      this.loadReports(this.activeFilter(), this.currentPage() + 1);
     }
   }
 

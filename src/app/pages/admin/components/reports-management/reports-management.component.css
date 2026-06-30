@@ -72,6 +72,20 @@
     flex-shrink: 0;
 }
 
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 8px;
+}
+
+.pagination-info {
+    font-size: 0.875rem;
+    color: var(--bs-body-color);
+    white-space: nowrap;
+}
+
 @media (max-width: 767px) {
     .report-row {
         flex-direction: column;

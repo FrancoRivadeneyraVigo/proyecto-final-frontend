@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
-  IAdminReport,
   ICreateReportRequest,
+  IReportsPaginatedResponse,
   ReportStatusFilter,
 } from '../shared/models/report.interface';
 
@@ -19,9 +19,22 @@ export class ReportService {
     return lastValueFrom(this.httpClient.post<void>(this.baseUrl, payload));
   }
 
-  getReports(status?: ReportStatusFilter): Promise<IAdminReport[]> {
-    const url =
-      status && status !== 'all' ? `${this.baseUrl}?status=${status}` : this.baseUrl;
-    return lastValueFrom(this.httpClient.get<IAdminReport[]>(url));
+  getReports(
+    status?: ReportStatusFilter,
+    page = 1,
+    limit = 10
+  ): Promise<IReportsPaginatedResponse> {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (status && status !== 'all') {
+      params.set('status', status);
+    }
+
+    return lastValueFrom(
+      this.httpClient.get<IReportsPaginatedResponse>(`${this.baseUrl}?${params.toString()}`)
+    );
   }
 }
