@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-custom py-4 bg-white">
     <div class="container-fluid">
-        <div class="container-xxl d-flex align-items-center px-0 py-0">
+        <div class="container-xxl d-flex justify-content-between align-items-center px-0 py-0 flex-wrap flex-lg-nowrap">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <div class="brand-icon">
@@ -8,10 +8,14 @@
                 </div>
             </a>
             <!-- Mobile button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler-custom bg-light border-0 p-2 d-lg-none my-auto lh-1" type="button"
+                data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+
+                <i class="bi bi-list text-primary fw-bold fs-2 d-block"></i>
+
             </button>
-            <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+            <div class="collapse navbar-collapse justify-content-between bg-whitemt-2 mt-lg-0 pt-3 p-lg-0"
+                id="mainNavbar">
                 <!-- Menu -->
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
@@ -22,15 +26,35 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']">Vender</a>
-                    </li>           
+                    </li>
                 </ul>
+
+                <hr class="text-black-50 my-2 w-100 d-lg-none">
 
                 @if (!currentUser()) {
                 <!-- Not logged -->
-                <div class="d-flex gap-3 align-items-center">
-                    <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
-                        [iconLeft]="'bi bi-person-circle'">
-                    </app-button>
+
+                <!-- Mobile menu -->
+
+                <ul class="navbar-nav d-flex flex-column gap-2 align-items-start w-100 px-3 pb-3 pt-2 d-lg-none ps-0">
+                    <li class="nav-item">
+                        <a routerLink="/register" class="nav-link">
+                            <i class="bi bi-person-circle"></i> Crear cuenta
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/login" class="nav-link">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                        </a>
+                    </li>
+                </ul>
+                <!-- Computer -->
+                <div class="d-none d-lg-flex gap-3 align-items-center">
+                    <a routerLink="/register">
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-person-circle'">
+                        </app-button>
+                    </a>
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-box-arrow-in-right'">
@@ -42,15 +66,17 @@
                 <div class="d-flex gap-3 align-items-center">
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
                     <a routerLink="/chats">
-                        <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                        <app-button [class]="'btn-light'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-envelope'"></app-button>
                     </a>
                     <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
                     @if (currentUser(); as user) {
                     <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
-                    <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
+                        <app-avatar [name]="user.name" [surname]="user.surname"
+                            [photoUrl]="user.photo_url"></app-avatar>
                     </a>
-                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-box-arrow-right'"
-                        (click)="onLogout()"></app-button>
+                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()"></app-button>
                     }
                 </div>
                 }

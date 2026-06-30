@@ -1,0 +1,19 @@
+<section class="stats-section w-100 py-5 text-white">
+    <div class="container ">
+        <div class="row justify-content-center text-center">
+            <div class="col-12 col-md-8 text-center">
+                <h3 class="main-title">Líderes en el sector</h3>
+                <p class="description">Conectamos compradores y vendedores de relojes de segunda mano en una plataforma segura y confiable.</p>
+            </div>
+        </div>
+
+        <div class="stats-group justify-content-center text-center">
+            @for(stat of stats; track stat.label){
+                <div class=" stat-item col-md-3 col-12 mb-4 ">
+                    <h2 class="stat-value">{{ stat.value }}</h2>
+                    <p class="stat-label mb-0"> {{ stat.label }}</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
