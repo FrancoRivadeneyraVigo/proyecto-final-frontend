@@ -19,3 +19,5 @@ export interface ICreateArticle {
     fk_models_id: number;
     publish?: boolean;
 }
+
+export type IUpdateArticle = Omit<ICreateArticle, 'publish'>;
