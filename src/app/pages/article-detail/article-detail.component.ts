@@ -12,6 +12,7 @@ import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from './report-article/report-article.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-detail',
@@ -42,12 +43,13 @@ export class ArticleDetailComponent implements OnInit {
 
   currentUser = this.authService.currentUser;
 
-  async ngOnInit(): Promise<void> {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    this.articleId = idParam ? Number(idParam) : 0;
-
-    await this.loadArticle();
-  }
+ngOnInit(): void {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+        const idParam = params.get('id');
+        this.articleId = idParam ? Number(idParam) : 0;
+        this.loadArticle();
+    });
+}
 
   get isOwner(): boolean {
     const userId = this.currentUser()?.fk_usuarios_id;
