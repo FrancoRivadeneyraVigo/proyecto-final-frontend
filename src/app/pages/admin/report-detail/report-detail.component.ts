@@ -8,6 +8,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message';
 
 const REASON_LABELS: Record<ReportReason, string> = {
   fake_item: 'Artículo falso',
@@ -53,7 +54,7 @@ export class ReportDetailComponent {
       const result = await this.reportService.getReportDetail(id);
       this.report.set(result);
     } catch (error) {
-      console.error('Error al cargar el reporte:', error);
+      toast.error(getHttpErrorMessage(error, 'No se pudo cargar el reporte. Inténtalo de nuevo más tarde.'));
       this.report.set(null);
     } finally {
       this.loading.set(false);
@@ -97,8 +98,7 @@ export class ReportDetailComponent {
       await this.loadReport(report.id);
       this.confirmAction.set(null);
     } catch (error) {
-      console.error(`Error al ejecutar la acción "${action}":`, error);
-      toast.error('No se pudo completar la acción. Inténtalo de nuevo.');
+      toast.error(getHttpErrorMessage(error, 'No se pudo completar la acción. Inténtalo de nuevo.'));
     } finally {
       this.processingAction.set(false);
     }
