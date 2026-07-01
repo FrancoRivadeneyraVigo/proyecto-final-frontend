@@ -63,17 +63,13 @@
     display: grid;
     grid-template-columns: minmax(280px, 370px) minmax(0, 1fr);
     background: var(--bs-surface);
-    border: 1px solid var(--bs-primary-border-subtle-hover);
+    border-radius: 8px;
 }
 
 .article-panel,
 .conversation-panel {
     min-width: 0;
     padding: 22px;
-}
-
-.article-panel {
-    border-right: 1px solid var(--bs-primary-border-subtle-hover);
 }
 
 .conversation-panel {
@@ -300,10 +296,6 @@
         grid-template-columns: 1fr;
     }
 
-    .article-panel {
-        border-right: 0;
-        border-bottom: 1px solid var(--bs-primary-border-subtle-hover);
-    }
 }
 
 @media (max-width: 560px) {
@@ -327,8 +319,7 @@
     }
 
     .chat-layout {
-        border-left: 0;
-        border-right: 0;
+        border-radius: 0;
     }
 
     .article-panel,
