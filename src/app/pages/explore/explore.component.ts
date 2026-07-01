@@ -46,7 +46,6 @@ const GENDER_TRANSLATIONS: Record<string, string> = {
 
 @Component({
   selector: 'app-explore',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
