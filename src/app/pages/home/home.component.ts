@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ArticleService } from '../../services/article.service';
-import {  IArticlesPaginatedResponse } from '../../shared/models/article.interface';
+import { IArticlesPaginatedResponse } from '../../shared/models/article.interface';
 
 import { RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
@@ -24,8 +25,25 @@ export class HomeComponent implements OnInit {
 
   arrArticles = signal<IArticleSummary[]>([]);
   brands = signal<IBrand[]>([]);
-  limit = signal<number>(6)
   searchTerm = signal<string>('');
+
+  private getBackendErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendError = error.error;
+
+      if (typeof backendError === 'string') {
+        return backendError;
+      }
+
+      if (Array.isArray(backendError)) {
+        return backendError.join(', ');
+      }
+
+      return backendError?.message || backendError?.error || fallback;
+    }
+
+    return fallback;
+  }
 
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement
@@ -48,11 +66,10 @@ export class HomeComponent implements OnInit {
 
     } catch (error: any) {
 
-      if(error.status == 404) {
+      if (error.status == 404) {
         this.arrArticles.set([]);
       } else {
-        toast.error('Hubo un problema al realizar la búsqueda. Inténtalo más tarde.');
-        console.error('Error detallado:', error)
+        toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al realizar la búsqueda'));
       }
     }
   }
@@ -67,21 +84,19 @@ export class HomeComponent implements OnInit {
       const response: IArticlesPaginatedResponse = await this.articleService.getAll(3);
       this.arrArticles.set(response.data)
 
-    } catch (error) {
-      toast.error('Hubo un problema al cargar los artículos. Inténtalo más tarde.');
-      console.error('Error detallado:', error);
+    } catch (error: any) {
+      toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al cargar los artículos'));
     }
   }
 
   async loadBrands() {
-    try{
+    try {
       const response = await this.brandService.getAll();
       const brandIds = [1, 2, 60013, 30002, 4, 7];
       this.brands.set(response.data.filter(b => brandIds.includes(b.id) && b.logo_url));
 
-    } catch (error) {
-      toast.error('Hubo un problema al cargar las marcas. Inténtalo más tarde.');
-      console.error('Error detallado:', error)
+    } catch (error: any) {
+      toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al cargar las marcas'));
     }
   }
 
