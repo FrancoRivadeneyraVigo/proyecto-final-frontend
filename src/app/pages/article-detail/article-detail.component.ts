@@ -132,10 +132,16 @@ ngOnInit(): void {
       return;
     }
 
-    this.isLoading.set(false);
-
-    const similar = await this.articleService.getSimilarArticles(this.articleId);
-    this.similarArticles.set(similar);
+    try {
+      const similar = await this.articleService.getSimilarArticles(this.articleId);
+      console.debug('Similar articles response for', this.articleId, similar);
+      this.similarArticles.set(similar);
+    } catch (e) {
+      console.warn('Error loading similar articles for', this.articleId, e);
+      this.similarArticles.set([]);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   prevImage(): void {

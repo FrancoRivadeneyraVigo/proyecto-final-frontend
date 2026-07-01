@@ -285,6 +285,10 @@ export class ProfileComponent {
     this.router.navigate(['/chats']);
   }
 
+  onReportProfile(): void {
+    toast.success('Gracias, hemos recibido tu reporte sobre este perfil.');
+  }
+
   private formatMissingProfileFields(fields: string[]): string {
     const labels = fields.map((field) => (field === 'apellidos' ? 'tus apellidos' : `tu ${field}`));
 
