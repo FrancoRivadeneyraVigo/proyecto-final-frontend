@@ -4,6 +4,9 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   ICreateReportRequest,
+  IModerationMessageResponse,
+  IRejectReportRequest,
+  IReportDetail,
   IReportsPaginatedResponse,
   ReportStatusFilter,
 } from '../shared/models/report.interface';
@@ -14,6 +17,7 @@ import {
 export class ReportService {
   private httpClient = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/reports`;
+  private moderationUrl = `${environment.apiUrl}/moderacion`;
 
   createReport(payload: ICreateReportRequest): Promise<void> {
     return lastValueFrom(this.httpClient.post<void>(this.baseUrl, payload));
@@ -35,6 +39,28 @@ export class ReportService {
 
     return lastValueFrom(
       this.httpClient.get<IReportsPaginatedResponse>(`${this.baseUrl}?${params.toString()}`)
+    );
+  }
+
+  getReportDetail(id: number): Promise<IReportDetail> {
+    return lastValueFrom(this.httpClient.get<IReportDetail>(`${this.baseUrl}/${id}`));
+  }
+
+  rejectReport(id: number, payload: IRejectReportRequest = {}): Promise<IModerationMessageResponse> {
+    return lastValueFrom(
+      this.httpClient.patch<IModerationMessageResponse>(
+        `${this.moderationUrl}/reportes/${id}/rechazar`,
+        payload
+      )
+    );
+  }
+
+  withdrawReportedArticle(articleId: number): Promise<IModerationMessageResponse> {
+    return lastValueFrom(
+      this.httpClient.patch<IModerationMessageResponse>(
+        `${this.moderationUrl}/articulos/${articleId}/retirar`,
+        {}
+      )
     );
   }
 }

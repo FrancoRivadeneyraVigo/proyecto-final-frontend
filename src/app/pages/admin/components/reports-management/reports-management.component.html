@@ -24,13 +24,15 @@
     } @else {
     <ul class="list-group">
         @for (report of reports(); track report.id) {
-        <li class="list-group-item report-row">
+        <li class="list-group-item list-group-item-action report-row"
+            [routerLink]="['/admin/reports', report.id]">
             <div class="report-main">
                 <p class="body-medium text-muted report-reporter">
                     Reportado por: {{ report.name }} {{ report.surname }}
                 </p>
                 <h5 class="report-reason">{{ getReasonLabel(report.reason) }}</h5>
-                <a class="body-medium report-article-id" [routerLink]="['/articles', report.article_id]">
+                <a class="body-medium report-article-id" [routerLink]="['/articles', report.article_id]"
+                    (click)="$event.stopPropagation()">
                     <i class="bi bi-tag-fill"></i>
                     ID Artículo: {{ report.article_id }}
                 </a>

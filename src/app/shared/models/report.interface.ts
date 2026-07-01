@@ -36,3 +36,29 @@ export interface IReportsPaginatedResponse {
   total_pages: number;
   data: IAdminReport[];
 }
+
+export interface IReportDetail {
+  id: number;
+  reason: ReportReason;
+  comments: string;
+  status: ReportStatus;
+  created_at: string;
+  resolved_at: string | null;
+  resolution: string | null;
+  moderator_note: string | null;
+  article_id: number;
+  reporter_id: number;
+  moderator_id: number | null;
+  article_title: string;
+  article_status: string;
+  seller_id: number;
+  reporter_email: string;
+}
+
+export interface IRejectReportRequest {
+  moderator_note?: string;
+}
+
+export interface IModerationMessageResponse {
+  message: string;
+}
