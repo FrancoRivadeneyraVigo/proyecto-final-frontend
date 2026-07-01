@@ -7,8 +7,8 @@ import {
   IModerationMessageResponse,
   IRejectReportRequest,
   IReportDetail,
+  IReportFilters,
   IReportsPaginatedResponse,
-  ReportStatusFilter,
 } from '../shared/models/report.interface';
 
 @Injectable({
@@ -23,18 +23,31 @@ export class ReportService {
     return lastValueFrom(this.httpClient.post<void>(this.baseUrl, payload));
   }
 
-  getReports(
-    status?: ReportStatusFilter,
-    page = 1,
-    limit = 10
-  ): Promise<IReportsPaginatedResponse> {
+  getReports(filters: IReportFilters = {}): Promise<IReportsPaginatedResponse> {
     const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
+      page: (filters.page ?? 1).toString(),
+      limit: (filters.limit ?? 10).toString(),
     });
 
-    if (status && status !== 'all') {
-      params.set('status', status);
+    if (filters.status && filters.status !== 'all') {
+      params.set('status', filters.status);
+    }
+
+    const search = filters.search?.trim();
+    if (search) {
+      params.set('search', search);
+    }
+
+    if (filters.reason) {
+      params.set('reason', filters.reason);
+    }
+
+    if (filters.created_from) {
+      params.set('created_from', filters.created_from);
+    }
+
+    if (filters.created_to) {
+      params.set('created_to', filters.created_to);
     }
 
     return lastValueFrom(

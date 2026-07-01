@@ -1,19 +1,66 @@
 <div class="filter-tabs">
     <app-button [text]="'Pendientes'"
         [class]="activeFilter() === 'PENDING' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
-        (click)="loadReports('PENDING')">
+        (click)="onStatusChange('PENDING')">
     </app-button>
     <app-button [text]="'En revisión'"
-        [class]="activeFilter() === 'UNDER_REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
-        (click)="loadReports('UNDER_REVIEW')">
+        [class]="activeFilter() === 'UNDER REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="onStatusChange('UNDER REVIEW')">
     </app-button>
     <app-button [text]="'Resueltos'"
         [class]="activeFilter() === 'RESOLVED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
-        (click)="loadReports('RESOLVED')">
+        (click)="onStatusChange('RESOLVED')">
+    </app-button>
+    <app-button [text]="'Rechazados'"
+        [class]="activeFilter() === 'REJECTED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="onStatusChange('REJECTED')">
     </app-button>
     <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
-        [fullWidth]="true" (click)="loadReports('all')">
+        [fullWidth]="true" (click)="onStatusChange('all')">
     </app-button>
+</div>
+
+<div class="search-bar">
+    <input type="text" class="search-input"
+        placeholder="Ej: 123, 30001, Rolex, ana@email.com, parece falso"
+        [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="applyFilters()" />
+    <app-button [text]="'Buscar'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-search'"
+        (click)="applyFilters()">
+    </app-button>
+</div>
+<p class="search-hint body-small text-muted">
+    ID reporte · ID artículo · título del artículo · email o nombre del usuario · texto del comentario
+</p>
+
+<div class="advanced-filters">
+    <div class="filter-field">
+        <label class="filter-label" for="reason-filter">Motivo</label>
+        <select id="reason-filter" class="filter-select" [ngModel]="selectedReason()"
+            (ngModelChange)="selectedReason.set($event)">
+            <option value="">Todos los motivos</option>
+            @for (option of reasonOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+    </div>
+    <div class="filter-field">
+        <label class="filter-label" for="created-from">Desde</label>
+        <input id="created-from" type="date" class="filter-input" [ngModel]="createdFrom()"
+            (ngModelChange)="createdFrom.set($event)" />
+    </div>
+    <div class="filter-field">
+        <label class="filter-label" for="created-to">Hasta</label>
+        <input id="created-to" type="date" class="filter-input" [ngModel]="createdTo()"
+            (ngModelChange)="createdTo.set($event)" />
+    </div>
+    <div class="filter-actions">
+        <app-button [text]="'Aplicar filtros'" [class]="'btn-primary'" [showIconLeft]="true"
+            [iconLeft]="'bi bi-funnel'" (click)="applyFilters()">
+        </app-button>
+        <app-button [text]="'Limpiar filtros'" [class]="'btn-outline-primary'" (click)="clearFilters()">
+        </app-button>
+    </div>
 </div>
 
 <section class="section">
@@ -54,13 +101,9 @@
             <div class="report-badge-wrapper">
                 <span class="badge" [class.badge-active]="report.status === 'RESOLVED'"
                     [class.badge-blocked]="report.status === 'PENDING'"
-                    [class.badge-deleted]="report.status === 'UNDER_REVIEW'">
-                    @switch (report.status) {
-                    @case ('PENDING') { Pendiente }
-                    @case ('UNDER_REVIEW') { En revisión }
-                    @case ('RESOLVED') { Resuelto }
-                    @default { Desconocido }
-                    }
+                    [class.badge-deleted]="report.status === 'UNDER REVIEW'"
+                    [class.badge-rejected]="report.status === 'REJECTED'">
+                    {{ getStatusLabel(report.status) }}
                 </span>
             </div>
         </li>

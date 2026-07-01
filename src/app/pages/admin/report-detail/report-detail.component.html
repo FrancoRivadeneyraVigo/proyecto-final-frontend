@@ -62,15 +62,11 @@
                     <div class="report-detail-actions">
                         <span class="badge" [class.badge-active]="report()!.status === 'RESOLVED'"
                             [class.badge-blocked]="report()!.status === 'PENDING'"
-                            [class.badge-deleted]="report()!.status === 'UNDER_REVIEW'">
-                            @switch (report()!.status) {
-                            @case ('PENDING') { Pendiente }
-                            @case ('UNDER_REVIEW') { En revisión }
-                            @case ('RESOLVED') { Resuelto }
-                            @default { Desconocido }
-                            }
+                            [class.badge-deleted]="report()!.status === 'UNDER REVIEW'"
+                            [class.badge-rejected]="report()!.status === 'REJECTED'">
+                            {{ getStatusLabel(report()!.status) }}
                         </span>
-                        @if (report()!.status !== 'RESOLVED') {
+                        @if (canModerate(report()!.status)) {
                         <app-button [text]="'Rechazar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-x-circle'" (click)="openConfirm('reject')"></app-button>
                         <app-button [text]="'Validar'" [class]="'btn-outline-primary'" [showIconLeft]="true"

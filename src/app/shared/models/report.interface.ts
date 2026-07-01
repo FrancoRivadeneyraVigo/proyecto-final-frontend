@@ -6,9 +6,19 @@ export type ReportReason =
   | 'inappropriate_content'
   | 'other';
 
-export type ReportStatus = 'PENDING' | 'UNDER_REVIEW' | 'RESOLVED';
+export type ReportStatus = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'REJECTED';
 
 export type ReportStatusFilter = ReportStatus | 'all';
+
+export interface IReportFilters {
+  status?: ReportStatusFilter;
+  search?: string;
+  reason?: ReportReason;
+  created_from?: string;
+  created_to?: string;
+  page?: number;
+  limit?: number;
+}
 
 export interface ICreateReportRequest {
   reason: ReportReason;

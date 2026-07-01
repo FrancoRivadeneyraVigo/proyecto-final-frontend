@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { ReportService } from '../../../services/report.service';
-import { IReportDetail, ReportReason } from '../../../shared/models/report.interface';
+import { IReportDetail, ReportReason, ReportStatus } from '../../../shared/models/report.interface';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
@@ -17,6 +17,13 @@ const REASON_LABELS: Record<ReportReason, string> = {
   spam: 'Spam',
   inappropriate_content: 'Contenido inapropiado',
   other: 'Otro',
+};
+
+const STATUS_LABELS: Record<ReportStatus, string> = {
+  PENDING: 'Pendiente',
+  'UNDER REVIEW': 'En revisión',
+  RESOLVED: 'Resuelto',
+  REJECTED: 'Rechazado',
 };
 
 type ConfirmAction = 'reject' | 'validate' | null;
@@ -63,6 +70,14 @@ export class ReportDetailComponent {
 
   getReasonLabel(reason: ReportReason): string {
     return REASON_LABELS[reason] ?? reason;
+  }
+
+  getStatusLabel(status: ReportStatus): string {
+    return STATUS_LABELS[status] ?? status;
+  }
+
+  canModerate(status: ReportStatus): boolean {
+    return status !== 'RESOLVED' && status !== 'REJECTED';
   }
 
   openConfirm(action: ConfirmAction): void {

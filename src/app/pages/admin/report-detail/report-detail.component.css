@@ -80,6 +80,11 @@
     text-decoration: underline;
 }
 
+.badge.badge-rejected {
+    background: var(--bs-dark);
+    color: var(--bs-surface);
+}
+
 @media (max-width: 768px) {
     .report-detail-header {
         flex-direction: column;
