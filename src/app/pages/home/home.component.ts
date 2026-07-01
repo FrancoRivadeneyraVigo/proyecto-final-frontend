@@ -5,7 +5,7 @@ import {  IArticlesPaginatedResponse } from '../../shared/models/article.interfa
 
 import { RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { IBrand } from '../../shared/models/brand.interface';
+import { IBrand } from '../../shared/models/ibrand.interface';
 import { BrandService } from '../../services/brand.service';
 import { StatsComponent } from './components/stats/stats.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
