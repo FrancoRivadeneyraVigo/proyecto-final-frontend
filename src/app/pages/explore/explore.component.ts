@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toast } from 'ngx-sonner';
 
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
@@ -366,29 +367,27 @@ export class ExploreComponent implements OnInit {
 
   // Favoritos
   async toggleFavorite(article: IArticleSummary) {
+    const originalStatus = article.is_favorite;
 
     try {
-
-      if (article.is_favorite) {
-
-        await this.articleService.removeFavorite(article.id);
-
-      } else {
-
-        await this.articleService.addFavorite(article.id);
-
-      }
-
       article.is_favorite = !article.is_favorite;
-
       this.filteredArticles.update(v => [...v]);
 
+      if (originalStatus) {
+        await this.articleService.removeFavorite(article.id);
+        toast.success('Eliminado de tus favoritos correctamente');
+      } else {
+        await this.articleService.addFavorite(article.id);
+        toast.success('Añadido a tus favoritos correctamente');
+      }
+
     } catch (e) {
+      article.is_favorite = originalStatus;
+      this.filteredArticles.update(v => [...v]);
 
-      console.error(e);
-
+      console.error('Error al gestionar favoritos:', e);
+      
+      toast.error('No se pudo actualizar tus favoritos. Inténtalo de nuevo.');
     }
-
   }
-
 }
