@@ -381,13 +381,15 @@ export class ExploreComponent implements OnInit {
         toast.success('Añadido a tus favoritos correctamente');
       }
 
-    } catch (e) {
+    } catch (e: any) {
       article.is_favorite = originalStatus;
       this.filteredArticles.update(v => [...v]);
 
       console.error('Error al gestionar favoritos:', e);
       
-      toast.error('No se pudo actualizar tus favoritos. Inténtalo de nuevo.');
+      const errorMessage = e?.error?.message || e?.message || 'Error inesperado del servidor';
+      
+      toast.error(`No se pudo actualizar tus favoritos: ${errorMessage}`);
     }
   }
 }
