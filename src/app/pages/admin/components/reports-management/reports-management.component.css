@@ -40,6 +40,12 @@
     gap: 6px;
     margin: 0;
     color: var(--bs-primary);
+    text-decoration: none;
+    width: fit-content;
+}
+
+.report-article-id:hover {
+    text-decoration: underline;
 }
 
 .report-article-id i {

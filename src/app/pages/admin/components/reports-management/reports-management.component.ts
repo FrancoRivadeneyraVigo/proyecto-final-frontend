@@ -7,6 +7,7 @@ import {
   ReportStatusFilter,
 } from '../../../../shared/models/report.interface';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { RouterLink } from '@angular/router';
 
 const REASON_LABELS: Record<ReportReason, string> = {
   fake_item: 'Artículo falso',
@@ -19,7 +20,7 @@ const REASON_LABELS: Record<ReportReason, string> = {
 
 @Component({
   selector: 'app-reports-management',
-  imports: [ButtonComponent, DatePipe],
+  imports: [ButtonComponent, DatePipe, RouterLink],
   templateUrl: './reports-management.component.html',
   styleUrl: './reports-management.component.css',
 })
