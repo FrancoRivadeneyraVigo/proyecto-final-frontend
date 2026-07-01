@@ -54,6 +54,7 @@ export class ProfileDetailComponent {
       this.reports.set(result.reports);
     } catch (error) {
       console.error('Error al cargar el perfil:', error);
+      toast.error('No se pudo cargar el perfil. Inténtalo más tarde.');
       this.profile.set(null);
     } finally {
       this.loading.set(false);

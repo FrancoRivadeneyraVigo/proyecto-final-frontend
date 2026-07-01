@@ -1,3 +1,5 @@
+declare const bootstrap: any;
+
 import {
   AfterViewInit,
   Component,
@@ -10,7 +12,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Modal } from 'bootstrap';
 import { toast } from 'ngx-sonner';
 import { ReportService } from '../../../services/report.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -51,7 +52,7 @@ export class ReportArticleComponent implements AfterViewInit, OnDestroy {
     ]),
   });
 
-  private modalInstance?: Modal;
+  private modalInstance?: any;
   private onHiddenHandler = (): void => {
     this.reportForm.reset();
     this.isSubmitting.set(false);
@@ -63,7 +64,7 @@ export class ReportArticleComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.modalInstance = Modal.getOrCreateInstance(element);
+    this.modalInstance = bootstrap.Modal.getOrCreateInstance(element);
     element.addEventListener('hidden.bs.modal', this.onHiddenHandler);
   }
 
