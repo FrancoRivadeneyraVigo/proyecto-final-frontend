@@ -3,7 +3,7 @@
 
     <div class="article-list-items">
         @for (article of articles(); track article.id) {
-        <app-article-card [article]="article" />
+        <app-article-card [article]="article" [isOwner]="isOwner()" (deleted)="deleted.emit($event)" />
         }
     </div>
 </div>
