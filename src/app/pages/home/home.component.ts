@@ -46,8 +46,14 @@ export class HomeComponent implements OnInit {
       const result = await this.articleService.searchArticles(term)
       this.arrArticles.set(result)
 
-    } catch (error) {
-      console.error('Error al buscar:', error)
+    } catch (error: any) {
+
+      if(error.status == 404) {
+        this.arrArticles.set([]);
+      } else {
+        toast.error('Hubo un problema al realizar la búsqueda. Inténtalo más tarde.');
+        console.error('Error detallado:', error)
+      }
     }
   }
 
@@ -62,17 +68,20 @@ export class HomeComponent implements OnInit {
       this.arrArticles.set(response.data)
 
     } catch (error) {
-      console.error('Error al cargar los articulos:', error);
+      toast.error('Hubo un problema al cargar los artículos. Inténtalo más tarde.');
+      console.error('Error detallado:', error);
     }
   }
 
   async loadBrands() {
     try{
-      const response = await this.brandService.getAll(1, this.limit());
-      this.brands.set(response.data);
+      const response = await this.brandService.getAll();
+      const brandIds = [1, 2, 60013, 30002, 4, 7];
+      this.brands.set(response.data.filter(b => brandIds.includes(b.id) && b.logo_url));
 
     } catch (error) {
-      console.error('Error al cargar las marcas:', error)
+      toast.error('Hubo un problema al cargar las marcas. Inténtalo más tarde.');
+      console.error('Error detallado:', error)
     }
   }
 
@@ -84,12 +93,6 @@ export class HomeComponent implements OnInit {
     } else {
       toast.info('Has quitado ' + article.title + ' de tus favoritos');
     }
-  }
-
-  getBrandLogo(brand:any): string {
-    return brand.logo_url && brand.logo_url.trim() !== ''
-      ? brand.logo_url
-      : '/images/brand-rolex.png';
   }
 
 }

@@ -30,11 +30,13 @@
                 <div class="col col-md-auto">
                     <h3 class="m-0">{{ searchTerm() ? 'Resultados de búsqueda' : 'Novedades' }}</h3>
                 </div>
-                <div class="col-auto ms-auto text-end">
-                    <a routerLink="/explore" class="view-all-link fw-semibold text-nowrap"> Ver todo <i
-                            class="bi bi-arrow-right-short"></i>
-                    </a>
-                </div>
+                @if(!searchTerm()){
+                    <div class="col-auto ms-auto text-end">
+                        <a routerLink="/explore" class="view-all-link fw-semibold text-nowrap"> Ver todo <i
+                                class="bi bi-arrow-right-short"></i>
+                        </a>
+                    </div>
+                }
 
                 <div class="col-12">
                     <p class="text mt-1 fs-6 mb-0 mobile">
@@ -50,6 +52,10 @@
                     [article]="article"
                     (favoriteToggled)="toggleFavorite($event)">
                 </app-product-card>
+            } @empty {
+                @if(searchTerm()) {
+                    <p>No se encontraron resultados para "{{searchTerm()}}"</p>
+                }
             }
 
         </div>
@@ -76,7 +82,7 @@
             @for (brand of brands(); track brand.id) {
             <div class="col-12 col-sm-4 col-md d-flex justify-content-center">
                 <div class="brand-card bg-white border rounded-4 d-flex justify-content-center align-items-center p-1">
-                    <img [src]="getBrandLogo(brand)" class="img-fluid brand-img" [alt]="brand.name">
+                    <img [src]="brand.logo_url" class="img-fluid brand-img" [alt]="brand.name">
                 </div>
             </div>
             }
