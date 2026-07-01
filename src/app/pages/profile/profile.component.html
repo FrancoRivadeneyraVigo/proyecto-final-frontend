@@ -59,7 +59,7 @@
                         } @else {
                         <div class="profile-actions">
                             <app-button [text]="'Reportar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                                [iconLeft]="'bi bi-exclamation-circle'" (click)="onReportProfile()">
+                                [iconLeft]="'bi bi-exclamation-circle'" (click)="reportUserModal.open()">
                             </app-button>
                             <app-button [text]="'Contactar'" [class]="'btn-primary'" [showIconLeft]="true"
                                 [iconLeft]="'bi bi-chat-square-text'" (click)="onContact()">
@@ -67,6 +67,12 @@
                         </div>
                         }
                     </div>
+
+                    <app-report-user
+                      #reportUserModal
+                      [userId]="profile.fk_usuarios_id"
+                      [userName]="(profile.name ?? '') + ' ' + (profile.surname ?? '')"
+                    ></app-report-user>
 
                     @if (isMyProfile() && profileIncompleteMessage(); as incompleteMessage) {
                     <div class="profile-incomplete-banner" role="status">

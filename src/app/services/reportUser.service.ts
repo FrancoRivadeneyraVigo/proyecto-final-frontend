@@ -9,7 +9,7 @@ import { IReportProfileRequest } from '../shared/models/reportUser.interface';
 })
 export class ReportService {
   private httpClient = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/users`;
+  private baseUrl = `${environment.apiUrl}/profile`;
 
   async reportProfile(userId: number | string, payload: IReportProfileRequest): Promise<void> {
     await lastValueFrom(

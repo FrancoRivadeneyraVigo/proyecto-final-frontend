@@ -1,10 +1,10 @@
 export type ReportReason =
-  | 'FAKE_ITEM'
-  | 'FRAUD'
-  | 'SUSPICIOUS_PRICE'
-  | 'SPAM'
-  | 'INAPPROPRIATE_CONTENT'
-  | 'OTHER';
+  | 'fake_item'
+  | 'scam_attempt'
+  | 'suspicious_price'
+  | 'spam'
+  | 'inappropriate_content'
+  | 'other';
 
 export interface IReportReasonOption {
   value: ReportReason;
@@ -12,15 +12,15 @@ export interface IReportReasonOption {
 }
 
 export const REPORT_REASON_OPTIONS: IReportReasonOption[] = [
-  { value: 'FAKE_ITEM', label: 'Artículo falso' },
-  { value: 'FRAUD', label: 'Fraude' },
-  { value: 'SUSPICIOUS_PRICE', label: 'Precio sospechoso' },
-  { value: 'SPAM', label: 'Spam' },
-  { value: 'INAPPROPRIATE_CONTENT', label: 'Contenido inapropiado' },
-  { value: 'OTHER', label: 'Otro' },
+  { value: 'fake_item', label: 'Artículo falso' },
+  { value: 'scam_attempt', label: 'Fraude' },
+  { value: 'suspicious_price', label: 'Precio sospechoso' },
+  { value: 'spam', label: 'Spam' },
+  { value: 'inappropriate_content', label: 'Contenido inapropiado' },
+  { value: 'other', label: 'Otro' },
 ];
 
 export interface IReportProfileRequest {
   reason: ReportReason;
-  comment?: string;
+  comments?: string;
 }
