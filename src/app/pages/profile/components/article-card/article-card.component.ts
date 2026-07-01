@@ -1,6 +1,8 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { Router } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { IArticle } from '../../../../shared/models/article.interface';
+import Swal from 'sweetalert2';
 
 const STATUS_LABELS: Record<string, string> = {
   PUBLISHED: 'Publicado',
@@ -18,6 +20,11 @@ const STATUS_LABELS: Record<string, string> = {
 })
 export class ArticleCardComponent {
   article = input.required<IArticle>();
+  isOwner = input(false);
+
+  deleted = output<number>();
+
+  private router = inject(Router);
 
   initials = computed(() => {
     const words = this.article().title.trim().split(/\s+/);
@@ -28,4 +35,27 @@ export class ArticleCardComponent {
   });
 
   statusLabel = computed(() => STATUS_LABELS[this.article().status] ?? this.article().status);
+
+  onEdit(): void {
+    this.router.navigate(['/articles', this.article().id, 'edit']);
+  }
+
+  async onDelete(): Promise<void> {
+
+    const result = await Swal.fire({
+      title: 'Eliminar artículo',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#dc3545'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    this.deleted.emit(this.article().id);
+  }
 }

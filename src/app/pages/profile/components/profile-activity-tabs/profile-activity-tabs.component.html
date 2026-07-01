@@ -31,7 +31,7 @@
     <div class="profile-activity-panel">
         @switch (activeTab()) {
             @case ('articles') {
-            <app-my-articles [userId]="userId()" />
+            <app-my-articles [userId]="userId()" [isOwner]="isMyProfile()" />
             }
             @case ('ratings') {
             <app-ratings />

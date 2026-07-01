@@ -6,13 +6,25 @@
         <!-- CABECERA -->
         <header class="article-header">
             <i class="bi bi-hourglass-split"></i>
+            @if (isEditMode) {
+            <h1>Editar anuncio</h1>
+            <p>
+                Actualiza la información de tu reloj. Los cambios se guardarán en tu anuncio existente.
+            </p>
+            } @else {
             <h1>Vender reloj</h1>
             <p>
                 Publica tu anuncio en pocos minutos y conecta con compradores interesados.
                 Añade fotos, una descripción detallada y el precio para mostrar tu reloj de la mejor manera.
             </p>
+            }
         </header>
 
+        @if (isLoading()) {
+        <div class="article-card">
+            <p class="text-muted">Cargando artículo...</p>
+        </div>
+        } @else {
         <div class="article-card">
 
             <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
@@ -34,7 +46,7 @@
 
                     <div class="article-images-grid">
 
-                        @for(image of imagePreviews(); track $index){
+                        @for(image of imagePreviews; track $index){
 
                         <div class="article-image-slot article-image-slot--filled">
 
@@ -52,7 +64,7 @@
 
                         }
 
-                        @if(imagePreviews().length < maxImages){
+                        @if(imagePreviews.length < maxImages){
 
                         <button type="button" class="article-image-slot article-image-slot--add"
                             (click)="triggerImageInput(imageInput)">
@@ -345,19 +357,34 @@
                 <!-- BOTONES -->
                 <div class="article-actions">
 
+                    @if (!isEditMode) {
                     <app-button [text]="'Guardar borrador'" [type]="'button'" [class]="'btn-outline-primary'"
                         [showIconLeft]="true" [iconLeft]="'bi bi-file-earmark'" (click)="saveDraft()">
                     </app-button>
+                    }
 
+                    @if (isEditMode) {
+                    <app-button [text]="'Guardar cambios'" [type]="'submit'" [class]="'btn-primary'"
+                        [showIconLeft]="true" [iconLeft]="'bi bi-check-lg'">
+                    </app-button>
+                    } @else {
                     <app-button [text]="'Publicar artículo'" [type]="'submit'" [class]="'btn-primary'"
                         [showIconLeft]="true" [iconLeft]="'bi bi-rocket'">
                     </app-button>
+                    }
+
+                    @if (isEditMode && isDraft()) {
+                    <app-button [text]="'Publicar artículo'" [type]="'button'" [class]="'btn-success'"
+                        [showIconLeft]="true" [iconLeft]="'bi bi-rocket'" (click)="publishFromEdit()">
+                    </app-button>
+                    }
 
                 </div>
 
             </form>
 
         </div>
+        }
 
     </div>
 </div>
