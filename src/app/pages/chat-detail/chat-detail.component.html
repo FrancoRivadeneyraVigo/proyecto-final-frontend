@@ -10,10 +10,12 @@
         <div class="header-actions">
             <app-button [text]="'Reportar perfil'" [class]="'btn-outline-primary'" [showIconLeft]="true"
                 [iconLeft]="'bi bi-exclamation-circle'"></app-button>
-            <a routerLink="/profile">
+            @if (currentUserId; as userId) {
+            <a [routerLink]="['/profile', userId]">
                 <app-button [text]="'Ver perfil'" [class]="'btn-primary'" [showIconLeft]="true"
                     [iconLeft]="'bi bi-person-circle'"></app-button>
             </a>
+            }
         </div>
     </header>
 
