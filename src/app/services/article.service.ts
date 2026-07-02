@@ -211,4 +211,16 @@ export class ArticleService {
 
 }
 
+
+  markAsReserved(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/reserved`, {}));
+  }
+
+  markAsPublished(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/published`, {}));
+  }
+
+  markAsSold(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/sold`, {}));
+  }
 }

@@ -5,30 +5,35 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { ArticleService } from '../../services/article.service';
 import { ChatService } from '../../services/chat.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
-import { IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
+import { ChatArticleStatus, IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
+import { ReportArticleComponent } from '../article-detail/report-article/report-article.component';
 
 @Component({
   selector: 'app-chat-detail',
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, ButtonComponent, NavbarComponent],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink, ButtonComponent, NavbarComponent, ReportArticleComponent],
   templateUrl: './chat-detail.component.html',
   styleUrl: './chat-detail.component.css',
 })
 export class ChatDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private chatService = inject(ChatService);
+  private articleService = inject(ArticleService);
   private authService = inject(AuthService);
 
   @ViewChild('messagesEnd') messagesEnd?: ElementRef<HTMLDivElement>;
+  @ViewChild(ReportArticleComponent) reportArticleModal?: ReportArticleComponent;
 
   chatId = '';
   chat = signal<IChatDetail | undefined>(undefined);
   messages = signal<IChatMessage[]>([]);
   isLoading = signal(true);
   isSending = signal(false);
+  isUpdatingArticle = signal(false);
   errorMessage = signal('');
 
   messageForm = new FormGroup({
@@ -49,6 +54,25 @@ export class ChatDetailComponent implements OnInit {
 
   get article(): IChatArticleDetail | null {
     return this.chat()?.article ?? null;
+  }
+  get canManageArticle(): boolean {
+    return this.chat()?.can_manage_article === true;
+  }
+
+  get articleStatus(): string | null {
+    return this.article?.status ?? null;
+  }
+
+  get showReserveAction(): boolean {
+    return this.canManageArticle && this.articleStatus === 'PUBLISHED';
+  }
+
+  get showReservedActions(): boolean {
+    return this.canManageArticle && this.articleStatus === 'RESERVED';
+  }
+
+  get showReportArticleAction(): boolean {
+    return this.articleStatus === 'SOLD';
   }
 
   get contactName(): string {
@@ -168,6 +192,60 @@ export class ChatDetailComponent implements OnInit {
     } finally {
       this.isSending.set(false);
     }
+  }
+
+
+  async updateArticleStatus(action: 'reserved' | 'published' | 'sold'): Promise<void> {
+    const currentArticle = this.article;
+    if (!currentArticle || this.isUpdatingArticle()) {
+      return;
+    }
+
+    this.isUpdatingArticle.set(true);
+
+    try {
+      const response = action === 'reserved'
+        ? await this.articleService.markAsReserved(currentArticle.id)
+        : action === 'published'
+          ? await this.articleService.markAsPublished(currentArticle.id)
+          : await this.articleService.markAsSold(currentArticle.id);
+
+      this.setArticleStatus(response.article.status as ChatArticleStatus);
+
+      const messages: Record<typeof action, string> = {
+        reserved: 'El producto se ha marcado como reservado.',
+        published: 'El producto vuelve a estar publicado.',
+        sold: 'El producto se ha marcado como vendido.',
+      };
+      toast.success(messages[action]);
+    } catch (error) {
+      toast.error(getHttpErrorMessage(error, 'No se pudo actualizar el estado del producto.'));
+    } finally {
+      this.isUpdatingArticle.set(false);
+    }
+  }
+
+  private setArticleStatus(status: ChatArticleStatus | string | null | undefined): void {
+    const currentChat = this.chat();
+    if (!currentChat?.article || !status) {
+      return;
+    }
+
+    this.chat.set({
+      ...currentChat,
+      article: {
+        ...currentChat.article,
+        status,
+      },
+    });
+  }
+  onReportArticle(): void {
+    if (!this.article) {
+      toast.error('No se puede reportar este producto ahora mismo.');
+      return;
+    }
+
+    this.reportArticleModal?.open();
   }
 
   private scrollToBottom(): void {

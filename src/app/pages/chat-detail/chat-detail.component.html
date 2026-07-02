@@ -8,7 +8,7 @@
             <span></span>
         </div>
         <div class="header-actions">
-            <app-button [text]="'Reportar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+            <app-button [text]="'Reportar perfil'" [class]="'btn-outline-primary'" [showIconLeft]="true"
                 [iconLeft]="'bi bi-exclamation-circle'"></app-button>
             <a routerLink="/profile">
                 <app-button [text]="'Ver perfil'" [class]="'btn-primary'" [showIconLeft]="true"
@@ -58,10 +58,25 @@
             </dl>
 
             <div class="article-actions">
+                @if (showReserveAction) {
                 <app-button [text]="'Reservado'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-bag-check'"></app-button>
+                    [iconLeft]="'bi bi-bag-check'" [disabled]="isUpdatingArticle()"
+                    (click)="updateArticleStatus('reserved')"></app-button>
+                }
+
+                @if (showReservedActions) {
+                <app-button [text]="'No reservado'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-arrow-counterclockwise'" [disabled]="isUpdatingArticle()"
+                    (click)="updateArticleStatus('published')"></app-button>
                 <app-button [text]="'Vendido'" [class]="'btn-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-currency-euro'"></app-button>
+                    [iconLeft]="'bi bi-currency-euro'" [disabled]="isUpdatingArticle()"
+                    (click)="updateArticleStatus('sold')"></app-button>
+                }
+
+                @if (showReportArticleAction) {
+                <app-button [text]="'Reportar producto'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-flag'" (click)="onReportArticle()"></app-button>
+                }
             </div>
         </aside>
 
@@ -117,4 +132,8 @@
         </section>
     </section>
 </main>
+
+@if (article; as currentArticle) {
+<app-report-article [articleId]="currentArticle.id" [articleTitle]="currentArticle.title"></app-report-article>
+}
 
