@@ -11,6 +11,7 @@ import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component'
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
 import { ProfileActivityTabsComponent } from '../components/profile-activity-tabs/profile-activity-tabs.component';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message';
 
 type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
 type ConfirmAction = 'block' | 'unblock' | 'delete' | null;
@@ -54,7 +55,7 @@ export class ProfileDetailComponent {
       this.reports.set(result.reports);
     } catch (error) {
       console.error('Error al cargar el perfil:', error);
-      toast.error('No se pudo cargar el perfil. Inténtalo más tarde.');
+      toast.error(getHttpErrorMessage(error, 'Error al cargar el perfil'));
       this.profile.set(null);
     } finally {
       this.loading.set(false);
