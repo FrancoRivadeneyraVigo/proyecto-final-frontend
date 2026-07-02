@@ -63,12 +63,13 @@ export interface IReportDetail {
   resolved_at: string | null;
   resolution: ReportResolution | null;
   moderator_note: string | null;
-  article_id: number;
+  article_id: number | null;
+  reported_user_id: number | null;
   reporter_id: number;
   moderator_id: number | null;
-  article_title: string;
-  article_status: string;
-  seller_id: number;
+  article_title: string | null;
+  article_status: string | null;
+  seller_id: number | null;
   reporter_email: string;
 }
 

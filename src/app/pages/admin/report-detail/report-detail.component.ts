@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { ReportService } from '../../../services/report.service';
+import { AuthService } from '../../../services/auth.service';
 import {
   IReportDetail,
   ReportReason,
@@ -52,6 +53,7 @@ type ConfirmAction = 'reject' | 'validate' | 'underReview' | null;
 })
 export class ReportDetailComponent {
   private reportService = inject(ReportService);
+  private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
 
   report = signal<IReportDetail | null>(null);
@@ -89,12 +91,55 @@ export class ReportDetailComponent {
     return STATUS_LABELS[status] ?? status;
   }
 
-  canModerate(status: ReportStatus): boolean {
-    return status === 'UNDER REVIEW';
+  hasId(id: number | null | undefined): boolean {
+    return id != null && id > 0;
   }
 
-  canMarkUnderReview(status: ReportStatus): boolean {
-    return status === 'PENDING';
+  isArticleReport(report: IReportDetail): boolean {
+    return this.hasId(report.article_id);
+  }
+
+  isUserReport(report: IReportDetail): boolean {
+    return this.hasId(report.reported_user_id) && !this.hasId(report.article_id);
+  }
+
+  isResolved(report: IReportDetail): boolean {
+    return report.status === 'RESOLVED' || report.resolved_at != null;
+  }
+
+  canModerateRole(): boolean {
+    const role = this.authService.currentUser()?.rol;
+    return role === 'admin' || role === 'moderator';
+  }
+
+  canModerate(report: IReportDetail): boolean {
+    return this.canModerateRole() && !this.isResolved(report) && report.status === 'UNDER REVIEW';
+  }
+
+  canMarkUnderReview(report: IReportDetail): boolean {
+    return this.canModerateRole() && !this.isResolved(report) && report.status === 'PENDING';
+  }
+
+  canValidate(report: IReportDetail): boolean {
+    return this.canModerate(report) && (this.isArticleReport(report) || this.isUserReport(report));
+  }
+
+  getValidateLabel(report: IReportDetail): string {
+    return this.isUserReport(report) ? 'Bloquear usuario' : 'Retirar artículo';
+  }
+
+  getValidateConfirmTitle(report: IReportDetail): string {
+    return this.isUserReport(report) ? '¿Bloquear a este usuario?' : 'Validar reporte';
+  }
+
+  getValidateConfirmMessage(report: IReportDetail): string {
+    return this.isUserReport(report)
+      ? 'Se bloqueará el acceso del usuario y el reporte se cerrará como aprobado.'
+      : '¿Estás seguro que deseas validar este reporte? Se retirará el artículo reportado.';
+  }
+
+  getValidateConfirmText(report: IReportDetail): string {
+    return this.isUserReport(report) ? 'Bloquear usuario' : 'Validar';
   }
 
   isResolvedRejected(status: ReportStatus, resolution: ReportResolution | null): boolean {
@@ -127,8 +172,24 @@ export class ReportDetailComponent {
           toast.success('Reporte rechazado correctamente');
           break;
         case 'validate':
-          await this.reportService.withdrawReportedArticle(report.article_id, report.id);
-          toast.success('Artículo retirado correctamente');
+          if (this.isArticleReport(report)) {
+            if (!this.hasId(report.article_id)) {
+              toast.error('No se puede retirar el artículo: falta el ID del artículo.');
+              return;
+            }
+            await this.reportService.withdrawReportedArticle(report.article_id!, report.id);
+            toast.success('Artículo retirado correctamente');
+          } else if (this.isUserReport(report)) {
+            if (!this.hasId(report.reported_user_id)) {
+              toast.error('No se puede bloquear el usuario: falta el ID del usuario reportado.');
+              return;
+            }
+            await this.reportService.blockReportedUser(report.reported_user_id!, report.id);
+            toast.success('Usuario bloqueado correctamente');
+          } else {
+            toast.error('No se puede validar este reporte.');
+            return;
+          }
           break;
         case 'underReview':
           await this.reportService.markReportUnderReview(report.id);

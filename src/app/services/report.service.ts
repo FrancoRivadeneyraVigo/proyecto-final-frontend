@@ -79,4 +79,10 @@ export class ReportService {
       this.httpClient.patch<void>(`${this.moderationUrl}/articulos/${articleId}/retirar`, { reportId })
     );
   }
+
+  blockReportedUser(userId: number, reportId: number): Promise<void> {
+    return lastValueFrom(
+      this.httpClient.patch<void>(`${this.moderationUrl}/usuario/${userId}/bloquear`, { reportId })
+    );
+  }
 }
