@@ -35,7 +35,7 @@ export interface IMeResponse {
     status: string;
     created_at: string;
     update_at: string;
-    last_login: string;
+    last_login: string | null;
     rol: string;
     profile: IProfile;
     roles: IRole[];

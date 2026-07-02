@@ -40,11 +40,11 @@ export class LoginFormComponent {
 
   async onSubmit() {
     const { email, password } = this.loginForm.value;
-    
+
     try {
       await this.authService.login({ email, password });
-      const profile = this.authService.currentUser();
 
+      const profile = this.authService.currentUser();
       const fullName = [profile?.name, profile?.surname]
       .filter(Boolean)
       .join(' ');
@@ -53,11 +53,17 @@ export class LoginFormComponent {
         ? `Te damos la bienvenida, ${fullName}`
         : 'Te damos la bienvenida';
 
-
       toast.success(message);
       this.router.navigate(['/']);
+
     } catch (error: any) {
-      toast.error('Email o contraseña incorrectos');
+
+      if (error?.status === 403) {
+        toast.error('Tu perfil no está disponible. Por favior, contacta con soporte.');
+      } else {
+        toast.error('Email o contraseña incorrectos');
+      }
+
     }
   }
 }

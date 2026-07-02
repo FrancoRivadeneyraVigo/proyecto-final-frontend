@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-custom py-4 bg-white">
     <div class="container-fluid">
-        <div class="container-xxl d-flex justify-content-between align-items-center px-0 py-0 flex-wrap flex-lg-nowrap">
+        <div class="container-xxl d-flex flex-wrap justify-content-between align-items-center px-0 py-0">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <div class="brand-icon">
@@ -8,20 +8,10 @@
                 </div>
             </a>
             <!-- Mobile button -->
-            <div class="d-flex align-items-center gap-2 d-lg-none my-auto">
-                <button class="navbar-toggler-custom bg-light border-0 p-2 lh-1" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#mainNavbar">
-                    <i class="bi bi-list text-primary fw-bold fs-2 d-block"></i>
-                </button>
-
-                @if (currentUser(); as user) {
-                <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
-                    <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
-                </a>
-                }
-            </div>
-
-            <div class="collapse navbar-collapse justify-content-between bg-white mt-2 mt-lg-0 pt-3 p-lg-0"
+            <button class="btn btn-light navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between bg-whitemt-2 mt-lg-0 pt-3 p-lg-0"
                 id="mainNavbar">
                 <!-- Menu -->
                 <ul class="navbar-nav mx-auto">
@@ -38,34 +28,19 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']">Vender</a>
-                    </li>
+                    </li>           
+                    @if (currentUser()?.rol === 'admin') {
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']">Administrar</a>
+                    </li>                       }           
                 </ul>
-
-                <hr class="text-black-50 my-2 w-100 d-lg-none">
 
                 @if (!currentUser()) {
                 <!-- Not logged -->
-
-                <!-- Mobile menu -->
-
-                <ul class="navbar-nav d-flex flex-column gap-2 align-items-start w-100 px-3 pb-3 pt-2 d-lg-none ps-0">
-                    <li class="nav-item">
-                        <a routerLink="/register" class="nav-link">
-                            <i class="bi bi-person-circle"></i> Crear cuenta
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a routerLink="/login" class="nav-link">
-                            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
-                        </a>
-                    </li>
-                </ul>
-                <!-- Computer -->
-                <div class="d-none d-lg-flex gap-3 align-items-center">
+                <div class="d-flex gap-3 align-items-center">
                     <a routerLink="/register">
-                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-person-circle'">
-                        </app-button>
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-person-circle'">
+                        </app-button>                
                     </a>
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
