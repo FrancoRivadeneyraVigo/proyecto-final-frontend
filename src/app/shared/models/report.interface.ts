@@ -12,10 +12,13 @@ export type ReportResolution = 'APPROVED' | 'REJECTED';
 
 export type ReportStatusFilter = ReportStatus | 'all';
 
+export type ReportByType = 'articulo' | 'usuario';
+
 export interface IReportFilters {
   status?: ReportStatusFilter;
   search?: string;
   reason?: ReportReason;
+  byreportype?: ReportByType;
   created_from?: string;
   created_to?: string;
   page?: number;
@@ -36,7 +39,8 @@ export interface IAdminReport {
   resolution: ReportResolution | null;
   created_at: string;
   resolved_at: string | null;
-  article_id: number;
+  article_id: number | null;
+  reported_user_id: number | null;
   name: string;
   surname: string;
   email: string;

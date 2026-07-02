@@ -41,6 +41,10 @@ export class ReportService {
       params.set('reason', filters.reason);
     }
 
+    if (filters.byreportype) {
+      params.set('byreportype', filters.byreportype);
+    }
+
     if (filters.created_from) {
       params.set('created_from', filters.created_from);
     }

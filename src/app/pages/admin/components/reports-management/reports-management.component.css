@@ -113,7 +113,7 @@
     margin: 0;
 }
 
-.report-article-id {
+.report-meta-link {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -123,11 +123,11 @@
     width: fit-content;
 }
 
-.report-article-id:hover {
+.report-meta-link:hover {
     text-decoration: underline;
 }
 
-.report-article-id i {
+.report-meta-link i {
     font-size: 0.875rem;
 }
 

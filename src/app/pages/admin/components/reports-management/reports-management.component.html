@@ -41,6 +41,16 @@
         </select>
     </div>
     <div class="filter-field">
+        <label class="filter-label" for="report-type-filter">Tipo</label>
+        <select id="report-type-filter" class="filter-select" [ngModel]="selectedReportType()"
+            (ngModelChange)="selectedReportType.set($event)">
+            <option value="">Todos los tipos</option>
+            @for (option of reportTypeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+    </div>
+    <div class="filter-field">
         <label class="filter-label" for="created-from">Desde</label>
         <input id="created-from" type="date" class="filter-input" [ngModel]="createdFrom()"
             (ngModelChange)="createdFrom.set($event)" />
@@ -74,11 +84,20 @@
                     Reportado por: {{ report.name }} {{ report.surname }}
                 </p>
                 <h5 class="report-reason">{{ getReasonLabel(report.reason) }}</h5>
-                <a class="body-medium report-article-id" [routerLink]="['/articles', report.article_id]"
+                @if (hasId(report.article_id)) {
+                <a class="body-medium report-meta-link" [routerLink]="['/articles', report.article_id]"
                     (click)="$event.stopPropagation()">
                     <i class="bi bi-tag-fill"></i>
                     ID Artículo: {{ report.article_id }}
                 </a>
+                }
+                @if (hasId(report.reported_user_id)) {
+                <a class="body-medium report-meta-link" [routerLink]="['/admin/profile', report.reported_user_id]"
+                    (click)="$event.stopPropagation()">
+                    <i class="bi bi-person-fill"></i>
+                    ID Usuario: {{ report.reported_user_id }}
+                </a>
+                }
                 <p class="body-medium text-muted report-comments">{{ report.comments }}</p>
             </div>
             <div class="report-meta">

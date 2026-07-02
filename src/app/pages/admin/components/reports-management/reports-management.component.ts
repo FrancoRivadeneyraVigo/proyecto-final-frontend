@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ReportService } from '../../../../services/report.service';
 import {
   IReportsPaginatedResponse,
+  ReportByType,
   ReportReason,
   ReportResolution,
   ReportStatus,
@@ -41,6 +42,11 @@ const RESOLUTION_LABELS: Record<ReportResolution, string> = {
   REJECTED: 'Rechazado',
 };
 
+const REPORT_TYPE_OPTIONS: { value: ReportByType; label: string }[] = [
+  { value: 'articulo', label: 'Artículo' },
+  { value: 'usuario', label: 'Usuario' },
+];
+
 @Component({
   selector: 'app-reports-management',
   imports: [ButtonComponent, DatePipe, RouterLink, FormsModule],
@@ -52,6 +58,7 @@ export class ReportsManagementComponent implements OnInit {
 
   readonly pageSize = 10;
   readonly reasonOptions = REASON_OPTIONS;
+  readonly reportTypeOptions = REPORT_TYPE_OPTIONS;
 
   response = signal<IReportsPaginatedResponse | null>(null);
   activeFilter = signal<ReportStatusFilter>('PENDING');
@@ -60,6 +67,7 @@ export class ReportsManagementComponent implements OnInit {
 
   searchTerm = signal('');
   selectedReason = signal<ReportReason | ''>('');
+  selectedReportType = signal<ReportByType | ''>('');
   createdFrom = signal('');
   createdTo = signal('');
 
@@ -77,6 +85,7 @@ export class ReportsManagementComponent implements OnInit {
         status: this.activeFilter(),
         search: this.searchTerm(),
         reason: this.selectedReason() || undefined,
+        byreportype: this.selectedReportType() || undefined,
         created_from: this.createdFrom() || undefined,
         created_to: this.createdTo() || undefined,
         page,
@@ -103,6 +112,7 @@ export class ReportsManagementComponent implements OnInit {
   clearFilters(): void {
     this.searchTerm.set('');
     this.selectedReason.set('');
+    this.selectedReportType.set('');
     this.createdFrom.set('');
     this.createdTo.set('');
     this.loadReports(1);
@@ -134,5 +144,9 @@ export class ReportsManagementComponent implements OnInit {
 
   isResolvedRejected(status: ReportStatus, resolution: ReportResolution | null): boolean {
     return status === 'RESOLVED' && resolution === 'REJECTED';
+  }
+
+  hasId(id: number | null | undefined): boolean {
+    return id != null && id > 0;
   }
 }
