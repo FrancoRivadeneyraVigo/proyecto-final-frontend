@@ -11,3 +11,8 @@ export interface ICreateReportRequest {
   comments: string;
   fk_articles_id: number;
 }
+
+export interface ICreateProfileReportRequest {
+  reason: ReportReason;
+  comments: string;
+}
