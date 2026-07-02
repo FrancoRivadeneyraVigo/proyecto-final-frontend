@@ -1,0 +1,80 @@
+<div
+  #modalElement
+  class="modal fade"
+  id="reportProfileModal"
+  tabindex="-1"
+  aria-labelledby="reportProfileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content report-profile-modal">
+      <div class="modal-header">
+        <h1 class="modal-title fs-6" id="reportProfileModalLabel">
+          <i class="bi bi-clipboard2-check"></i>
+          Reportar perfil
+        </h1>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="close()"></button>
+      </div>
+
+      <form [formGroup]="reportForm" (ngSubmit)="submitReport()">
+        <div class="modal-body">
+          <p class="profile-name">{{ username() }}</p>
+          <p class="instruction">Por favor, selecciona el motivo del reporte</p>
+
+          <div class="reason-list">
+            @for (reason of reasons; track reason.value) {
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                [id]="'profile-reason-' + reason.value"
+                formControlName="reason"
+                [value]="reason.value"
+              />
+              <label class="form-check-label" [for]="'profile-reason-' + reason.value">
+                {{ reason.label }}
+              </label>
+            </div>
+            }
+          </div>
+
+          @if (reportForm.controls.reason.touched && reportForm.controls.reason.invalid) {
+          <small class="text-danger">Selecciona un motivo para continuar.</small>
+          }
+
+          <label for="profile-report-comments" class="form-label comments-label">Comentario</label>
+          <textarea
+            id="profile-report-comments"
+            class="form-control"
+            rows="2"
+            placeholder="Deja tu comentario"
+            formControlName="comments"
+          ></textarea>
+
+          @if (reportForm.controls.comments.touched && reportForm.controls.comments.invalid) {
+          <small class="text-danger">El comentario no puede superar los 500 caracteres.</small>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <app-button
+            [text]="'Cancelar'"
+            [class]="'btn-outline-primary'"
+            [showIconLeft]="true"
+            [iconLeft]="'bi bi-x-lg'"
+            [type]="'button'"
+            (click)="close()"
+          ></app-button>
+          <app-button
+            [text]="'Reportar'"
+            [class]="'btn-primary'"
+            [showIconLeft]="true"
+            [iconLeft]="'bi bi-flag'"
+            [type]="'submit'"
+            [disabled]="isSubmitting()"
+          ></app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -46,6 +46,7 @@ export interface IChatArticleDetail {
 export interface IChatDetail {
     id: number;
     created_at?: string | null;
+    contact_id?: number | null;
     contact_name?: string | null;
     contact_photo?: string | null;
     can_manage_article?: boolean;

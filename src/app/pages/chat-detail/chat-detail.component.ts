@@ -12,10 +12,11 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ChatArticleStatus, IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from '../article-detail/report-article/report-article.component';
+import { ReportProfileComponent } from './report-profile/report-profile.component';
 
 @Component({
   selector: 'app-chat-detail',
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, ButtonComponent, NavbarComponent, ReportArticleComponent],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink, ButtonComponent, NavbarComponent, ReportArticleComponent, ReportProfileComponent],
   templateUrl: './chat-detail.component.html',
   styleUrl: './chat-detail.component.css',
 })
@@ -27,6 +28,7 @@ export class ChatDetailComponent implements OnInit {
 
   @ViewChild('messagesEnd') messagesEnd?: ElementRef<HTMLDivElement>;
   @ViewChild(ReportArticleComponent) reportArticleModal?: ReportArticleComponent;
+  @ViewChild(ReportProfileComponent) reportProfileModal?: ReportProfileComponent;
 
   chatId = '';
   chat = signal<IChatDetail | undefined>(undefined);
@@ -77,6 +79,10 @@ export class ChatDetailComponent implements OnInit {
 
   get contactName(): string {
     return this.chat()?.contact_name || 'Ana Garcia';
+  }
+
+  get contactId(): number | null {
+    return this.chat()?.contact_id ?? null;
   }
 
   get contactInitials(): string {
@@ -239,6 +245,15 @@ export class ChatDetailComponent implements OnInit {
       },
     });
   }
+  onReportProfile(): void {
+    if (!this.contactId) {
+      toast.error('No se puede reportar este perfil ahora mismo.');
+      return;
+    }
+
+    this.reportProfileModal?.open();
+  }
+
   onReportArticle(): void {
     if (!this.article) {
       toast.error('No se puede reportar este producto ahora mismo.');
