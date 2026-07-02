@@ -1,0 +1,64 @@
+.list-group-item {
+    display: flex;
+    --bs-list-group-bg: var(--bs-surface);
+    --bs-list-group-action-hover-bg: var(--bs-surface-var);
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 2px;
+}
+
+.profile-rol {
+    color: var(--bs-primary);
+    min-width: 100px;
+    text-align: right;
+}
+
+.profile-badge-warpper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 92px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--bs-surface, #fff);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--bs-body-color, #1a1a2e);
+}
+
+.search-input::placeholder {
+    color: var(--bs-dark);
+}

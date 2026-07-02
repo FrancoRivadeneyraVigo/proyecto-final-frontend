@@ -11,6 +11,7 @@ export interface IProfile {
     postal_code: string;
     biography: string | null;
     fk_usuarios_id: number;
+    rol?: string;
 }
 
 export interface IUploadPhotoResponse {
@@ -27,4 +28,16 @@ export interface IUpdateProfileRequest {
     city: string;
     postal_code: string;
     biography: string | null;
+}
+
+export interface IAdminProfile extends IProfile {
+    rol: string;
+    status: string;
+}
+
+export interface IProfileDetailUser extends IProfile {
+    email: string;
+    status: string;
+    created_at: string;
+    last_login: string;
 }

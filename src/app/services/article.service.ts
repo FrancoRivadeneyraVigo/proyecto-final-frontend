@@ -187,4 +187,40 @@ export class ArticleService {
     return response.article;
   }
 
+  async filterArticles(filters: any): Promise<IArticleSummary[]> {
+
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+
+    if (
+      value !== null &&
+      value !== undefined &&
+      value !== ''
+    ) {
+      params.set(key, String(value));
+    }
+
+  });
+
+  return await lastValueFrom(
+    this.httpClient.get<IArticleSummary[]>(
+      `${this.articlesUrl}/filter?${params.toString()}`
+    )
+  );
+
+}
+
+
+  markAsReserved(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/reserved`, {}));
+  }
+
+  markAsPublished(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/published`, {}));
+  }
+
+  markAsSold(id: number | string): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/sold`, {}));
+  }
 }

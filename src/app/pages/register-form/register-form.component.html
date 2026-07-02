@@ -65,6 +65,15 @@
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-link'"></app-button>
                     </a>
+                    
+                    <!-- Link to home -->
+                    <hr>
+                    <p class="text-center text-muted body-medium">Explora la mejor selección de relojes de segunda mano</p>
+                    <a routerLink="/home">
+                        <app-button [text]="'Ir al inicio'" [class]="'btn-outline-primary'" [showIconRight]="true"
+                            [iconRight]="'bi bi-house'" [fullWidth]="true">
+                        </app-button>
+                    </a>
                 </form>
             </div>
         </div>

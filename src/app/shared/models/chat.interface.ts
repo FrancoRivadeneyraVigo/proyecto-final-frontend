@@ -1,3 +1,5 @@
+export type ChatArticleStatus = 'PUBLISHED' | 'RESERVED' | 'SOLD' | 'BOUGHT' | 'NOT_BOUGHT' | 'ALL';
+
 export interface IChatSummary {
     id: number;
     chat_id: number;
@@ -6,7 +8,7 @@ export interface IChatSummary {
     article_title: string;
     article_price: number | string;
     article_cover?: string | null;
-    article_status?: 'PUBLISHED' | 'RESERVED' | 'SOLD' | 'BOUGHT' | 'NOT_BOUGHT' | 'ALL';
+    article_status?: ChatArticleStatus;
     buyer_name: string;
     contact_name?: string | null;
     contact_username?: string | null;
@@ -32,7 +34,7 @@ export interface IChatArticleDetail {
     title: string;
     description?: string | null;
     price: number | string;
-    status?: string | null;
+    status?: ChatArticleStatus | string | null;
     condition?: string | null;
     year_of_manufacture?: number | null;
     cover?: string | null;
@@ -46,6 +48,7 @@ export interface IChatDetail {
     created_at?: string | null;
     contact_name?: string | null;
     contact_photo?: string | null;
+    can_manage_article?: boolean;
     article?: IChatArticleDetail | null;
 }
 
