@@ -1,0 +1,80 @@
+<section class="section styles-panel">
+    <div class="styles-panel-header">
+        <h5>
+            <i class="bi bi-list-check"></i>
+            Listado de estilos
+        </h5>
+        <app-button [text]="'Nuevo estilo'" [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-plus'"
+            (click)="openCreateModal()"></app-button>
+    </div>
+
+    @if (loading()) {
+    <p class="text-muted text-center py-4">Cargando estilos...</p>
+    } @else if (styles().length === 0) {
+    <p class="text-muted text-center py-4">No hay estilos registrados</p>
+    } @else {
+    <ul class="styles-list">
+        @for (style of styles(); track style.id) {
+        <li class="style-row">
+            <div class="style-info">
+                <h5>{{ style.name }}</h5>
+                <span class="body-small style-id">
+                    <i class="bi bi-clipboard-data"></i>
+                    ID Estilo: {{ style.id }}
+                </span>
+                <p class="body-small text-muted">{{ style.description || 'Sin descripción' }}</p>
+            </div>
+            <div class="style-actions">
+                <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-pencil'"
+                    (click)="openEditModal(style)"></app-button>
+                <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
+                    (click)="openDeleteModal(style)"></app-button>
+            </div>
+        </li>
+        }
+    </ul>
+    }
+</section>
+
+@if (modalMode()) {
+<div class="style-modal-backdrop" (click)="closeStyleModal()">
+    <form class="style-modal" (click)="$event.stopPropagation()" (ngSubmit)="saveStyle()">
+        <div class="style-modal-header">
+            <h5>
+                <i [class]="modalIcon()"></i>
+                {{ modalTitle() }}
+            </h5>
+            <button type="button" class="style-modal-close" (click)="closeStyleModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <label class="style-field">
+            <span class="label-small">Nombre</span>
+            <input type="text" class="form-control" placeholder="Nombre estilo" maxlength="50" required
+                [ngModel]="form().name" name="styleName" (ngModelChange)="updateForm('name', $event)" />
+        </label>
+
+        <label class="style-field">
+            <span class="label-small">Descripción</span>
+            <input type="text" class="form-control" placeholder="Descripción estilo" maxlength="255"
+                [ngModel]="form().description ?? ''" name="styleDescription"
+                (ngModelChange)="updateForm('description', $event)" />
+        </label>
+
+        <div class="style-modal-footer">
+            <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-x'"
+                [disabled]="saving()" (click)="closeStyleModal()"></app-button>
+            <app-button [text]="saving() ? 'Guardando...' : 'Guardar'" [class]="'btn-primary'" [showIconLeft]="true"
+                [iconLeft]="'bi bi-check'" [type]="'submit'" [disabled]="saving()"></app-button>
+        </div>
+    </form>
+</div>
+}
+
+@if (styleToDelete(); as style) {
+<app-confirm-modal [title]="'Eliminar estilo'" [icon]="'bi bi-trash'" [subtitle]="style.name"
+    [message]="'¿Estás seguro que deseas eliminar el estilo seleccionado?'" [confirmText]="'Eliminar'"
+    [confirmIcon]="'bi bi-trash'" [processing]="deleting()" (confirmed)="deleteStyle()"
+    (cancelled)="closeDeleteModal()"></app-confirm-modal>
+}
