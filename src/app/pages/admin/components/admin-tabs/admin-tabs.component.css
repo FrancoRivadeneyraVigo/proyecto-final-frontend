@@ -1,0 +1,45 @@
+.admin-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    
+}
+
+.admin-tabs-nav-link {
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: var(--bs-body-font-family), sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--bs-body-color);
+    cursor: pointer;
+}
+
+.admin-tabs-nav-link:hover {
+    color: var(--bs-primary);
+}
+
+.admin-tabs-nav-link.active {
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.admin-tabs-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 767px) {
+    .admin-tabs-nav {
+        gap: 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

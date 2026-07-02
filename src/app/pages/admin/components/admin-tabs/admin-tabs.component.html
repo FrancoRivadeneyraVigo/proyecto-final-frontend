@@ -1,0 +1,36 @@
+<section class="admin-tabs">
+    <nav class="admin-tabs-nav">
+        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'profiles'"
+            (click)="setActiveTab('profiles')">
+            Gestión de perfiles
+        </button>
+        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reports'"
+            (click)="setActiveTab('reports')">
+            Gestión de reportes
+        </button>
+        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'categories'"
+            (click)="setActiveTab('categories')">
+            Gestión de estilos
+        </button>
+        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'stats'"
+            (click)="setActiveTab('stats')">
+            Estadísticas
+        </button>
+    </nav>
+    <section class="admin-tabs-panel">
+        @switch (activeTab()) {
+        @case ('profiles') {
+        <app-profiles-management />
+        }
+        @case ('reports') {
+        <p class="text-muted">Gestión de reportes (pendiente)</p>
+        }
+        @case ('categories') {
+        <p class="text-muted">Gestión de categorías (pendiente)</p>
+        }
+        @case ('stats') {
+        <p class="text-muted">Estadísticas (pendiente)</p>
+        }
+        }
+    </section>
+</section>

@@ -1,0 +1,102 @@
+<app-navbar></app-navbar>
+
+<main class="admin-page">
+    <div class="container-fluid">
+        <div class="container-xxl px-0 admin-content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a routerLink="/admin">Administrar</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span class="breadcrumb-active-pill">Detalle del perfil</span>
+                    </li>
+                </ol>
+            </nav>
+            @if (loading()) {
+            <p class="text-muted text-center py-4">Cargando perfil...</p>
+            } @else if (!profile()) {
+            <p class="text-muted text-center py-4">No se encontró el perfil</p>
+            } @else {
+            <section class="section profile-card">
+                <div class="profile-detail-header">
+                    <div class="profile-avatar">
+                        @if (profile()!.photo_url) {
+                        <img [src]="profile()!.photo_url" [alt]="profile()!.name" class="profile-avatar-img" />
+                        } @else {
+                        <span class="profile-avatar-initials">
+                            {{ (profile()!.name ?? '').charAt(0) }}{{ (profile()!.surname ?? '').charAt(0) }}
+                        </span>
+                        }
+                    </div>
+                    <div class="profile-detail-info">
+                        <h3>{{ profile()!.name }} {{ profile()!.surname }}</h3>
+                        <p class="profile-meta">
+                            <i class="bi bi-person-fill"></i>
+                            <span>ID: {{ profile()!.id }}</span>
+                        </p>
+                        <p class="profile-meta">
+                            <i class="bi bi-at"></i>
+                            <span>Email: {{ profile()!.email }}</span>
+                        </p>
+                        <p class="profile-meta">
+                            <i class="bi bi-calendar-fill"></i>
+                            <span>Fecha creación: {{ profile()!.created_at | date:'dd/MM/yyyy' }}</span>
+                        </p>
+                        <p class="profile-meta">
+                            <i class="bi bi-clock-fill"></i>
+                            <span>Último login: {{ profile()!.last_login ? (profile()!.last_login | date:'dd/MM/yyyy
+                                HH:mm') : 'Nunca' }}</span>
+                        </p>
+                    </div>
+                    <div class="profile-detail-actions">
+                        <span class="badge" [class.badge-active]="profile()!.status === 'ACTIVE'"
+                            [class.badge-blocked]="profile()!.status === 'BLOCKED'" [class.badge-deleted]="profile()!.status === 'DELETED'">
+                            @switch (profile()!.status) {
+                            @case ('ACTIVE') { Activo }
+                            @case ('BLOCKED') { Bloqueado }
+                            @case ('DELETED') { Baja }
+                            @default { Desconocido }
+                            }
+                        </span>
+                    
+                        @if (profile()!.status !== 'DELETED') {
+                        @if (profile()!.status === 'ACTIVE') {
+                        <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-lock'"
+                            (click)="openConfirm('block')"></app-button>
+                        } @else if (profile()!.status === 'BLOCKED') {
+                        <app-button [text]="'Desbloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-unlock'"
+                            (click)="openConfirm('unblock')"></app-button>
+                        }
+                        <app-button [text]="'Dar de baja'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
+                            (click)="openConfirm('delete')"></app-button>
+                        }              
+                    </div>
+                </div>
+                <div class="profile-detail-bio">
+                    <h5>Sobre {{ profile()!.name }}</h5>
+                    <p>{{ profile()!.biography || 'Sin biografía' }}</p>
+                </div>
+            </section>
+            <app-profile-activity-tabs [sales]="sales()" [purchases]="purchases()" [reviews]="reviews()"
+                [favorites]="favorites()" [reports]="reports()">
+            </app-profile-activity-tabs>
+            }
+        </div>
+    </div>
+</main>
+
+@if (confirmAction(); as action) {
+<app-confirm-modal
+    [title]="action === 'block' ? 'Bloquear perfil' : action === 'unblock' ? 'Desbloquear perfil' : 'Dar de baja'"
+    [icon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'"
+    [iconColor]="action === 'delete' ? 'danger' : 'success'"
+    [subtitle]="(profile()!.name || '') + ' ' + (profile()!.surname || '')" [subtitleId]="profile()!.id"
+    [message]="action === 'block' ? '¿Estás seguro que deseas bloquear el perfil seleccionado?' : action === 'unblock' ? '¿Estás seguro que deseas desbloquear el perfil seleccionado?' : '¿Estás seguro que deseas dar de baja el perfil seleccionado? Esta acción no se puede deshacer.'"
+    [confirmText]="action === 'block' ? 'Bloquear' : action === 'unblock' ? 'Desbloquear' : 'Dar de baja'"
+    [confirmIcon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'" [processing]="processingAction()"
+    (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
+</app-confirm-modal>   
+}
+
+<app-footer></app-footer>
