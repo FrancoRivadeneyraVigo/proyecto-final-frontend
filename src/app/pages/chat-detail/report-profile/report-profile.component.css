@@ -1,0 +1,76 @@
+.report-profile-modal {
+  border: 0;
+  border-radius: 8px;
+}
+
+.modal-header {
+  align-items: center;
+  padding: 12px 14px 8px;
+  border-bottom: 0;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.modal-title i {
+  color: var(--bs-secondary);
+}
+
+.btn-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #eef2ff;
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 0 14px 10px;
+}
+
+.profile-name {
+  color: var(--bs-primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.instruction {
+  color: hsla(0, 0%, 40%, 1);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.reason-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--bs-light);
+  margin-bottom: 12px;
+}
+
+.reason-list .form-check {
+  margin-bottom: 0;
+}
+
+.form-check-label,
+.comments-label,
+.form-control {
+  font-size: 13px;
+}
+
+.comments-label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.modal-footer {
+  gap: 8px;
+  padding: 0 14px 12px;
+  border-top: 0;
+}

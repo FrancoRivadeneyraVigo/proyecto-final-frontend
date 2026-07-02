@@ -80,7 +80,6 @@
     display: grid;
     gap: 0;
     padding: 28px 32px;
-    border: 1px solid var(--bs-border-color-translucent);
     border-radius: 8px;
     background: var(--bs-surface);
 }

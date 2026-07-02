@@ -13,9 +13,10 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { toast } from 'ngx-sonner';
-import { ReportService } from '../../../services/report.service';
+import { ReportProfileService } from '../../../services/report-profile.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { ICreateReportRequest, ReportReason } from '../../../shared/models/report.interface';
+import { ICreateProfileReportRequest, ReportReason } from '../../../shared/models/report.interface';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message';
 
 const REASON_LIST: { value: ReportReason; label: string }[] = [
   { value: 'fake_item', label: 'Artículo falso' },
@@ -27,29 +28,25 @@ const REASON_LIST: { value: ReportReason; label: string }[] = [
 ];
 
 @Component({
-  selector: 'app-report-article',
+  selector: 'app-report-profile',
   imports: [ReactiveFormsModule, ButtonComponent],
-  templateUrl: './report-article.component.html',
-  styleUrl: './report-article.component.css',
+  templateUrl: './report-profile.component.html',
+  styleUrl: './report-profile.component.css',
 })
-export class ReportArticleComponent implements AfterViewInit, OnDestroy {
-  private reportService = inject(ReportService);
+export class ReportProfileComponent implements AfterViewInit, OnDestroy {
+  private reportProfileService = inject(ReportProfileService);
 
   @ViewChild('modalElement') modalElement?: ElementRef<HTMLDivElement>;
 
-  articleId = input.required<number>();
-  articleTitle = input.required<string>();
+  userId = input.required<number>();
+  username = input.required<string>();
 
   reasons = REASON_LIST;
   isSubmitting = signal(false);
 
   reportForm = new FormGroup({
     reason: new FormControl<ReportReason | null>(null, Validators.required),
-    comments: new FormControl('', [
-      Validators.required,
-      Validators.minLength(10),
-      Validators.maxLength(500),
-    ]),
+    comments: new FormControl('', Validators.maxLength(500)),
   });
 
   private modalInstance?: any;
@@ -91,26 +88,20 @@ export class ReportArticleComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const payload: ICreateReportRequest = {
+    const payload: ICreateProfileReportRequest = {
       reason,
       comments: this.reportForm.controls.comments.value?.trim() ?? '',
-      fk_articles_id: this.articleId(),
     };
 
     this.isSubmitting.set(true);
 
     try {
-      await this.reportService.createReport(payload);
-      toast.success('Gracias, hemos recibido tu reporte sobre este artículo.');
+      await this.reportProfileService.reportProfile(this.userId(), payload);
+      toast.success('Gracias, hemos recibido tu reporte sobre este perfil.');
       this.close();
     } catch (error) {
-      let message = 'No se pudo enviar el reporte : ';
-      if (error instanceof HttpErrorResponse) {
-        message += error.error;
-      } else {
-        message += error;
-      }
-      toast.error(message);
+      const fallback = 'No se pudo enviar el reporte sobre este perfil.';
+      toast.error(error instanceof HttpErrorResponse ? getHttpErrorMessage(error, fallback) : fallback);
       this.isSubmitting.set(false);
     }
   }

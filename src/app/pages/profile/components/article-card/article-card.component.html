@@ -11,9 +11,11 @@
 
         <p class="article-card-description body-medium text-muted">{{ article().description }}</p>
 
+        @if (isOwner()) {
         <div class="article-card-actions">
-            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-pencil'"></app-button>
-            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"></app-button>
+            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-pencil'" (click)="onEdit()"></app-button>
+            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'" (click)="onDelete()"></app-button>
         </div>
+        }
     </div>
 </article>

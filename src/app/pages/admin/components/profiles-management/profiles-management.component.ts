@@ -5,6 +5,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { toast } from 'ngx-sonner';
 
 type RoleFilter = 'user' | 'moderator' | 'admin' | 'all';
 
@@ -53,6 +54,7 @@ export class ProfilesManagementComponent {
       this.profiles.set(result);
     } catch (error) {
       console.error('Error al cargar perfiles:', error);
+      toast.error('No se pudieron cargar los perfiles. Inténtalo más tarde.');
       this.profiles.set([]);
     } finally {
       this.loading.set(false);

@@ -72,3 +72,8 @@ export interface IRejectReportRequest {
 export interface IModerationMessageResponse {
   message: string;
 }
+
+export interface ICreateProfileReportRequest {
+  reason: ReportReason;
+  comments: string;
+}

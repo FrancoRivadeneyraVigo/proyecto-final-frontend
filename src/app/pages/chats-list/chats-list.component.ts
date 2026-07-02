@@ -114,6 +114,12 @@ export class ChatsListComponent implements OnInit {
     return chat.last_message || 'Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget.';
   }
 
+
+  get emptyStateMessage(): string {
+    return this.activeMode() === 'sales'
+      ? 'Cuando un comprador te escriba por uno de tus artículos, la conversación aparecerá aquí.'
+      : 'Cuando abras conversaciones como comprador, aparecerán aquí.';
+  }
   chatImage(chat: IChatSummary): string {
     return chat.article_cover || 'images/hero-watch.webp';
   }

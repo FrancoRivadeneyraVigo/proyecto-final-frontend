@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ArticleService } from '../../services/article.service';
-import {  IArticlesPaginatedResponse } from '../../shared/models/article.interface';
+import { IArticlesPaginatedResponse } from '../../shared/models/article.interface';
 
 import { RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { IBrand } from '../../shared/models/brand.interface';
+import { IBrand } from '../../shared/models/ibrand.interface';
 import { BrandService } from '../../services/brand.service';
 import { StatsComponent } from './components/stats/stats.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
@@ -24,8 +25,25 @@ export class HomeComponent implements OnInit {
 
   arrArticles = signal<IArticleSummary[]>([]);
   brands = signal<IBrand[]>([]);
-  limit = signal<number>(6)
   searchTerm = signal<string>('');
+
+  private getBackendErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendError = error.error;
+
+      if (typeof backendError === 'string') {
+        return backendError;
+      }
+
+      if (Array.isArray(backendError)) {
+        return backendError.join(', ');
+      }
+
+      return backendError?.message || backendError?.error || fallback;
+    }
+
+    return fallback;
+  }
 
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement
@@ -46,8 +64,13 @@ export class HomeComponent implements OnInit {
       const result = await this.articleService.searchArticles(term)
       this.arrArticles.set(result)
 
-    } catch (error) {
-      console.error('Error al buscar:', error)
+    } catch (error: any) {
+
+      if (error.status == 404) {
+        this.arrArticles.set([]);
+      } else {
+        toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al realizar la búsqueda'));
+      }
     }
   }
 
@@ -61,18 +84,19 @@ export class HomeComponent implements OnInit {
       const response: IArticlesPaginatedResponse = await this.articleService.getAll(3);
       this.arrArticles.set(response.data)
 
-    } catch (error) {
-      console.error('Error al cargar los articulos:', error);
+    } catch (error: any) {
+      toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al cargar los artículos'));
     }
   }
 
   async loadBrands() {
-    try{
-      const response = await this.brandService.getAll(1, this.limit());
-      this.brands.set(response.data);
+    try {
+      const response = await this.brandService.getAll();
+      const brandIds = [1, 2, 60013, 30002, 4, 7];
+      this.brands.set(response.data.filter(b => brandIds.includes(b.id) && b.logo_url));
 
-    } catch (error) {
-      console.error('Error al cargar las marcas:', error)
+    } catch (error: any) {
+      toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al cargar las marcas'));
     }
   }
 
@@ -84,12 +108,6 @@ export class HomeComponent implements OnInit {
     } else {
       toast.info('Has quitado ' + article.title + ' de tus favoritos');
     }
-  }
-
-  getBrandLogo(brand:any): string {
-    return brand.logo_url && brand.logo_url.trim() !== ''
-      ? brand.logo_url
-      : '/images/brand-rolex.png';
   }
 
 }

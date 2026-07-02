@@ -19,7 +19,7 @@
         @if (data.data.length === 0) {
         <p class="my-articles-state body-medium text-muted">{{ emptyMessage() }}</p>
         } @else {
-        <app-article-list [articles]="data.data" [total]="data.total" />
+        <app-article-list [articles]="data.data" [total]="data.total" [isOwner]="isOwner()" (deleted)="onArticleDeleted($event)" />
         }
     }
 </div>

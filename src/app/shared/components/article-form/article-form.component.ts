@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 
 import { ArticleService } from '../../../services/article.service';
@@ -14,14 +13,25 @@ import { IBrand } from '../../models/ibrand.interface';
 import { IModel } from '../../models/imodel.interface';
 import { IProfile } from '../../models/profile.interface';
 import { IStyle } from '../../models/istyle.interface';
+import { IArticleDetail, IArticleImage } from '../../models/article-detail.interface';
 
-import { ICreateArticle, ArticleCondition } from '../../models/icreate-article.component';
+import { ICreateArticle, IUpdateArticle, ArticleCondition } from '../../models/icreate-article.component';
+import { getHttpErrorMessage } from '../../utils/http-error-message';
 
 import { ButtonComponent } from '../button/button.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 
 const MAX_IMAGES = 5;
+
+// Una "foto" en el grid puede ser una imagen ya guardada en el
+// servidor (con id, para poder borrarla con DELETE /images) o una
+// imagen nueva todavía sin subir (un File local con su preview)
+interface IPhotoSlot {
+  preview: string;
+  existingImage?: IArticleImage;
+  newFile?: File;
+}
 
 @Component({
   selector: 'app-article-form',
@@ -48,16 +58,33 @@ export class ArticleFormComponent {
   modelService = inject(ModelService);
   styleService = inject(StyleService);
 
+  private route = inject(ActivatedRoute);
   router = inject(Router);
+
+  // Modo edición: si la ruta tiene :id (articles/:id/edit) editamos
+  // ese artículo; si no, creamos uno nuevo (articles/sell)
+  private readonly articleId: number | null = this.resolveArticleId();
+  readonly isEditMode = this.articleId !== null;
+
+  isLoading = signal(this.isEditMode);
+
+  // Si estamos editando un artículo que está en borrador, mostramos
+  // además el botón de publicarlo (el backend no permite cambiar el
+  // status a través de PUT /articles/:id, solo con PATCH /publish)
+  isDraft = signal(false);
 
   // Datos para selects
   brands = signal<IBrand[]>([]);
   models = signal<IModel[]>([]);
   styles = signal<IStyle[]>([]);
 
-  // Imágenes
-  selectedImages = signal<File[]>([]);
-  imagePreviews = signal<string[]>([]);
+  // Fotos: tanto las ya guardadas (en modo edición) como las nuevas
+  // que el usuario va seleccionando viven juntas en este único grid
+  photoSlots = signal<IPhotoSlot[]>([]);
+
+  // Imágenes existentes cuyo botón de borrar se ha pulsado: se borran
+  // del servidor solo al guardar, no al pulsar la "x"
+  private removedImageIds = signal<number[]>([]);
 
   // Formulario
   articleForm = new FormGroup({
@@ -99,9 +126,9 @@ export class ArticleFormComponent {
       Validators.required
     ),
     movement_type: new FormControl({
-        value: '',
-        disabled: true,
-      }),
+      value: '',
+      disabled: true,
+    }),
     fk_styles_id: new FormControl<number | null>(
       null,
       Validators.required
@@ -127,12 +154,29 @@ export class ArticleFormComponent {
       return;
     }
 
-    if (!this.isProfileCompleteEnoughToSell(currentUser)) {
+    if (!this.isEditMode && !this.isProfileCompleteEnoughToSell(currentUser)) {
       void this.goToOwnProfile();
       return;
     }
 
     void this.loadInitialData();
+
+  }
+
+  // Lee el :id de la ruta articles/:id/edit. Si no existe (estamos en
+  // articles/sell), devuelve null y el formulario actúa en modo creación
+  private resolveArticleId(): number | null {
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (!idParam) {
+      return null;
+    }
+
+    const id = Number(idParam);
+
+    return Number.isFinite(id) ? id : null;
+
   }
 
   // Comprueba que el perfil tenga los datos mínimos para poder vender
@@ -143,7 +187,8 @@ export class ArticleFormComponent {
       && !!(profile.city ?? '').trim();
   }
 
-  // Carga inicial
+  // Carga inicial: marcas y estilos siempre, y si estamos editando,
+  // además el artículo a editar (que arrastra ya su modelo, marca y estilo)
   async loadInitialData() {
 
     try {
@@ -156,27 +201,83 @@ export class ArticleFormComponent {
 
       this.styles.set(styles);
 
+      if (this.isEditMode && this.articleId !== null) {
+        await this.loadArticleToEdit(this.articleId);
+      }
+
     } catch (error) {
 
-      toast.error(this.getErrorMessage(error, 'Error cargando datos'));
+      toast.error(getHttpErrorMessage(error, 'Error cargando datos'));
+
+    } finally {
+
+      this.isLoading.set(false);
 
     }
 
   }
 
-  // Extrae el mensaje real del backend (HttpErrorResponse.error.message)
-  // y cae a un mensaje genérico solo si no hay nada útil que mostrar
-  private getErrorMessage(error: unknown, fallback: string): string {
+  // Carga el artículo a editar y rellena el formulario con sus datos.
+  // La protección real de "solo el owner puede editar" la hace el
+  // backend (devuelve 403 al guardar); aquí solo evitamos que alguien
+  // que no es el dueño llegue a ver el formulario rellenado
+  private async loadArticleToEdit(articleId: number): Promise<void> {
 
-    if (error instanceof HttpErrorResponse) {
-      return error.error?.message ?? error.message ?? fallback;
+    const article = await this.articleService.getArticleById(articleId);
+
+    const currentUserId = this.authService.currentUser()?.fk_usuarios_id;
+
+    if (currentUserId !== article.fk_users_id) {
+      toast.error('No tienes permiso para editar este artículo');
+      await this.goToOwnProfile();
+      return;
     }
 
-    if (error instanceof Error) {
-      return error.message || fallback;
+    await this.populateFormFromArticle(article);
+
+  }
+
+  // Vuelca los datos del artículo en el formulario, carga los modelos
+  // de su marca para que el select de modelo tenga opciones, y muestra
+  // sus imágenes existentes en el grid de fotos
+  private async populateFormFromArticle(article: IArticleDetail): Promise<void> {
+
+    this.isDraft.set(article.status === 'DRAFT');
+
+    const brandId = article.brand?.id ?? null;
+    const modelId = article.model?.id ?? null;
+
+    if (brandId) {
+      const models = await this.modelService.getByBrandId(brandId);
+      this.models.set(models);
     }
 
-    return fallback;
+    const model = this.models().find(m => m.id === modelId);
+
+    this.articleForm.patchValue({
+      brand: brandId,
+      fk_models_id: modelId,
+      title: article.title,
+      description: article.description ?? '',
+      price: Number(article.price),
+      condition: article.condition ?? 'VERY_GOOD',
+      year_of_manufacture: article.year_of_manufacture ?? new Date().getFullYear(),
+      movement_type: model?.movement_type ?? article.movement_type ?? '',
+      fk_styles_id: article.style?.id ?? null,
+      gender: model?.gender ?? '',
+      case_material: article.case_material ?? '',
+      bracelet_material: article.bracelet_material ?? '',
+      original_box: !!article.original_box,
+      original_papers: !!article.original_papers,
+      shipping_available: !!article.shipping_available,
+    });
+
+    const existingSlots: IPhotoSlot[] = (article.images ?? []).map(image => ({
+      preview: image.image_url,
+      existingImage: image,
+    }));
+
+    this.photoSlots.set(existingSlots);
 
   }
 
@@ -230,41 +331,46 @@ export class ArticleFormComponent {
     this.articleForm.patchValue({ condition: value });
   }
 
-  // Imágenes
+  // Imágenes: añade las nuevas fotos seleccionadas al mismo grid en
+  // el que ya están las existentes, respetando el máximo total
   onImagesSelected(event: Event) {
 
     const input = event.target as HTMLInputElement;
 
     if (!input.files?.length) return;
 
-    const incoming = Array.from(input.files);
+    const incoming = Array.from(input.files).map<IPhotoSlot>(file => ({
+      preview: URL.createObjectURL(file),
+      newFile: file,
+    }));
 
-    const files = [...this.selectedImages(), ...incoming].slice(0, MAX_IMAGES);
+    const slots = [...this.photoSlots(), ...incoming].slice(0, MAX_IMAGES);
 
-    this.selectedImages.set(files);
-
-    const previews = files.map(file =>
-      URL.createObjectURL(file)
-    );
-
-    this.imagePreviews.set(previews);
+    this.photoSlots.set(slots);
 
     input.value = '';
 
   }
 
+  // Quita una foto del grid. Si era una imagen ya guardada en el
+  // servidor, anota su id para borrarla al guardar; si era una foto
+  // nueva todavía sin subir, simplemente se descarta
   removeImage(index: number) {
 
-    const files = [...this.selectedImages()];
-    const previews = [...this.imagePreviews()];
+    const slots = [...this.photoSlots()];
+    const [removed] = slots.splice(index, 1);
 
-    URL.revokeObjectURL(previews[index]);
+    if (!removed) {
+      return;
+    }
 
-    files.splice(index, 1);
-    previews.splice(index, 1);
+    if (removed.existingImage) {
+      this.removedImageIds.set([...this.removedImageIds(), removed.existingImage.id]);
+    } else {
+      URL.revokeObjectURL(removed.preview);
+    }
 
-    this.selectedImages.set(files);
-    this.imagePreviews.set(previews);
+    this.photoSlots.set(slots);
 
   }
 
@@ -272,16 +378,22 @@ export class ArticleFormComponent {
     input.click();
   }
 
+  // Previews a mostrar en el grid (existentes + nuevas, en el orden
+  // en que están en photoSlots; la primera sigue siendo la principal)
+  get imagePreviews(): string[] {
+    return this.photoSlots().map(slot => slot.preview);
+  }
+
   // Devuelve un array de huecos vacíos para completar la cuadrícula de fotos
   get emptyImageSlots(): number[] {
-    const remaining = this.maxImages - this.imagePreviews().length;
+    const remaining = this.maxImages - this.photoSlots().length;
     return remaining > 0 ? Array.from({ length: remaining }) : [];
   }
 
   // Construye el payload que espera el backend, descartando los campos
   // que son solo de uso interno del formulario (brand, movement_type,
   // gender no existen como columnas en articles)
-  private buildPayload(publish: boolean): ICreateArticle {
+  private buildPayload(): IUpdateArticle {
 
     const raw = this.articleForm.getRawValue();
 
@@ -298,9 +410,15 @@ export class ArticleFormComponent {
       shipping_available: raw.shipping_available!,
       fk_styles_id: raw.fk_styles_id!,
       fk_models_id: raw.fk_models_id!,
-      publish,
     };
 
+  }
+
+  // Las fotos nuevas (todavía sin subir) del grid actual
+  private get newImageFiles(): File[] {
+    return this.photoSlots()
+      .map(slot => slot.newFile)
+      .filter((file): file is File => !!file);
   }
 
   // Navega al perfil del usuario logueado. El :id de la ruta profile/:id
@@ -317,56 +435,80 @@ export class ArticleFormComponent {
 
   }
 
-  // Submit (publicar artículo)
+  // Submit: publica un artículo nuevo o guarda los cambios de uno
+  // existente, según el modo en el que esté el formulario
   async onSubmit() {
 
     if (this.articleForm.invalid) {
 
       this.articleForm.markAllAsTouched();
 
+      toast.error('Completa todos los campos obligatorios antes de continuar.');
+
       return;
 
     }
 
     try {
 
-      const payload = this.buildPayload(true);
+      if (this.isEditMode && this.articleId !== null) {
 
-      const article = await this.articleService.createArticleWithImages(
-        payload,
-        this.selectedImages()
-      );
+        await this.articleService.updateArticleWithImages(
+          this.articleId,
+          this.buildPayload(),
+          this.newImageFiles,
+          this.removedImageIds()
+        );
 
-      toast.success('Anuncio publicado');
+        toast.success('Artículo actualizado');
+
+      } else {
+
+        const payload: ICreateArticle = { ...this.buildPayload(), publish: true };
+
+        await this.articleService.createArticleWithImages(
+          payload,
+          this.newImageFiles
+        );
+
+        toast.success('Anuncio publicado');
+
+      }
 
       await this.goToOwnProfile();
 
     } catch (error) {
 
-      toast.error(this.getErrorMessage(error, 'Error al publicar el anuncio'));
+      const fallback = this.isEditMode
+        ? 'Error al actualizar el artículo'
+        : 'Error al publicar el anuncio';
+
+      toast.error(getHttpErrorMessage(error, fallback));
 
     }
 
   }
 
-  // Guardar como borrador
+  // Guardar como borrador (solo disponible al crear un artículo nuevo)
   async saveDraft() {
 
     if (this.articleForm.invalid) {
 
       this.articleForm.markAllAsTouched();
 
+      toast.error('Completa todos los campos obligatorios antes de guardar el borrador.');
+
       return;
 
     }
 
     try {
 
-      const payload = this.buildPayload(false);
+      const payload: ICreateArticle = { ...this.buildPayload(), publish: false };
 
-      const article = await this.articleService.createArticleWithImages(
+      await this.articleService.createArticleWithImages(
         payload,
-        this.selectedImages()
+        this.newImageFiles
       );
 
       toast.success('Borrador guardado');
@@ -375,7 +517,49 @@ export class ArticleFormComponent {
 
     } catch (error) {
 
-      toast.error(this.getErrorMessage(error, 'Error al guardar el borrador'));
+      toast.error(getHttpErrorMessage(error, 'Error al guardar el borrador'));
+
+    }
+
+  }
+
+  // Publicar un borrador existente (solo disponible al editar un
+  // artículo que está en DRAFT). Primero guarda los cambios pendientes
+  // del formulario (datos e imágenes) y, si eso sale bien, lo publica
+  async publishFromEdit() {
+
+    if (this.articleForm.invalid) {
+
+      this.articleForm.markAllAsTouched();
+
+      toast.error('Completa todos los campos obligatorios antes de guardar el borrador.');
+
+      return;
+
+    }
+
+    if (this.articleId === null) {
+      return;
+    }
+
+    try {
+
+      await this.articleService.updateArticleWithImages(
+        this.articleId,
+        this.buildPayload(),
+        this.newImageFiles,
+        this.removedImageIds()
+      );
+
+      await this.articleService.publishArticle(this.articleId);
+
+      toast.success('Artículo publicado');
+
+      await this.goToOwnProfile();
+
+    } catch (error) {
+
+      toast.error(getHttpErrorMessage(error, 'Error al publicar el artículo'));
 
     }
 

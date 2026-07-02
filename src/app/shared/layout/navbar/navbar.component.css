@@ -14,6 +14,7 @@
         justify-content: space-between;
         align-items: center;
     }
+
 }
 
 .navbar-nav .nav-link {
@@ -65,6 +66,8 @@
 }
 
 @media (max-width: 991.98px) {
+
+    
     .navbar .container-xxl {
         flex-wrap: wrap;
         justify-content: space-between;
@@ -73,5 +76,10 @@
     .navbar-collapse {
         flex: 1 0 100%;
         margin-top: 1rem;
+    }
+
+        
+    .navbar-nav {
+        padding-bottom: 1rem;
     }
 }
