@@ -8,7 +8,8 @@
                 </div>
             </a>
             <!-- Mobile button -->
-            <button class="btn btn-light navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <button class="btn btn-light navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
                 <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse justify-content-between bg-whitemt-2 mt-lg-0 pt-3 p-lg-0"
@@ -19,28 +20,25 @@
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        @if (currentUser()) {
-                        <a class="nav-link" routerLinkActive="active" [routerLink]="['/explore']">Comprar</a>
-                        } @else {
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/explore']">Explorar</a>
-                        }
-
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']">Vender</a>
-                    </li>           
+                    </li>
                     @if (currentUser()?.rol === 'admin') {
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']">Administrar</a>
-                    </li>                       }           
+                    </li>
+                    }
                 </ul>
 
                 @if (!currentUser()) {
                 <!-- Not logged -->
                 <div class="d-flex gap-3 align-items-center">
                     <a routerLink="/register">
-                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-person-circle'">
-                        </app-button>                
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-person-circle'">
+                        </app-button>
                     </a>
                     <a routerLink="/login">
                         <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
@@ -56,7 +54,8 @@
 
                     <ul class="navbar-nav w-100">
                         <li class="nav-item">
-                            <a routerLink="/fav-items" class="nav-link"><i class="bi bi-heart me-2"></i> Mis favoritos</a>
+                            <a routerLink="/fav-items" class="nav-link"><i class="bi bi-heart me-2"></i> Mis
+                                favoritos</a>
                         </li>
 
                         <li class="nav-item">

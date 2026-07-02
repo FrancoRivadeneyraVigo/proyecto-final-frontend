@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { ProfilesManagementComponent } from '../profiles-management/profiles-management.component';
+import { AdminStatsComponent } from '../admin-stats/admin-stats.component';
 
 type AdminTab = 'profiles' | 'reports' | 'categories' | 'stats';
 
 @Component({
   selector: 'app-admin-tabs',
-  imports: [ProfilesManagementComponent],
+  imports: [ProfilesManagementComponent, AdminStatsComponent],
   templateUrl: './admin-tabs.component.html',
   styleUrl: './admin-tabs.component.css',
 })

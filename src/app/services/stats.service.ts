@@ -10,28 +10,45 @@ export class StatsService {
   private httpClient = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  async publishedArticles(): Promise<{ total: number }> {
+  async getReportsByStatus(periodo?: string): Promise<{ status: string, total: number }[]> {
+    const url = periodo 
+      ? `${this.apiUrl}/stats/reportes-por-estado?periodo=${periodo}`
+      : `${this.apiUrl}/stats/reportes-por-estado`;
+
     return await lastValueFrom(
-      this.httpClient.get<{ total: number }>(`${this.apiUrl}/stats/articulos-publicados`)
+      this.httpClient.get<{ status: string, total: number }[]>(url)
     );
   }
 
-  async soldArticles(): Promise<{ total: number }> {
+  async getUsersByStatus(periodo?: string): Promise<{ status: string, total: number }[]> {
+    const url = periodo 
+      ? `${this.apiUrl}/stats/usuarios-por-estado?periodo=${periodo}`
+      : `${this.apiUrl}/stats/usuarios-por-estado`;
+
     return await lastValueFrom(
-      this.httpClient.get<{ total: number }>(`${this.apiUrl}/stats/articulos-vendidos`)
-    );
+      this.httpClient.get<{ status: string, total: number }[]>(url)
+    )
   }
 
-  async activeUsers(): Promise<{ total: number }> {
+
+  async getArticlesByDate(periodo?: string): Promise<{date: string, total: number}[]> {
+    const url = periodo 
+      ? `${this.apiUrl}/stats/articulos-por-fecha?periodo=${periodo}`
+      : `${this.apiUrl}/stats/articulos-por-fecha`;
+    
     return await lastValueFrom(
-      this.httpClient.get<{ total: number }>(`${this.apiUrl}/stats/usuarios-activos`)
-    );
+      this.httpClient.get<{date: string, total: number}[]>(url)
+    )
   }
 
-  async managedReports(): Promise<{ total: number }> {
+  async getSessionByDate(periodo?: string): Promise<{date: string, total: number}[]> {
+    const url = periodo 
+      ? `${this.apiUrl}/stats/usuarios-por-fecha?periodo=${periodo}`
+      : `${this.apiUrl}/stats/usuarios-por-fecha`;
+
     return await lastValueFrom(
-      this.httpClient.get<{ total: number }>(`${this.apiUrl}/stats/reportes-gestionados`)
-    );
-  }
+      this.httpClient.get<{date: string, total: number}[]>(url)
+    )
+  } 
 
 }
