@@ -9,7 +9,7 @@
         </div>
         <div class="header-actions">
             <app-button [text]="'Reportar perfil'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                [iconLeft]="'bi bi-exclamation-circle'"></app-button>
+                [iconLeft]="'bi bi-exclamation-circle'" (click)="onReportProfile()"></app-button>
             @if (currentUserId; as userId) {
             <a [routerLink]="['/profile', userId]">
                 <app-button [text]="'Ver perfil'" [class]="'btn-primary'" [showIconLeft]="true"
@@ -139,3 +139,7 @@
 <app-report-article [articleId]="currentArticle.id" [articleTitle]="currentArticle.title"></app-report-article>
 }
 
+
+@if (contactId; as reportedUserId) {
+<app-report-profile [userId]="reportedUserId" [username]="contactName"></app-report-profile>
+}
