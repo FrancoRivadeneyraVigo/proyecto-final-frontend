@@ -40,6 +40,14 @@
                             <span>Email: {{ profile()!.email }}</span>
                         </p>
                         <p class="profile-meta">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Roles:</span>
+                        
+                            @for (role of rolesList(); track role) {
+                            <span>{{ role }}</span>
+                            }
+                        </p>
+                        <p class="profile-meta">
                             <i class="bi bi-calendar-fill"></i>
                             <span>Fecha creación: {{ profile()!.created_at | date:'dd/MM/yyyy' }}</span>
                         </p>
@@ -59,18 +67,25 @@
                             @default { Desconocido }
                             }
                         </span>
-                    
-                        @if (profile()!.status !== 'DELETED') {
-                        @if (profile()!.status === 'ACTIVE') {
-                        <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-lock'"
-                            (click)="openConfirm('block')"></app-button>
-                        } @else if (profile()!.status === 'BLOCKED') {
-                        <app-button [text]="'Desbloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-unlock'"
-                            (click)="openConfirm('unblock')"></app-button>
-                        }
-                        <app-button [text]="'Dar de baja'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
-                            (click)="openConfirm('delete')"></app-button>
-                        }              
+
+                        <div class="actions-group">
+                            <app-button [text]="'Roles'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-people'"
+                                (click)="openRolesModal()">
+                            </app-button>
+                        
+                            @if (profile()!.status !== 'DELETED') {
+                            @if (profile()!.status === 'ACTIVE') {
+                            <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-lock'"
+                                (click)="openConfirm('block')"></app-button>
+                            } @else if (profile()!.status === 'BLOCKED') {
+                            <app-button [text]="'Desbloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-unlock'"
+                                (click)="openConfirm('unblock')"></app-button>
+                            }
+                            <app-button [text]="'Dar de baja'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
+                                (click)="openConfirm('delete')"></app-button>
+                            } 
+                        </div>
+                        
                     </div>
                 </div>
                 <div class="profile-detail-bio">
@@ -98,5 +113,58 @@
     (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
 </app-confirm-modal>   
 }
+
+@if (showRolesModal()) {
+<div class="confirm-modal-backdrop" (click)="closeRolesModal()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+
+        <form [formGroup]="rolesForm">
+
+            <div class="confirm-modal-header">
+                <h5>
+                    <i class="bi bi-people"></i>
+                    Gestionar roles
+                </h5>
+                <button type="button" class="confirm-modal-close" (click)="closeRolesModal()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="confirm-modal-body">
+                <p class="body-medium">Selecciona los roles que tendrá este usuario.</p>
+
+                <div class="roles-checkbox-group">
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="admin" />
+                        Admin
+                    </label>
+
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="moderator" />
+                        Moderador
+                    </label>
+
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="user" />
+                        Usuario
+                    </label>
+                </div>
+            </div>
+
+            <div class="confirm-modal-footer">
+                <app-button text="Cancelar" class="btn-outline-primary" [showIconLeft]="true" iconLeft="bi bi-x"
+                    [disabled]="processingRoles()" (click)="closeRolesModal()">
+                </app-button>
+
+                <app-button text="Guardar" class="btn-primary" [showIconLeft]="true" iconLeft="bi bi-check-lg"
+                    [disabled]="processingRoles()" (click)="saveRoles()">
+                </app-button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+}    
 
 <app-footer></app-footer>

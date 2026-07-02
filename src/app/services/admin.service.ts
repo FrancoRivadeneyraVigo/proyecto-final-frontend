@@ -67,4 +67,32 @@ async deleteProfile(userId: number): Promise<{ message: string }> {
   );
 }
 
+//Añadir rol
+async addRole(userId: number, rol: string): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.post<{ message: string }>(
+      `${this.baseUrl}/${userId}/roles`,
+      { rol }
+    )
+  );
+}
+
+//Quitar rol
+async removeRole(userId: number, roleId: number): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.delete<{ message: string }>(
+      `${this.baseUrl}/${userId}/roles/${roleId}`
+    )
+  );
+}
+
+// Obtener roles de un usuario
+async getProfileRoles(userId: number): Promise<{ roles: { roleId: number; rol: string }[] }> {
+  return lastValueFrom(
+    this.httpClient.get<{ roles: { roleId: number; rol: string }[] }>(
+      `${this.baseUrl}/${userId}/roles`
+    )
+  );
+}
+
 }
