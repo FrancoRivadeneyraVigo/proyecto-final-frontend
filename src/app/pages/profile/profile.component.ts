@@ -11,6 +11,7 @@ import { IProfile, IUpdateProfileRequest } from '../../shared/models/profile.int
 import { ProfileService } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
 import { ProfileActivityTabsComponent } from './components/profile-activity-tabs/profile-activity-tabs.component';
+import { ReportUserComponent } from './report-user/report-user.component';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +20,7 @@ import { ProfileActivityTabsComponent } from './components/profile-activity-tabs
     FooterComponent,
     ButtonComponent,
     ProfileActivityTabsComponent,
+    ReportUserComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './profile.component.html',
