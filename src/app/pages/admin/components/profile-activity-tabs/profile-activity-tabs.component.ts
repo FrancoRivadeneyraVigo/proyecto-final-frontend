@@ -4,7 +4,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
-type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER_REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
+type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
 type ReportStatusFilter = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'all';
 
 @Component({

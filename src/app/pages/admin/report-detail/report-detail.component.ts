@@ -3,7 +3,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { ReportService } from '../../../services/report.service';
-import { IReportDetail, ReportReason, ReportStatus } from '../../../shared/models/report.interface';
+import {
+  IReportDetail,
+  ReportReason,
+  ReportResolution,
+  ReportStatus,
+} from '../../../shared/models/report.interface';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { NavbarComponent } from '../../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/layout/footer/footer.component';
@@ -23,10 +28,14 @@ const STATUS_LABELS: Record<ReportStatus, string> = {
   PENDING: 'Pendiente',
   'UNDER REVIEW': 'En revisión',
   RESOLVED: 'Resuelto',
+};
+
+const RESOLUTION_LABELS: Record<ReportResolution, string> = {
+  APPROVED: 'Aprobado',
   REJECTED: 'Rechazado',
 };
 
-type ConfirmAction = 'reject' | 'validate' | null;
+type ConfirmAction = 'reject' | 'validate' | 'underReview' | null;
 
 @Component({
   selector: 'app-report-detail',
@@ -51,6 +60,7 @@ export class ReportDetailComponent {
   processingAction = signal(false);
 
   constructor() {
+    window.scrollTo(0, 0);
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadReport(id);
   }
@@ -72,12 +82,23 @@ export class ReportDetailComponent {
     return REASON_LABELS[reason] ?? reason;
   }
 
-  getStatusLabel(status: ReportStatus): string {
+  getStatusLabel(status: ReportStatus, resolution: ReportResolution | null = null): string {
+    if (status === 'RESOLVED' && resolution) {
+      return RESOLUTION_LABELS[resolution] ?? STATUS_LABELS.RESOLVED;
+    }
     return STATUS_LABELS[status] ?? status;
   }
 
   canModerate(status: ReportStatus): boolean {
-    return status !== 'RESOLVED' && status !== 'REJECTED';
+    return status === 'UNDER REVIEW';
+  }
+
+  canMarkUnderReview(status: ReportStatus): boolean {
+    return status === 'PENDING';
+  }
+
+  isResolvedRejected(status: ReportStatus, resolution: ReportResolution | null): boolean {
+    return status === 'RESOLVED' && resolution === 'REJECTED';
   }
 
   openConfirm(action: ConfirmAction): void {
@@ -106,8 +127,12 @@ export class ReportDetailComponent {
           toast.success('Reporte rechazado correctamente');
           break;
         case 'validate':
-          await this.reportService.withdrawReportedArticle(report.article_id);
+          await this.reportService.withdrawReportedArticle(report.article_id, report.id);
           toast.success('Artículo retirado correctamente');
+          break;
+        case 'underReview':
+          await this.reportService.markReportUnderReview(report.id);
+          toast.success('Reporte marcado en revisión');
           break;
       }
       await this.loadReport(report.id);

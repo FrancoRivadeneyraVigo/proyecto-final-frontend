@@ -4,7 +4,6 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   ICreateReportRequest,
-  IModerationMessageResponse,
   IRejectReportRequest,
   IReportDetail,
   IReportFilters,
@@ -59,21 +58,21 @@ export class ReportService {
     return lastValueFrom(this.httpClient.get<IReportDetail>(`${this.baseUrl}/${id}`));
   }
 
-  rejectReport(id: number, payload: IRejectReportRequest = {}): Promise<IModerationMessageResponse> {
+  markReportUnderReview(id: number): Promise<void> {
     return lastValueFrom(
-      this.httpClient.patch<IModerationMessageResponse>(
-        `${this.moderationUrl}/reportes/${id}/rechazar`,
-        payload
-      )
+      this.httpClient.patch<void>(`${this.moderationUrl}/reportes/${id}/en_revision`, null)
     );
   }
 
-  withdrawReportedArticle(articleId: number): Promise<IModerationMessageResponse> {
+  rejectReport(id: number, payload: IRejectReportRequest = {}): Promise<void> {
     return lastValueFrom(
-      this.httpClient.patch<IModerationMessageResponse>(
-        `${this.moderationUrl}/articulos/${articleId}/retirar`,
-        {}
-      )
+      this.httpClient.patch<void>(`${this.moderationUrl}/reportes/${id}/rechazar`, payload)
+    );
+  }
+
+  withdrawReportedArticle(articleId: number, reportId: number): Promise<void> {
+    return lastValueFrom(
+      this.httpClient.patch<void>(`${this.moderationUrl}/articulos/${articleId}/retirar`, { reportId })
     );
   }
 }

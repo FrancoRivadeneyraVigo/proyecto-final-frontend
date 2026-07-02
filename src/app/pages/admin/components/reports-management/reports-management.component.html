@@ -11,10 +11,6 @@
         [class]="activeFilter() === 'RESOLVED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
         (click)="onStatusChange('RESOLVED')">
     </app-button>
-    <app-button [text]="'Rechazados'"
-        [class]="activeFilter() === 'REJECTED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
-        (click)="onStatusChange('REJECTED')">
-    </app-button>
     <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
         [fullWidth]="true" (click)="onStatusChange('all')">
     </app-button>
@@ -99,11 +95,12 @@
                 </p>
             </div>
             <div class="report-badge-wrapper">
-                <span class="badge" [class.badge-active]="report.status === 'RESOLVED'"
+                <span class="badge"
+                    [class.badge-active]="report.status === 'RESOLVED' && report.resolution === 'APPROVED'"
                     [class.badge-blocked]="report.status === 'PENDING'"
-                    [class.badge-deleted]="report.status === 'UNDER REVIEW'"
-                    [class.badge-rejected]="report.status === 'REJECTED'">
-                    {{ getStatusLabel(report.status) }}
+                    [class.badge-deleted]="report.status === 'UNDER REVIEW' || (report.status === 'RESOLVED' && !report.resolution)"
+                    [class.badge-rejected]="isResolvedRejected(report.status, report.resolution)">
+                    {{ getStatusLabel(report.status, report.resolution) }}
                 </span>
             </div>
         </li>

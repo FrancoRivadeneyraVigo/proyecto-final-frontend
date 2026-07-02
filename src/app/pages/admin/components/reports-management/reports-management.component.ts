@@ -6,6 +6,7 @@ import { ReportService } from '../../../../services/report.service';
 import {
   IReportsPaginatedResponse,
   ReportReason,
+  ReportResolution,
   ReportStatus,
   ReportStatusFilter,
 } from '../../../../shared/models/report.interface';
@@ -33,6 +34,10 @@ const STATUS_LABELS: Record<ReportStatus, string> = {
   PENDING: 'Pendiente',
   'UNDER REVIEW': 'En revisión',
   RESOLVED: 'Resuelto',
+};
+
+const RESOLUTION_LABELS: Record<ReportResolution, string> = {
+  APPROVED: 'Aprobado',
   REJECTED: 'Rechazado',
 };
 
@@ -120,7 +125,14 @@ export class ReportsManagementComponent implements OnInit {
     return REASON_LABELS[reason] ?? reason;
   }
 
-  getStatusLabel(status: ReportStatus): string {
+  getStatusLabel(status: ReportStatus, resolution: ReportResolution | null = null): string {
+    if (status === 'RESOLVED' && resolution) {
+      return RESOLUTION_LABELS[resolution] ?? STATUS_LABELS.RESOLVED;
+    }
     return STATUS_LABELS[status] ?? status;
+  }
+
+  isResolvedRejected(status: ReportStatus, resolution: ReportResolution | null): boolean {
+    return status === 'RESOLVED' && resolution === 'REJECTED';
   }
 }

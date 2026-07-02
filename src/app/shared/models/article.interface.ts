@@ -1,7 +1,7 @@
 export type ArticleStatus =
   | 'DRAFT'
   | 'PUBLISHED'
-  | 'UNDER_REVIEW'
+  | 'UNDER REVIEW'
   | 'RESERVED'
   | 'SOLD';
 

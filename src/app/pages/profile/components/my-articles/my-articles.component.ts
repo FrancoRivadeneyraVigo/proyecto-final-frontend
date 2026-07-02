@@ -9,7 +9,7 @@ import { ArticleStatusFilterComponent } from '../article-status-filter/article-s
 const EMPTY_MESSAGES: Record<string, string> = {
   published: 'No tienes anuncios publicados.',
   draft: 'No tienes borradores.',
-  under_review: 'No tienes anuncios en revisión.',
+  'under review': 'No tienes anuncios en revisión.',
   reserved: 'No tienes anuncios reservados.',
   sold: 'No tienes anuncios vendidos.',
   all: 'No tienes anuncios.',

@@ -144,7 +144,7 @@ export class ChatDetailComponent implements OnInit {
     const labels: Record<string, string> = {
       DRAFT: 'Borrador',
       PUBLISHED: 'Publicado',
-      UNDER_REVIEW: 'En revision',
+      'UNDER REVIEW': 'En revision',
       SOLD: 'Vendido',
       RESERVED: 'Reservado',
       RETIRED: 'Retirado',

@@ -6,7 +6,9 @@ export type ReportReason =
   | 'inappropriate_content'
   | 'other';
 
-export type ReportStatus = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'REJECTED';
+export type ReportStatus = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED';
+
+export type ReportResolution = 'APPROVED' | 'REJECTED';
 
 export type ReportStatusFilter = ReportStatus | 'all';
 
@@ -31,6 +33,7 @@ export interface IAdminReport {
   reason: ReportReason;
   comments: string;
   status: ReportStatus;
+  resolution: ReportResolution | null;
   created_at: string;
   resolved_at: string | null;
   article_id: number;
@@ -54,7 +57,7 @@ export interface IReportDetail {
   status: ReportStatus;
   created_at: string;
   resolved_at: string | null;
-  resolution: string | null;
+  resolution: ReportResolution | null;
   moderator_note: string | null;
   article_id: number;
   reporter_id: number;
@@ -67,10 +70,6 @@ export interface IReportDetail {
 
 export interface IRejectReportRequest {
   moderator_note?: string;
-}
-
-export interface IModerationMessageResponse {
-  message: string;
 }
 
 export interface ICreateProfileReportRequest {

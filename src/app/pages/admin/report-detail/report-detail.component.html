@@ -60,12 +60,17 @@
                         </p>
                     </div>
                     <div class="report-detail-actions">
-                        <span class="badge" [class.badge-active]="report()!.status === 'RESOLVED'"
+                        <span class="badge"
+                            [class.badge-active]="report()!.status === 'RESOLVED' && report()!.resolution === 'APPROVED'"
                             [class.badge-blocked]="report()!.status === 'PENDING'"
-                            [class.badge-deleted]="report()!.status === 'UNDER REVIEW'"
-                            [class.badge-rejected]="report()!.status === 'REJECTED'">
-                            {{ getStatusLabel(report()!.status) }}
+                            [class.badge-deleted]="report()!.status === 'UNDER REVIEW' || (report()!.status === 'RESOLVED' && !report()!.resolution)"
+                            [class.badge-rejected]="isResolvedRejected(report()!.status, report()!.resolution)">
+                            {{ getStatusLabel(report()!.status, report()!.resolution) }}
                         </span>
+                        @if (canMarkUnderReview(report()!.status)) {
+                        <app-button [text]="'Poner en revisión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-eye'" (click)="openConfirm('underReview')"></app-button>
+                        }
                         @if (canModerate(report()!.status)) {
                         <app-button [text]="'Rechazar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-x-circle'" (click)="openConfirm('reject')"></app-button>
@@ -92,13 +97,14 @@
 
 @if (confirmAction(); as action) {
 <app-confirm-modal
-    [title]="action === 'reject' ? 'Rechazar reporte' : 'Validar reporte'"
-    [icon]="action === 'reject' ? 'bi bi-x-circle' : 'bi bi-check-circle'"
-    [iconColor]="action === 'reject' ? 'danger' : 'success'"
+    [title]="action === 'reject' ? 'Rechazar reporte' : action === 'validate' ? 'Validar reporte' : 'Poner en revisión'"
+    [icon]="action === 'reject' ? 'bi bi-x-circle' : action === 'validate' ? 'bi bi-check-circle' : 'bi bi-eye'"
+    [iconColor]="action === 'reject' ? 'danger' : action === 'validate' ? 'success' : 'primary'"
     [subtitle]="getReasonLabel(report()!.reason)" [subtitleId]="report()!.id"
-    [message]="action === 'reject' ? '¿Estás seguro que deseas rechazar este reporte?' : '¿Estás seguro que deseas validar este reporte? Se retirará el artículo reportado.'"
-    [confirmText]="action === 'reject' ? 'Rechazar' : 'Validar'"
-    [confirmIcon]="action === 'reject' ? 'bi bi-x-circle' : 'bi bi-check-circle'" [processing]="processingAction()"
+    [message]="action === 'reject' ? '¿Estás seguro que deseas rechazar este reporte?' : action === 'validate' ? '¿Estás seguro que deseas validar este reporte? Se retirará el artículo reportado.' : '¿Deseas marcar este reporte como en revisión?'"
+    [confirmText]="action === 'reject' ? 'Rechazar' : action === 'validate' ? 'Validar' : 'Poner en revisión'"
+    [confirmIcon]="action === 'reject' ? 'bi bi-x-circle' : action === 'validate' ? 'bi bi-check-circle' : 'bi bi-eye'"
+    [processing]="processingAction()"
     (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
 </app-confirm-modal>
 }
