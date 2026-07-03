@@ -1,30 +1,79 @@
-<div class=" bg-white p-4 rounded shadow-sm mb-4">
- <div class="filter-tabs">
-    <app-button 
-        [text]="'Últimos 30 días'" 
-        [class]="activePeriod() === '30d' ? 'btn-primary' : 'btn-outline-primary'"
-        [fullWidth]="true" 
-        (click)="onPeriodChange('30d')">
+<div class="filter-tabs">
+    <app-button [text]="'Últimos 30 días'" [class]="activePeriod() === '30d' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="onPeriodChange('30d')">
     </app-button>
-    <app-button 
-        [text]="'Últimos 7 días'" 
-        [class]="activePeriod() === '7d' ? 'btn-primary' : 'btn-outline-primary'"
-        [fullWidth]="true" 
-        (click)="onPeriodChange('7d')">
+    <app-button [text]="'Últimos 7 días'" [class]="activePeriod() === '7d' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="onPeriodChange('7d')">
     </app-button>
-    <app-button 
-        [text]="'Hoy'" 
-        [class]="activePeriod() === 'today' ? 'btn-primary' : 'btn-outline-primary'"
-        [fullWidth]="true" 
-        (click)="onPeriodChange('today')">
+    <app-button [text]="'Hoy'" [class]="activePeriod() === 'today' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="onPeriodChange('today')">
     </app-button>
-    <app-button 
-        [text]="'Todos'" 
-        [class]="activePeriod() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
-        [fullWidth]="true" 
-        (click)="onPeriodChange('all')">
+    <app-button [text]="'Todos'" [class]="activePeriod() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="onPeriodChange('all')">
     </app-button>
 </div>
+
+<div class="bg-white p-4 rounded shadow-sm mb-4">
+    <h5 class="mb-4 fw-normal text-black">
+        <i class="bi bi-graph-up me-2 text-success"></i>Resumen global
+    </h5>
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card p-3 border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="icon-bg bg-primary-subtle">
+                        <i class="bi bi-watch fs-4 text-primary"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-1 small">Artículos publicados</p>
+                        <h3 class="fw-bold mb-0 text-primary">{{ publishedArticles() }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card p-3 border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="icon-bg bg-success-subtle">
+                        <i class="bi bi-people fs-4 text-success"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-1 small">Usuarios activos</p>
+                        <h3 class="fw-bold mb-0 text-success">{{ activeUsers() }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card p-3 border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="icon-bg bg-warning-subtle">
+                        <i class="bi bi-clipboard-check fs-4 text-warning"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-1 small">Reportes gestionados</p>
+                        <h3 class="fw-bold mb-0 text-warning">{{ managedReports() }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card p-3 border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="icon-bg bg-info-subtle">
+                        <i class="bi bi-bag-check fs-4 text-info"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-1 small">Artículos vendidos</p>
+                        <h3 class="fw-bold mb-0 text-info">{{ soldArticles() }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=" bg-white p-4 rounded shadow-sm mb-4">
     <h5 class="mb-4 fw-normal text-black"><i class="bi bi-person-square me-2 text-success"></i>Perfiles</h5>
 
     <div class="row g-3">
@@ -95,7 +144,7 @@
 <div class="row g-4 mt-2">
     <div class="col-12 col-md-6">
         <div class="bg-white p-4 rounded-4 shadow-sm">
-            <h6 class="mb-3 f-4">
+            <h6 class="mb-3 fs-5">
                 <i class="bi bi-clock-history me-2 text-success"></i>Total sesiones
             </h6>
             <ag-charts [options]="sessionsChartOptions()"></ag-charts>
@@ -104,7 +153,7 @@
 
     <div class="col-12 col-md-6">
         <div class="bg-white p-4 rounded-4 shadow-sm">
-            <h6 class="mb-3 f-4">
+            <h6 class="mb-3 fs-5">
                 <i class="bi bi-watch me-2 text-success"></i>Total artículos
             </h6>
             <ag-charts [options]="articlesChartOptions()"></ag-charts>
