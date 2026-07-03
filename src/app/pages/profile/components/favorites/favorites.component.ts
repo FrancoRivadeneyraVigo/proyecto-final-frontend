@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { ArticleService } from '../../../../services/article.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { IFavorite } from '../../../../shared/models/profile-activity.interface';
+import { IFavorite } from '../../../../shared/models/profile.interface';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message';
 
 @Component({

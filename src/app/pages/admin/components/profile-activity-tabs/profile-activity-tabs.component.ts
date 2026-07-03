@@ -1,5 +1,5 @@
 import { Component, computed, input, signal } from '@angular/core';
-import { IPurchaseSale, IReview, IReport, IFavorite } from '../../../../shared/models/profile-activity.interface';
+import { IFavorite, IPurchaseSale, IReport, IReview } from '../../../../shared/models/profile.interface';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
