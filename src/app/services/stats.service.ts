@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { environment } from "../../environments/environment";
 import { lastValueFrom } from 'rxjs';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StatsService {
   private httpClient = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = BACKEND_API_URL;
 
   async getReportsByStatus(periodo?: string): Promise<{ status: string, total: number }[]> {
     const url = periodo 

@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { ICreateProfileReportRequest } from '../shared/models/report.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportProfileService {
   private httpClient = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/profile`;
+  private baseUrl = `${BACKEND_API_URL}/profile`;
 
   reportProfile(userId: number, payload: ICreateProfileReportRequest): Promise<{ message: string }> {
     return lastValueFrom(

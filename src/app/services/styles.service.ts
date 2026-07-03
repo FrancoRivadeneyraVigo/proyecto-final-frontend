@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { IStyle } from "../shared/models/istyle.interface";
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 type StylePayload = Omit<IStyle, 'id'>;
 
@@ -12,7 +12,7 @@ type StylePayload = Omit<IStyle, 'id'>;
 export class StyleService {
 
   private httpClient = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = BACKEND_API_URL;
 
   async getAll(): Promise<IStyle[]> {
 
