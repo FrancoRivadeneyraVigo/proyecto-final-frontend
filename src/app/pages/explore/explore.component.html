@@ -249,7 +249,7 @@
       } @else {
 
       <!-- Grid de resultados -->
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-4">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-4 align-items-start">
         @for (article of paginatedArticles(); track article.id) {
         <div class="col">
           <app-product-card [article]="article" (favoriteToggled)="toggleFavorite($event)"></app-product-card>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 
+
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
@@ -16,6 +17,7 @@ import { IArticleSummary } from '../../shared/models/article-detail.interface';
 import { IBrand } from '../../shared/models/ibrand.interface';
 import { IModel } from '../../shared/models/imodel.interface';
 import { IStyle } from '../../shared/models/istyle.interface';
+import { ActivatedRoute } from '@angular/router';
 
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 50000;
@@ -53,7 +55,7 @@ const GENDER_TRANSLATIONS: Record<string, string> = {
     NavbarComponent,
     FooterComponent,
     ProductCardComponent,
-],
+  ],
   templateUrl: './explore.component.html',
   styleUrl: './explore.component.css'
 })
@@ -68,6 +70,8 @@ export class ExploreComponent implements OnInit {
   private brandService = inject(BrandService);
   private modelService = inject(ModelService);
   private styleService = inject(StyleService);
+
+  private route = inject(ActivatedRoute);
 
   // Listas fijas para los selects/checkboxes que no vienen de la API
   readonly movementTypes = MOVEMENT_TYPES;
@@ -135,12 +139,23 @@ export class ExploreComponent implements OnInit {
   async ngOnInit() {
     this.loading.set(true);
 
+    const searchParam = this.route.snapshot.queryParamMap.get('search')
+    if (searchParam) {
+      this.search = searchParam;
+    }
+
     try {
       await Promise.all([
-        this.loadArticles().catch(err => console.error('Error cargando artículos:', err)),
         this.loadBrands().catch(err => console.error('Error cargando marcas:', err)),
         this.loadStyles().catch(err => console.error('Error cargando estilos (público):', err))
       ]);
+
+      if (searchParam) {
+        await this.applyFilters();
+      } else {
+        await this.loadArticles();
+      }
+
     } catch (error) {
       console.error('Error general en la inicialización:', error);
     } finally {
