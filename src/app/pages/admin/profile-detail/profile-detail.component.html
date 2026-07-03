@@ -43,9 +43,8 @@
                             <i class="bi bi-people-fill"></i>
                             <span>Roles:</span>
                         
-                            @for (role of rolesList(); track role) {
-                            <span>{{ role }}</span>
-                            }
+                            @for (role of rolesList(); track role; let last = $last) {
+                            <span>{{ role }}{{ !last ? ' |' : '' }}</span>                           }
                         </p>
                         <p class="profile-meta">
                             <i class="bi bi-calendar-fill"></i>
@@ -102,69 +101,27 @@
 </main>
 
 @if (confirmAction(); as action) {
-<app-confirm-modal
-    [title]="action === 'block' ? 'Bloquear perfil' : action === 'unblock' ? 'Desbloquear perfil' : 'Dar de baja'"
-    [icon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'"
-    [iconColor]="action === 'delete' ? 'danger' : 'success'"
-    [subtitle]="(profile()!.name || '') + ' ' + (profile()!.surname || '')" [subtitleId]="profile()!.id"
-    [message]="action === 'block' ? '¿Estás seguro que deseas bloquear el perfil seleccionado?' : action === 'unblock' ? '¿Estás seguro que deseas desbloquear el perfil seleccionado?' : '¿Estás seguro que deseas dar de baja el perfil seleccionado? Esta acción no se puede deshacer.'"
-    [confirmText]="action === 'block' ? 'Bloquear' : action === 'unblock' ? 'Desbloquear' : 'Dar de baja'"
-    [confirmIcon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'" [processing]="processingAction()"
-    (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
-</app-confirm-modal>   
+    <app-confirm-modal
+        [title]="action === 'block' ? 'Bloquear perfil' : action === 'unblock' ? 'Desbloquear perfil' : 'Dar de baja'"
+        [icon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'"
+        [iconColor]="action === 'delete' ? 'danger' : 'success'"
+        [subtitle]="(profile()!.name || '') + ' ' + (profile()!.surname || '')" [subtitleId]="profile()!.id"
+        [message]="action === 'block' ? '¿Estás seguro que deseas bloquear el perfil seleccionado?' : action === 'unblock' ? '¿Estás seguro que deseas desbloquear el perfil seleccionado?' : '¿Estás seguro que deseas dar de baja el perfil seleccionado? Esta acción no se puede deshacer.'"
+        [confirmText]="action === 'block' ? 'Bloquear' : action === 'unblock' ? 'Desbloquear' : 'Dar de baja'"
+        [confirmIcon]="action === 'delete' ? 'bi bi-trash' : 'bi bi-shield-exclamation'" [processing]="processingAction()"
+        (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
+    </app-confirm-modal>   
 }
 
 @if (showRolesModal()) {
-<div class="confirm-modal-backdrop" (click)="closeRolesModal()">
-    <div class="confirm-modal" (click)="$event.stopPropagation()">
-
-        <form [formGroup]="rolesForm">
-
-            <div class="confirm-modal-header">
-                <h5>
-                    <i class="bi bi-people"></i>
-                    Gestionar roles
-                </h5>
-                <button type="button" class="confirm-modal-close" (click)="closeRolesModal()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <div class="confirm-modal-body">
-                <p class="body-medium">Selecciona los roles que tendrá este usuario.</p>
-
-                <div class="roles-checkbox-group">
-                    <label class="roles-checkbox">
-                        <input type="checkbox" formControlName="admin" />
-                        Admin
-                    </label>
-
-                    <label class="roles-checkbox">
-                        <input type="checkbox" formControlName="moderator" />
-                        Moderador
-                    </label>
-
-                    <label class="roles-checkbox">
-                        <input type="checkbox" formControlName="user" />
-                        Usuario
-                    </label>
-                </div>
-            </div>
-
-            <div class="confirm-modal-footer">
-                <app-button text="Cancelar" class="btn-outline-primary" [showIconLeft]="true" iconLeft="bi bi-x"
-                    [disabled]="processingRoles()" (click)="closeRolesModal()">
-                </app-button>
-
-                <app-button text="Guardar" class="btn-primary" [showIconLeft]="true" iconLeft="bi bi-check-lg"
-                    [disabled]="processingRoles()" (click)="saveRoles()">
-                </app-button>
-            </div>
-
-        </form>
-
-    </div>
-</div>
-}    
+    <app-roles-modal 
+        [rolesForm]="rolesForm" 
+        [processing]="processingRoles()"
+        [userName]="(profile()!.name || '') + ' ' + (profile()!.surname || '')" 
+        [userId]="profile()!.id"
+        (confirmed)="saveRoles()" 
+        (cancelled)="closeRolesModal()">
+    </app-roles-modal>
+}
 
 <app-footer></app-footer>

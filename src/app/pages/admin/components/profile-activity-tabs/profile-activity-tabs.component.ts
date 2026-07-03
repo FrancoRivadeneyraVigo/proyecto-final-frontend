@@ -2,6 +2,7 @@ import { Component, computed, input, signal } from '@angular/core';
 import { IPurchaseSale, IReview, IReport, IFavorite } from '../../../../shared/models/profile-activity.interface';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { RouterLink } from '@angular/router';
 
 type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
 type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER_REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
@@ -9,7 +10,7 @@ type ReportStatusFilter = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'all';
 
 @Component({
   selector: 'app-profile-activity-tabs',
-  imports: [EmptyStateComponent, ButtonComponent],
+  imports: [EmptyStateComponent, ButtonComponent, RouterLink],
   templateUrl: './profile-activity-tabs.component.html',
   styleUrl: './profile-activity-tabs.component.css',
 })

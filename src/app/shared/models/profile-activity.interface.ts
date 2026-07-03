@@ -1,11 +1,13 @@
 import { IProfileDetailUser } from './profile.interface';
 
 export interface IPurchaseSale {
+    id: number;
     title: string;
     description: string;
     price: string;
     condition: string;
     status: string;
+    cover_image?: string | null;
 }
 
 export interface IReview {
