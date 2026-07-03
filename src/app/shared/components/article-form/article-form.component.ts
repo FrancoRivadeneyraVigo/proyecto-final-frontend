@@ -13,9 +13,14 @@ import { IBrand } from '../../models/ibrand.interface';
 import { IModel } from '../../models/imodel.interface';
 import { IProfile } from '../../models/profile.interface';
 import { IStyle } from '../../models/istyle.interface';
-import { IArticleDetail, IArticleImage } from '../../models/article-detail.interface';
+import {
+  ArticleCondition,
+  IArticleDetail,
+  IArticleImage,
+  ICreateArticle,
+  IUpdateArticle,
+} from '../../models/article.interface';
 
-import { ICreateArticle, IUpdateArticle, ArticleCondition } from '../../models/icreate-article.component';
 import { getHttpErrorMessage } from '../../utils/http-error-message';
 
 import { ButtonComponent } from '../button/button.component';

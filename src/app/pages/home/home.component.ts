@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ArticleService } from '../../services/article.service';
-import { IArticlesPaginatedResponse } from '../../shared/models/article.interface';
+import { IArticleSummary, IArticlesPaginatedResponse } from '../../shared/models/article.interface';
 
 import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
@@ -11,7 +11,6 @@ import { BrandService } from '../../services/brand.service';
 import { StatsComponent } from './components/stats/stats.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import { IArticleSummary } from '../../shared/models/article-detail.interface';
 
 @Component({
   selector: 'app-home',
@@ -82,7 +81,7 @@ export class HomeComponent implements OnInit {
 
   async loadArticles() {
     try {
-      const response: IArticlesPaginatedResponse = await this.articleService.getAll(3);
+      const response: IArticlesPaginatedResponse<IArticleSummary> = await this.articleService.getAll(3);
       this.arrArticles.set(response.data)
 
     } catch (error: any) {

@@ -12,7 +12,7 @@ import { BrandService } from '../../services/brand.service';
 import { ModelService } from '../../services/model.service';
 import { StyleService } from '../../services/styles.service';
 
-import { IArticleSummary } from '../../shared/models/article-detail.interface';
+import { IArticleSummary } from '../../shared/models/article.interface';
 import { IBrand } from '../../shared/models/ibrand.interface';
 import { IModel } from '../../shared/models/imodel.interface';
 import { IStyle } from '../../shared/models/istyle.interface';
@@ -152,7 +152,7 @@ export class ExploreComponent implements OnInit {
 
     const response = await this.articleService.getAll(500);
 
-    this.filteredArticles.set(response.data as unknown as IArticleSummary[]);
+    this.filteredArticles.set(response.data);
 
   }
 
