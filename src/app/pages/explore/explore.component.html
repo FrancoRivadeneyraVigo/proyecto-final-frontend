@@ -252,7 +252,7 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-4">
         @for (article of paginatedArticles(); track article.id) {
         <div class="col">
-          <app-product-card [article]="article" (favoriteToggle)="toggleFavorite(article)"></app-product-card>
+          <app-product-card [article]="article" (favoriteToggled)="toggleFavorite($event)"></app-product-card>
         </div>
         }
       </div>

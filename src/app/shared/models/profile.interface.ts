@@ -1,3 +1,9 @@
+export interface IProfileStats {
+    sales_count: number;
+    purchases_count: number;
+    reviews_count: number;
+    member_since: number | null;
+}
 export interface IProfile {
     id: number;
     username: string;
@@ -11,6 +17,8 @@ export interface IProfile {
     postal_code: string;
     biography: string | null;
     fk_usuarios_id: number;
+    created_at?: string;
+    stats?: IProfileStats;
     rol?: string;
 }
 
