@@ -1,0 +1,163 @@
+.styles-panel {
+    gap: 24px;
+}
+
+.styles-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.styles-panel-header h5,
+.style-modal-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.styles-panel-header i,
+.style-modal-header i {
+    color: var(--bs-secondary);
+}
+
+.styles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.style-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+}
+
+.style-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.style-info h5 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.style-info p {
+    overflow-wrap: anywhere;
+}
+
+.style-id {
+    color: var(--bs-body-color);
+}
+
+.style-id i {
+    color: var(--bs-primary);
+}
+
+.style-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.style-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.style-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 560px;
+    padding: 24px;
+    border-radius: 16px;
+    background-color: var(--bs-surface);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.style-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.style-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+}
+
+.style-modal-close:hover {
+    background-color: var(--bs-primary-bg-subtle-hover);
+}
+
+.style-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.style-field .form-control {
+    min-height: 48px;
+    border-color: var(--bs-light);
+    border-radius: 10px;
+}
+
+.style-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+@media (max-width: 767px) {
+    .styles-panel {
+        padding: 24px 16px;
+    }
+
+    .styles-panel-header {
+        align-items: flex-start;
+    }
+
+    .style-row {
+        gap: 12px;
+    }
+
+    .style-actions {
+        flex: 0 0 auto;
+    }
+
+    .style-modal-backdrop {
+        padding: 16px;
+    }
+
+    .style-modal {
+        padding: 20px;
+    }
+
+    .style-modal-footer {
+        flex-wrap: wrap;
+    }
+}

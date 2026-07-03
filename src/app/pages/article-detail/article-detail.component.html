@@ -100,9 +100,13 @@
         <h5 class="card-title"><i class="bi bi-people"></i> Información del vendedor</h5>
 
         <div class="seller-row">
-            <div class="seller-chip" aria-hidden="true">
-                {{ article.seller.name.charAt(0) }}{{ article.seller.surname.charAt(0) }}
-            </div>
+            @if (article.seller.photo_url) {
+                <img class="seller-avatar" [src]="article.seller.photo_url" [alt]="article.seller.name">
+            } @else {
+                <div class="seller-chip" aria-hidden="true">
+                    {{ article.seller.name.charAt(0) }}{{ article.seller.surname.charAt(0) }}
+                </div>
+            }
 
             <div class="seller-identity">
                 <strong>{{ article.seller.name }} {{ article.seller.surname }}</strong>

@@ -1,0 +1,46 @@
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.modal-title i {
+  color: var(--bs-secondary);
+}
+
+.profile-name {
+  color: var(--bs-primary);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.instruction {
+  color: hsla(0, 0%, 40%, 1);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.reason-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--bs-light);
+  margin-bottom: 16px;
+}
+
+.reason-list .form-check {
+  margin-bottom: 0;
+}
+
+.comments-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.modal-footer {
+  gap: 8px;
+}

@@ -8,8 +8,8 @@
             (click)="setActiveTab('reports')">
             Gestión de reportes
         </button>
-        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'categories'"
-            (click)="setActiveTab('categories')">
+        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'styles'"
+            (click)="setActiveTab('styles')">
             Gestión de estilos
         </button>
         <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'stats'"
@@ -25,13 +25,11 @@
         @case ('reports') {
         <p class="text-muted">Gestión de reportes (pendiente)</p>
         }
-        @case ('categories') {
-        <p class="text-muted">Gestión de categorías (pendiente)</p>
+        @case ('styles') {
+        <app-styles-management />
         }
         @case ('stats') {
-        <p class="text-muted">
             <app-admin-stats></app-admin-stats>
-        </p>
         }
         }
     </section>
