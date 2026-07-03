@@ -34,7 +34,7 @@
 
         <div class="article-info">
             <div class="info-top-row">
-                <span class="brand-pill"><i class="bi bi-patch-check"></i> Marca</span>
+                <span class="brand-pill"><i class="bi bi-patch-check"></i> {{article.brand?.name || 'Marca desconocida'}}</span>
 
                 @if (isLoggedIn && !isOwner) {
                 <button type="button" class="favorite-btn" (click)="toggleFavorite()"
