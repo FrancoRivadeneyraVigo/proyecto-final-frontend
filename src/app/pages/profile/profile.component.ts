@@ -107,6 +107,7 @@ export class ProfileComponent {
 
     try {
       this.user.set(await this.profileService.getById(userId));
+      this.scrollToActivityIfRequested();
     } catch (error) {
       if (error instanceof HttpErrorResponse && error.status === 404) {
         this.router.navigate(['/404']);
@@ -114,6 +115,28 @@ export class ProfileComponent {
       }
       throw error;
     }
+  }
+
+  ratingText(profile: IProfile): string {
+    const rating = Number(profile.rating ?? 0);
+    return rating.toFixed(2);
+  }
+
+  reviewsLabel(profile: IProfile): string {
+    const count = profile.stats?.reviews_count ?? 0;
+    return `${count} ${count === 1 ? 'valoración' : 'valoraciones'}`;
+  }
+
+  statValue(profile: IProfile, key: 'sales_count' | 'purchases_count'): number {
+    return profile.stats?.[key] ?? 0;
+  }
+
+  memberSince(profile: IProfile): string {
+    if (profile.stats?.member_since) {
+      return String(profile.stats.member_since);
+    }
+
+    return profile.created_at ? String(new Date(profile.created_at).getFullYear()) : '-';
   }
 
   startEditing(profile: IProfile): void {
@@ -319,6 +342,21 @@ export class ProfileComponent {
       URL.revokeObjectURL(this.photoObjectUrl);
       this.photoObjectUrl = null;
     }
+  }
+
+  private scrollToActivityIfRequested(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+
+    if (tab !== 'favorites' && tab !== 'ratings') {
+      return;
+    }
+
+    window.setTimeout(() => {
+      document.getElementById('profile-activity')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 0);
   }
 
   private scrollToTop(): void {

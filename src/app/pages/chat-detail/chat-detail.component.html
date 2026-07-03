@@ -143,3 +143,47 @@
 @if (contactId; as reportedUserId) {
 <app-report-profile [userId]="reportedUserId" [username]="contactName"></app-report-profile>
 }
+
+@if (showReviewModal()) {
+<div class="review-modal-backdrop" role="presentation" (click)="closeReviewModal()">
+    <section class="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-modal-title" (click)="$event.stopPropagation()">
+        <header class="review-modal-header">
+            <div>
+                <h4 id="review-modal-title">Valorar vendedor</h4>
+                <p class="body-medium text-muted">{{ articleTitle }}</p>
+            </div>
+            <button type="button" class="review-modal-close" aria-label="Cerrar" (click)="closeReviewModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </header>
+
+        <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="review-form">
+            <div class="review-stars" aria-label="Puntuación">
+                @for (star of starOptions(); track star) {
+                <button type="button" class="review-star-button" [class.is-selected]="star <= selectedStars"
+                    [attr.aria-label]="star + ' estrellas'" (click)="setReviewStars(star)">
+                    <i class="bi" [class.bi-star-fill]="star <= selectedStars" [class.bi-star]="star > selectedStars"></i>
+                </button>
+                }
+            </div>
+
+            <div class="review-field">
+                <label for="review-comment" class="form-label">Comentario</label>
+                <textarea id="review-comment" class="form-control" rows="4" formControlName="comentario"
+                    placeholder="Cuenta cómo ha ido la compra"></textarea>
+                @if (reviewForm.get('comentario')?.hasError('maxlength')) {
+                <small class="text-danger">El comentario no puede superar los 500 caracteres.</small>
+                }
+            </div>
+
+            <div class="review-modal-actions">
+                <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [type]="'button'"
+                    (click)="closeReviewModal()"></app-button>
+                <app-button [text]="isSubmittingReview() ? 'Enviando...' : 'Enviar valoración'" [class]="'btn-primary'"
+                    [showIconLeft]="true" [iconLeft]="'bi bi-send'" [type]="'submit'"
+                    [disabled]="reviewForm.invalid || isSubmittingReview()"></app-button>
+            </div>
+        </form>
+    </section>
+</div>
+}

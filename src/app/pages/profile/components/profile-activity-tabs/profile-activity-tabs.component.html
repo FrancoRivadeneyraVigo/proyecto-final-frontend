@@ -34,11 +34,11 @@
             <app-my-articles [userId]="userId()" [isOwner]="isMyProfile()" />
             }
             @case ('ratings') {
-            <app-ratings />
+            <app-ratings [reviews]="reviews()" [loading]="loadingActivity()" [error]="activityError()" />
             }
             @case ('favorites') {
             @if (isMyProfile()) {
-            <app-favorites />
+            <app-favorites [favorites]="favorites()" [loading]="loadingActivity()" [error]="activityError()" (changed)="reloadActivity()" />
             }
             }
         }

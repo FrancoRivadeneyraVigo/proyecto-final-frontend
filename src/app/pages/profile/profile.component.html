@@ -41,7 +41,7 @@
                                 <h3>{{ profile.name }} {{ profile.surname }}</h3>
                                 <p class="profile-meta">
                                     <i class="bi bi-star-fill"></i>
-                                    <span>{{ profile.rating }} (0 valoraciones)</span>
+                                    <span>{{ ratingText(profile) }} ({{ reviewsLabel(profile) }})</span>
                                 </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
@@ -84,15 +84,15 @@
                     <div class="profile-stats">
                         <div class="profile-stat">
                             <span class="profile-stat-label">Ventas</span>
-                            <span class="profile-stat-value">28</span>
+                            <span class="profile-stat-value">{{ statValue(profile, 'sales_count') }}</span>
                         </div>
                         <div class="profile-stat">
                             <span class="profile-stat-label">Compras</span>
-                            <span class="profile-stat-value">2</span>
+                            <span class="profile-stat-value">{{ statValue(profile, 'purchases_count') }}</span>
                         </div>
                         <div class="profile-stat">
                             <span class="profile-stat-label">Miembro desde</span>
-                            <span class="profile-stat-value">2026</span>
+                            <span class="profile-stat-value">{{ memberSince(profile) }}</span>
                         </div>
                     </div>
 
@@ -258,7 +258,7 @@
 
     @if (user()) {
     @if (routeUserId(); as routeId) {
-    <section class="profile-activity container-xxl">
+    <section id="profile-activity" class="profile-activity container-xxl">
         @for (activeRouteId of [routeId]; track activeRouteId) {
         <app-profile-activity-tabs [userId]="activeRouteId" [isMyProfile]="isMyProfile()" />
         }

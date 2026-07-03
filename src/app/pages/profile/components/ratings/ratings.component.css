@@ -1,5 +1,56 @@
-.ratings-stub {
+.ratings-section,
+.ratings-header,
+.ratings-list {
     display: flex;
     flex-direction: column;
+    gap: 16px;
+}
+
+.ratings-header {
     gap: 8px;
+}
+
+.profile-activity-state {
+    margin: 0;
+}
+
+.rating-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background-color: var(--bs-surface);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.08);
+}
+
+.rating-item-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.rating-item h5,
+.rating-item p {
+    margin: 0;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    color: var(--bs-primary);
+}
+
+.rating-comment {
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.text-muted {
+    color: var(--bs-secondary-text-emphasis);
+}
+
+.text-danger {
+    color: hsl(0, 72%, 45%);
 }

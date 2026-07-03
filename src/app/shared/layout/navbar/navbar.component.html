@@ -54,8 +54,7 @@
 
                     <ul class="navbar-nav w-100">
                         <li class="nav-item">
-                            <a routerLink="/fav-items" class="nav-link"><i class="bi bi-heart me-2"></i> Mis
-                                favoritos</a>
+                            <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]" [queryParams]="{ tab: 'favorites' }" fragment="profile-activity" class="nav-link"><i class="bi bi-heart me-2"></i> Mis favoritos</a>
                         </li>
 
                         <li class="nav-item">
@@ -76,7 +75,7 @@
                 </div>
                 <!-- computer -->
                 <div class="d-none d-lg-flex gap-3 align-items-center">
-                    <a routerLink="/fav-items">
+                    <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]" [queryParams]="{ tab: 'favorites' }" fragment="profile-activity">
                         <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
                     </a>
                     <a routerLink="/chats">

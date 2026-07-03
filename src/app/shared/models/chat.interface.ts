@@ -50,6 +50,10 @@ export interface IChatDetail {
     contact_name?: string | null;
     contact_photo?: string | null;
     can_manage_article?: boolean;
+    my_role?: 'BUYER' | 'SELLER' | null;
+    buyer_id?: number | null;
+    seller_id?: number | null;
+    has_reviewed?: boolean;
     article?: IChatArticleDetail | null;
 }
 
