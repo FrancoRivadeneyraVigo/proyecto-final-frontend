@@ -1,7 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
-import { IProfileDetailUser } from '../../../shared/models/profile.interface';
-import { IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile-activity.interface';
+import {
+  IFavorite,
+  IPurchaseSale,
+  IProfileDetailUser,
+  IReport,
+  IReview,
+} from '../../../shared/models/profile.interface';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';

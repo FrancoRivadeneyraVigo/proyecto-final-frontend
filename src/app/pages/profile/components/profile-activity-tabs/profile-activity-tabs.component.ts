@@ -5,7 +5,7 @@ import { FavoritesComponent } from '../favorites/favorites.component';
 import { MyArticlesComponent } from '../my-articles/my-articles.component';
 import { RatingsComponent } from '../ratings/ratings.component';
 import { ProfileService } from '../../../../services/profile.service';
-import { IFavorite, IReview } from '../../../../shared/models/profile-activity.interface';
+import { IFavorite, IReview } from '../../../../shared/models/profile.interface';
 
 type ActivityTab = 'articles' | 'ratings' | 'favorites';
 

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { IReview } from '../../../../shared/models/profile-activity.interface';
+import { IReview } from '../../../../shared/models/profile.interface';
 
 @Component({
   selector: 'app-ratings',
