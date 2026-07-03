@@ -60,6 +60,7 @@ export interface IArticleDetail {
   brand?: IArticleBrand | null;
   model?: IArticleModel | null;
   style?: IArticleStyle | null;
+
 }
 
 export interface IArticleSummary {
@@ -74,6 +75,9 @@ export interface IArticleSummary {
   diameter_mm?: number | null;
   cover?: string | null;
   is_favorite?: boolean;
+  brand_id?: number;
+  brand_name?: string;
+  brand?: IArticleBrand | null;
 }
 
 export interface IArticlesPaginatedResponse {

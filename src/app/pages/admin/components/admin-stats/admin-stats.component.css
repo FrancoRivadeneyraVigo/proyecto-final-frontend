@@ -1,0 +1,58 @@
+.card {
+    border-radius: 15px;
+}
+
+.icon-bg {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.card {
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.text-blocked {
+    color: #dc2626;
+}
+
+.bg-active {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.bg-blocked {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+
+ag-charts {
+    display: block;
+    height: 300px;
+}
+
+@media (max-width: 767px) {
+    ag-charts {
+        height: 130px;
+        width: auto;
+    }
+}
+
+@media (max-width: 767px) {
+    .filter-tabs ::ng-deep .btn{
+       font-size: 12px;
+       padding: 6px 8px;
+    }
+}

@@ -52,8 +52,8 @@ const GENDER_TRANSLATIONS: Record<string, string> = {
     FormsModule,
     NavbarComponent,
     FooterComponent,
-    ProductCardComponent
-  ],
+    ProductCardComponent,
+],
   templateUrl: './explore.component.html',
   styleUrl: './explore.component.css'
 })
@@ -79,6 +79,8 @@ export class ExploreComponent implements OnInit {
   readonly priceMax = DEFAULT_MAX_PRICE;
 
   readonly loading = signal(false);
+
+  readonly showMobileFilters = signal(false);
 
   readonly filteredArticles = signal<IArticleSummary[]>([]);
 
@@ -131,17 +133,19 @@ export class ExploreComponent implements OnInit {
   });
 
   async ngOnInit() {
-
     this.loading.set(true);
 
-    await Promise.all([
-      this.loadArticles(),
-      this.loadBrands(),
-      this.loadStyles()
-    ]);
-
-    this.loading.set(false);
-
+    try {
+      await Promise.all([
+        this.loadArticles().catch(err => console.error('Error cargando artículos:', err)),
+        this.loadBrands().catch(err => console.error('Error cargando marcas:', err)),
+        this.loadStyles().catch(err => console.error('Error cargando estilos (público):', err))
+      ]);
+    } catch (error) {
+      console.error('Error general en la inicialización:', error);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   async loadArticles() {
@@ -386,9 +390,9 @@ export class ExploreComponent implements OnInit {
       this.filteredArticles.update(v => [...v]);
 
       console.error('Error al gestionar favoritos:', e);
-      
+
       const errorMessage = e?.error?.message || e?.message || 'Error inesperado del servidor';
-      
+
       toast.error(`No se pudo actualizar tus favoritos: ${errorMessage}`);
     }
   }

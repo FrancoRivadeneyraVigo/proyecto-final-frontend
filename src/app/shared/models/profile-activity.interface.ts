@@ -1,3 +1,4 @@
+import { IArticle } from './article.interface';
 import { IProfileDetailUser } from './profile.interface';
 
 export interface IPurchaseSale {
@@ -12,9 +13,13 @@ export interface IPurchaseSale {
 
 export interface IReview {
     stars: number;
-    comentario: string;
+    comentario: string | null;
     created_at: string;
     fk_article_id: number;
+    article_title?: string | null;
+    reviewer_name?: string | null;
+    reviewer_surname?: string | null;
+    reviewer_username?: string | null;
 }
 
 export interface IReport {
@@ -25,9 +30,15 @@ export interface IReport {
     fk_articles_id: number;
 }
 
-export interface IFavorite {
-    created_at: string;
-    fk_articles_id: number;
+export interface IFavorite extends IArticle {
+    favorite_created_at: string;
+    fk_articles_id?: number;
+    cover?: string | null;
+}
+
+export interface IProfileActivity {
+    reviews: IReview[];
+    favorites: IFavorite[];
 }
 
 export interface IAdminProfileDetail {

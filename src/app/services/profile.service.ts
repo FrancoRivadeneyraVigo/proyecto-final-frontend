@@ -7,6 +7,7 @@ import {
   IUpdateProfileRequest,
   IUploadPhotoResponse,
 } from '../shared/models/profile.interface';
+import { IProfileActivity } from '../shared/models/profile-activity.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,17 @@ export class ProfileService {
       );
     } catch (error) {
       console.error('Error obteniendo perfil:', error);
+      throw error;
+    }
+  }
+
+  async getActivity(userId: string): Promise<IProfileActivity> {
+    try {
+      return await lastValueFrom(
+        this.httpClient.get<IProfileActivity>(`${this.baseUrl}/${userId}/activity`)
+      );
+    } catch (error) {
+      console.error('Error obteniendo actividad del perfil:', error);
       throw error;
     }
   }
