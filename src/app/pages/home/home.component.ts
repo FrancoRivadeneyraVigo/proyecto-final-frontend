@@ -4,7 +4,7 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ArticleService } from '../../services/article.service';
 import { IArticlesPaginatedResponse } from '../../shared/models/article.interface';
 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { IBrand } from '../../shared/models/ibrand.interface';
 import { BrandService } from '../../services/brand.service';
@@ -22,6 +22,7 @@ import { IArticleSummary } from '../../shared/models/article-detail.interface';
 export class HomeComponent implements OnInit {
   private articleService = inject(ArticleService);
   private brandService = inject(BrandService);
+  private router = inject(Router);
 
   arrArticles = signal<IArticleSummary[]>([]);
   brands = signal<IBrand[]>([]);

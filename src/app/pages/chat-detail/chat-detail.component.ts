@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { ArticleService } from '../../services/article.service';
 import { ChatService } from '../../services/chat.service';
+import { ReviewService } from '../../services/review.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ChatArticleStatus, IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
@@ -25,6 +26,7 @@ export class ChatDetailComponent implements OnInit {
   private chatService = inject(ChatService);
   private articleService = inject(ArticleService);
   private authService = inject(AuthService);
+  private reviewService = inject(ReviewService);
 
   @ViewChild('messagesEnd') messagesEnd?: ElementRef<HTMLDivElement>;
   @ViewChild(ReportArticleComponent) reportArticleModal?: ReportArticleComponent;
@@ -36,7 +38,18 @@ export class ChatDetailComponent implements OnInit {
   isLoading = signal(true);
   isSending = signal(false);
   isUpdatingArticle = signal(false);
+  isSubmittingReview = signal(false);
+  showReviewModal = signal(false);
   errorMessage = signal('');
+
+  reviewForm = new FormGroup({
+    stars: new FormControl(5, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(5),
+    ]),
+    comentario: new FormControl('', [Validators.maxLength(500)]),
+  });
 
   messageForm = new FormGroup({
     message: new FormControl('', [
@@ -71,6 +84,26 @@ export class ChatDetailComponent implements OnInit {
 
   get showReservedActions(): boolean {
     return this.canManageArticle && this.articleStatus === 'RESERVED';
+  }
+
+  get canReviewSeller(): boolean {
+    const chat = this.chat();
+
+    return chat?.my_role === 'BUYER'
+      && this.articleStatus === 'SOLD'
+      && chat.has_reviewed !== true;
+  }
+
+  get hasReviewedSeller(): boolean {
+    return this.chat()?.has_reviewed === true;
+  }
+
+  get selectedStars(): number {
+    return Number(this.reviewForm.value.stars ?? 0);
+  }
+
+  starOptions(): number[] {
+    return [1, 2, 3, 4, 5];
   }
 
   get showReportArticleAction(): boolean {
@@ -245,6 +278,58 @@ export class ChatDetailComponent implements OnInit {
       },
     });
   }
+  openReviewModal(): void {
+    if (!this.canReviewSeller) {
+      return;
+    }
+
+    this.reviewForm.reset({ stars: 5, comentario: '' });
+    this.showReviewModal.set(true);
+  }
+
+  closeReviewModal(): void {
+    if (this.isSubmittingReview()) {
+      return;
+    }
+
+    this.showReviewModal.set(false);
+  }
+
+  setReviewStars(stars: number): void {
+    this.reviewForm.patchValue({ stars });
+  }
+
+  async submitReview(): Promise<void> {
+    const currentArticle = this.article;
+
+    if (!currentArticle || this.reviewForm.invalid || this.isSubmittingReview()) {
+      this.reviewForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmittingReview.set(true);
+
+    try {
+      await this.reviewService.createReview({
+        article_id: currentArticle.id,
+        stars: Number(this.reviewForm.value.stars),
+        comentario: this.reviewForm.value.comentario?.trim() || null,
+      });
+
+      const currentChat = this.chat();
+      if (currentChat) {
+        this.chat.set({ ...currentChat, has_reviewed: true });
+      }
+
+      this.showReviewModal.set(false);
+      toast.success('Valoración enviada correctamente');
+    } catch (error) {
+      toast.error(getHttpErrorMessage(error, 'No se pudo enviar la valoración'));
+    } finally {
+      this.isSubmittingReview.set(false);
+    }
+  }
+
   onReportProfile(): void {
     if (!this.contactId) {
       toast.error('No se puede reportar este perfil ahora mismo.');

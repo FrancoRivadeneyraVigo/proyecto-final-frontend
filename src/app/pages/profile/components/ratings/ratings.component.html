@@ -1,4 +1,38 @@
-<div class="ratings-stub">
-    <h2>Valoraciones</h2>
-    <p class="body-large text-muted">Próximamente</p>
+<div class="ratings-section">
+    <header class="ratings-header">
+        <h2>Valoraciones</h2>
+        <p class="body-large text-muted">Opiniones recibidas tras compras y ventas completadas.</p>
+    </header>
+
+    @if (loading()) {
+    <p class="profile-activity-state body-medium text-muted">Cargando valoraciones...</p>
+    } @else if (error()) {
+    <p class="profile-activity-state body-medium text-danger">{{ error() }}</p>
+    } @else if (reviews().length === 0) {
+    <p class="profile-activity-state body-medium text-muted">Este perfil todavía no tiene valoraciones.</p>
+    } @else {
+    <div class="ratings-list">
+        @for (review of reviews(); track review.fk_article_id + '-' + review.created_at) {
+        <article class="rating-item">
+            <div class="rating-item-header">
+                <div>
+                    <h5>{{ reviewerName(review) }}</h5>
+                    <p class="body-small text-muted">{{ review.article_title || 'Artículo' }} · {{ reviewDate(review) }}</p>
+                </div>
+                <div class="rating-stars" [attr.aria-label]="review.stars + ' de 5 estrellas'">
+                    @for (_ of stars(review); track $index) {
+                    <i class="bi bi-star-fill"></i>
+                    }
+                    @for (_ of emptyStars(review); track $index) {
+                    <i class="bi bi-star"></i>
+                    }
+                </div>
+            </div>
+            @if (review.comentario) {
+            <p class="rating-comment body-medium">{{ review.comentario }}</p>
+            }
+        </article>
+        }
+    </div>
+    }
 </div>

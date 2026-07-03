@@ -1,8 +1,8 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component'; 
 import { IArticle } from '../../../../shared/models/article.interface';
-import Swal from 'sweetalert2';
 
 const STATUS_LABELS: Record<string, string> = {
   PUBLISHED: 'Publicado',
@@ -14,7 +14,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 @Component({
   selector: 'app-article-card',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, ConfirmModalComponent], 
   templateUrl: './article-card.component.html',
   styleUrl: './article-card.component.css',
 })
@@ -25,6 +25,9 @@ export class ArticleCardComponent {
   deleted = output<number>();
 
   private router = inject(Router);
+
+  // Signal para controlar si mostramos o no el modal en el HTML
+  showDeleteModal = signal<boolean>(false);
 
   initials = computed(() => {
     const words = this.article().title.trim().split(/\s+/);
@@ -40,22 +43,19 @@ export class ArticleCardComponent {
     this.router.navigate(['/articles', this.article().id, 'edit']);
   }
 
-  async onDelete(): Promise<void> {
+  // Abre el modal cambiando el estado del signal
+  onDelete(): void {
+    this.showDeleteModal.set(true);
+  }
 
-    const result = await Swal.fire({
-      title: 'Eliminar artículo',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#dc3545'
-    });
-
-    if (!result.isConfirmed) {
-      return;
-    }
-
+  // Se ejecuta cuando el usuario hace clic en "Confirmar" dentro del modal
+  onConfirmDelete(): void {
     this.deleted.emit(this.article().id);
+    this.showDeleteModal.set(false);
+  }
+
+  // Se ejecuta si el usuario cancela o cierra el modal
+  onCancelDelete(): void {
+    this.showDeleteModal.set(false);
   }
 }

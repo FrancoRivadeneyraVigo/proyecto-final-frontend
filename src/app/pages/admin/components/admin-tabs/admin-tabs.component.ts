@@ -1,7 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProfilesManagementComponent } from '../profiles-management/profiles-management.component';
-import { ReportsManagementComponent } from '../reports-management/reports-management.component';
+import { AdminStatsComponent } from '../admin-stats/admin-stats.component';
+import { StylesManagementComponent } from '../styles-management/styles-management.component';
+
 
 type AdminTab = 'profiles' | 'reports' | 'styles' | 'stats';
 
@@ -9,7 +11,7 @@ const ADMIN_TABS: AdminTab[] = ['profiles', 'reports', 'styles', 'stats'];
 
 @Component({
   selector: 'app-admin-tabs',
-  imports: [ProfilesManagementComponent, ReportsManagementComponent],
+  imports: [ProfilesManagementComponent, AdminStatsComponent, StylesManagementComponent],
   templateUrl: './admin-tabs.component.html',
   styleUrl: './admin-tabs.component.css',
 })

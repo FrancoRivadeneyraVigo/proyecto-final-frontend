@@ -7,7 +7,11 @@
             <i class="bi" [class.bi-heart-fill]="article().is_favorite" [class.bi-heart]="!article().is_favorite"></i>
         </button>
         }
-        <span class="brand-pill"><i class="bi bi-patch-check"></i> Marca</span>
+      
+        <span class="brand-pill"><i class="bi bi-patch-check"></i>
+            {{article().brand?.name ||article().brand_name }}
+        </span>
+    
     </div>
 
     <div class="product-body">
