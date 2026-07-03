@@ -220,7 +220,7 @@ export class ArticleService {
     return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/published`, {}));
   }
 
-  markAsSold(id: number | string): Promise<{ article: IArticleDetail }> {
-    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/sold`, {}));
+  markAsSold(id: number | string, buyerId?: number | null): Promise<{ article: IArticleDetail }> {
+    return lastValueFrom(this.httpClient.patch<{ article: IArticleDetail }>(`${this.articlesUrl}/${id}/sold`, buyerId ? { buyer_id: buyerId } : {}));
   }
 }

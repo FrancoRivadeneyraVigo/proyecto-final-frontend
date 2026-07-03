@@ -247,7 +247,7 @@ export class ChatDetailComponent implements OnInit {
         ? await this.articleService.markAsReserved(currentArticle.id)
         : action === 'published'
           ? await this.articleService.markAsPublished(currentArticle.id)
-          : await this.articleService.markAsSold(currentArticle.id);
+          : await this.articleService.markAsSold(currentArticle.id, this.chat()?.buyer_id);
 
       this.setArticleStatus(response.article.status as ChatArticleStatus);
 
