@@ -5,7 +5,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { RouterLink } from '@angular/router';
 
 type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
-type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER_REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
+type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
 type ReportStatusFilter = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'all';
 
 @Component({

@@ -18,8 +18,8 @@
     <app-button [text]="'Borradores'" [class]="statusFilter() === 'DRAFT' ? 'btn-primary' : 'btn-outline-primary'"
         [fullWidth]="true" (click)="setStatusFilter('DRAFT')"></app-button>
     <app-button [text]="'En revisión'"
-        [class]="statusFilter() === 'UNDER_REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
-        (click)="setStatusFilter('UNDER_REVIEW')"></app-button>
+        [class]="statusFilter() === 'UNDER REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="setStatusFilter('UNDER REVIEW')"></app-button>
     <app-button [text]="'Reservados'" [class]="statusFilter() === 'RESERVED' ? 'btn-primary' : 'btn-outline-primary'"
         [fullWidth]="true" (click)="setStatusFilter('RESERVED')"></app-button>
     <app-button [text]="'Vendidos'" [class]="statusFilter() === 'SOLD' ? 'btn-primary' : 'btn-outline-primary'"

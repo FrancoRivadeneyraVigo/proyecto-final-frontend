@@ -183,10 +183,10 @@
 
  .grid-watch {
     display: grid;
-    grid-template-columns: repeat(3, minmax(auto, 425px));
+    grid-template-columns:  repeat(3, 1fr);
     gap: 20px;
     margin-top: 32px;
-    align-items: stretch;
+    align-items: start;
 }
 
 
