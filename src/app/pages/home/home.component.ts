@@ -4,7 +4,7 @@ import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ArticleService } from '../../services/article.service';
 import { IArticlesPaginatedResponse } from '../../shared/models/article.interface';
 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { IBrand } from '../../shared/models/ibrand.interface';
 import { BrandService } from '../../services/brand.service';
@@ -22,6 +22,7 @@ import { IArticleSummary } from '../../shared/models/article-detail.interface';
 export class HomeComponent implements OnInit {
   private articleService = inject(ArticleService);
   private brandService = inject(BrandService);
+  private router = inject(Router);
 
   arrArticles = signal<IArticleSummary[]>([]);
   brands = signal<IBrand[]>([]);
@@ -48,30 +49,14 @@ export class HomeComponent implements OnInit {
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement
     this.searchTerm.set(input.value);
-    if (input.value.trim() === '') {
-      this.loadArticles()
-    }
+
   }
 
   async onSearch(): Promise<void> {
-    try {
-      const term = this.searchTerm().trim();
-      if (!term) {
-        this.loadArticles();
-        return;
-      }
+    const term = this.searchTerm().trim();
+    if (!term) return;
 
-      const result = await this.articleService.searchArticles(term)
-      this.arrArticles.set(result)
-
-    } catch (error: any) {
-
-      if (error.status == 404) {
-        this.arrArticles.set([]);
-      } else {
-        toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al realizar la búsqueda'));
-      }
-    }
+    this.router.navigate(['/explore'], { queryParams: { search: term } });
   }
 
   ngOnInit() {
@@ -100,13 +85,34 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  toggleFavorite(article: IArticleSummary) {
-    article.is_favorite = !article.is_favorite;
+  async toggleFavorite(article: IArticleSummary) {
 
-    if (article.is_favorite) {
-      toast.success('Has añadido ' + article.title + ' a favoritos');
-    } else {
-      toast.info('Has quitado ' + article.title + ' de tus favoritos');
+    try {
+      if (article.is_favorite) {
+        await this.articleService.removeFavorite(article.id)
+      } else {
+        await this.articleService.addFavorite(article.id)
+      }
+
+      this.arrArticles.update(articles =>
+        articles.map(a =>
+          a.id === article.id
+            ? { ...a, is_favorite: !a.is_favorite }
+            : a
+        )
+      );
+
+      if (!article.is_favorite) {
+        toast.success('Has añadido ' + article.title + ' a favoritos');
+      } else {
+        toast.info('Has quitado ' + article.title + ' de tus favoritos');
+      }
+    } catch (error: any) {
+      if (error.status === 401) {
+        toast.error('Debes iniciar sesión para guardar favoritos')
+      } else {
+        toast.error(this.getBackendErrorMessage(error, 'Hubo un problema al gestionar los favoritos'));
+      }
     }
   }
 
