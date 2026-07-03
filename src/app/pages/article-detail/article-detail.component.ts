@@ -12,6 +12,7 @@ import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from './report-article/report-article.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-detail',
@@ -42,12 +43,13 @@ export class ArticleDetailComponent implements OnInit {
 
   currentUser = this.authService.currentUser;
 
-  async ngOnInit(): Promise<void> {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    this.articleId = idParam ? Number(idParam) : 0;
-
-    await this.loadArticle();
-  }
+ngOnInit(): void {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+        const idParam = params.get('id');
+        this.articleId = idParam ? Number(idParam) : 0;
+        this.loadArticle();
+    });
+}
 
   get isOwner(): boolean {
     const userId = this.currentUser()?.fk_usuarios_id;
@@ -130,10 +132,16 @@ export class ArticleDetailComponent implements OnInit {
       return;
     }
 
-    this.isLoading.set(false);
-
-    const similar = await this.articleService.getSimilarArticles(this.articleId);
-    this.similarArticles.set(similar);
+    try {
+      const similar = await this.articleService.getSimilarArticles(this.articleId);
+      console.debug('Similar articles response for', this.articleId, similar);
+      this.similarArticles.set(similar);
+    } catch (e) {
+      console.warn('Error loading similar articles for', this.articleId, e);
+      this.similarArticles.set([]);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   prevImage(): void {

@@ -3,8 +3,7 @@
 <div class="explore container-fluid px-3 px-lg-5 py-4">
   <div class="row g-4">
 
-    <!-- SIDEBAR DE FILTROS -->
-    <aside class="col-12 col-lg-3">
+    <aside class="col-12 col-lg-3 d-lg-block" [class.mobile-filters-active]="showMobileFilters()" [class.d-none]="!showMobileFilters()">
       <div class="filters-card p-3 mb-3">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -180,6 +179,12 @@
           </div>
         </div>
 
+        <div class="mobile-filter-footer d-grid d-lg-none mt-4">
+          <button type="button" class="btn btn-primary py-2.5 rounded-3 fw-semibold w-100" (click)="showMobileFilters.set(false)">
+            Ver {{ filteredArticles().length }} resultados
+          </button>
+        </div>
+
       </div>
     </aside>
 
@@ -198,12 +203,11 @@
       <div class="search-bar mx-auto my-4">
         <div class="input-group custom-search-group">
           <span class="input-group-text search-icon-wrapper">
-            <i class="bi bi-search"></i> </span>
-
+            <i class="bi bi-search"></i>
+          </span>
           <input type="text" class="form-control custom-search-input"
-            placeholder="Buscar marcas, modelos, referencias..." [(ngModel)]="search" (keyup.enter)="applyFilters()" />
-
-          <button class="btn btn-primary custom-search-btn" type="button" (click)="applyFilters()">
+            placeholder="Buscar marca, modelo o referencia..." [(ngModel)]="search" (keyup.enter)="applyFilters()" />
+          <button class="btn btn-primary custom-search-btn " type="button" (click)="applyFilters()">
             Buscar
           </button>
         </div>
@@ -217,6 +221,13 @@
           {{ genderTranslations[gender] }}
         </button>
         }
+      </div>
+
+      <div class="d-block d-lg-none text-center my-3 position-relative">
+        <button type="button" class="btn btn-filter-trigger w-100 py-2.5 shadow-sm fw-semibold"
+          (click)="showMobileFilters.set(true)">
+          <i class="bi bi-sliders me-2"></i> Filtros
+        </button>
       </div>
 
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -241,7 +252,7 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-4">
         @for (article of paginatedArticles(); track article.id) {
         <div class="col">
-          <app-product-card [article]="article" (favoriteToggle)="toggleFavorite(article)"></app-product-card>
+          <app-product-card [article]="article" (favoriteToggled)="toggleFavorite($event)"></app-product-card>
         </div>
         }
       </div>
