@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ProfilesManagementComponent } from '../profiles-management/profiles-management.component';
 import { ReportsManagementComponent } from '../reports-management/reports-management.component';
 
-type AdminTab = 'profiles' | 'reports' | 'categories' | 'stats';
+type AdminTab = 'profiles' | 'reports' | 'styles' | 'stats';
 
-const ADMIN_TABS: AdminTab[] = ['profiles', 'reports', 'categories', 'stats'];
+const ADMIN_TABS: AdminTab[] = ['profiles', 'reports', 'styles', 'stats'];
 
 @Component({
   selector: 'app-admin-tabs',
