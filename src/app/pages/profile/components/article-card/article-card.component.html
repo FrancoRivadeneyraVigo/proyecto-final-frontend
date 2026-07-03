@@ -1,6 +1,10 @@
 <article class="article-card">
     <div class="article-card-thumbnail">
+        @if (article().cover) {
+        <img [src]="article().cover" [alt]="article().title" />
+        } @else {
         <span class="article-card-initials">{{ initials() }}</span>
+        }
     </div>
 
     <div class="article-card-body">

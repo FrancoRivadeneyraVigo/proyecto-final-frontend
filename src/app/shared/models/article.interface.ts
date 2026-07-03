@@ -23,6 +23,7 @@ export interface IArticle {
   fk_buyer_id: number | null;
   fk_styles_id: number;
   fk_models_id: number;
+  cover?: string | null;
 }
 
 export interface IArticlesPaginatedResponse {
