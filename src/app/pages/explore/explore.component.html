@@ -3,7 +3,8 @@
 <div class="explore container-fluid px-3 px-lg-5 py-4">
   <div class="row g-4">
 
-    <aside class="col-12 col-lg-3 d-lg-block" [class.mobile-filters-active]="showMobileFilters()" [class.d-none]="!showMobileFilters()">
+    <aside class="col-12 col-lg-3 d-lg-block" [class.mobile-filters-active]="showMobileFilters()"
+      [class.d-none]="!showMobileFilters()">
       <div class="filters-card p-3 mb-3">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -180,7 +181,8 @@
         </div>
 
         <div class="mobile-filter-footer d-grid d-lg-none mt-4">
-          <button type="button" class="btn btn-primary py-2.5 rounded-3 fw-semibold w-100" (click)="showMobileFilters.set(false)">
+          <button type="button" class="btn btn-primary py-2.5 rounded-3 fw-semibold w-100"
+            (click)="showMobileFilters.set(false)">
             Ver {{ filteredArticles().length }} resultados
           </button>
         </div>
@@ -201,14 +203,12 @@
 
       <!-- Buscador -->
       <div class="search-bar mx-auto my-4">
-        <div class="input-group custom-search-group">
-          <span class="input-group-text search-icon-wrapper">
-            <i class="bi bi-search"></i>
-          </span>
-          <input type="text" class="form-control custom-search-input"
-            placeholder="Buscar marca, modelo o referencia..." [(ngModel)]="search" (keyup.enter)="applyFilters()" />
-          <button class="btn btn-primary custom-search-btn " type="button" (click)="applyFilters()">
-            Buscar
+        <div class="search input-group bg-white position-relative mx-auto">
+          <input type="text" class="form-control border-0" placeholder="Buscar marca, modelo o estilo..."
+            [ngModel]="searchTerm()" (input)="onSearchInput($event)" (keyup.enter)="onSearch()" />
+          <button type="button" (click)="onSearch()"
+            class="btn btn-light border-0 d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-search"></i>Buscar
           </button>
         </div>
       </div>
