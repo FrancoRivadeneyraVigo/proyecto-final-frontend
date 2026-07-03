@@ -1,0 +1,123 @@
+<app-navbar></app-navbar>
+
+<main class="admin-page">
+    <div class="container-fluid">
+        <div class="container-xxl px-0 admin-content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a routerLink="/admin" [queryParams]="{ tab: 'reports' }">Gestión de reportes</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span class="breadcrumb-active-pill">Detalle del reporte</span>
+                    </li>
+                </ol>
+            </nav>
+            @if (loading()) {
+            <p class="text-muted text-center py-4">Cargando reporte...</p>
+            } @else if (!report()) {
+            <p class="text-muted text-center py-4">No se encontró el reporte</p>
+            } @else {
+            <section class="section report-card">
+                <div class="report-detail-header">
+                    <div class="report-detail-info">
+                        <h3>{{ getReasonLabel(report()!.reason) }}</h3>
+                        <p class="report-meta">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            <span>ID Reporte: {{ report()!.id }}</span>
+                        </p>
+                        <p class="report-meta">
+                            <i class="bi bi-calendar-fill"></i>
+                            <span>Fecha creación: {{ report()!.created_at | date:'dd/MM/yyyy' }}</span>
+                        </p>
+                        @if (hasId(report()!.article_id)) {
+                        <a class="report-meta report-meta-link" [routerLink]="['/articles', report()!.article_id]">
+                            <i class="bi bi-tag-fill"></i>
+                            <span>ID Artículo: {{ report()!.article_id }}</span>
+                        </a>
+                        }
+                        @if (hasId(report()!.reported_user_id)) {
+                        <a class="report-meta report-meta-link" [routerLink]="['/admin/profile', report()!.reported_user_id]">
+                            <i class="bi bi-person-fill"></i>
+                            <span>ID Usuario: {{ report()!.reported_user_id }}</span>
+                        </a>
+                        }
+                        <p class="report-meta">
+                            <i class="bi bi-person-fill"></i>
+                            <span>Reportado por: {{ report()!.reporter_email }}</span>
+                        </p>
+                        <p class="report-meta">
+                            <i class="bi bi-calendar-fill"></i>
+                            <span>Fecha resolución:
+                                @if (report()!.resolved_at) {
+                                {{ report()!.resolved_at | date:'dd/MM/yyyy' }}
+                                } @else {
+                                —
+                                }
+                            </span>
+                        </p>
+                        <p class="report-meta">
+                            <i class="bi bi-person-fill"></i>
+                            <span>Resuelto por:
+                                @if (report()!.moderator_id) {
+                                ID {{ report()!.moderator_id }}
+                                } @else {
+                                —
+                                }
+                            </span>
+                        </p>
+                    </div>
+                    <div class="report-detail-actions">
+                        <span class="badge"
+                            [class.badge-active]="report()!.status === 'RESOLVED' && report()!.resolution === 'APPROVED'"
+                            [class.badge-blocked]="report()!.status === 'PENDING'"
+                            [class.badge-deleted]="report()!.status === 'UNDER REVIEW' || (report()!.status === 'RESOLVED' && !report()!.resolution)"
+                            [class.badge-rejected]="isResolvedRejected(report()!.status, report()!.resolution)">
+                            {{ getStatusLabel(report()!.status, report()!.resolution) }}
+                        </span>
+                        @if (canMarkUnderReview(report()!)) {
+                        <app-button [text]="'Poner en revisión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-eye'" (click)="openConfirm('underReview')"></app-button>
+                        }
+                        @if (canModerate(report()!)) {
+                        <app-button [text]="'Rechazar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-x-circle'" (click)="openConfirm('reject')"></app-button>
+                        }
+                        @if (canValidate(report()!)) {
+                        <app-button [text]="getValidateLabel(report()!)" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                            [iconLeft]="isUserReport(report()!) ? 'bi bi-person-x' : 'bi bi-check-circle'"
+                            (click)="openConfirm('validate')"></app-button>
+                        }
+                    </div>
+                </div>
+                <div class="report-detail-comments">
+                    <div class="report-comment-block">
+                        <h5>Comentario del usuario creador</h5>
+                        <p>{{ report()!.comments || 'Sin comentario' }}</p>
+                    </div>
+                    <div class="report-comment-block">
+                        <h5>Comentario del moderador</h5>
+                        <p>{{ report()!.moderator_note || 'Sin comentario' }}</p>
+                    </div>
+                </div>
+            </section>
+            }
+        </div>
+    </div>
+</main>
+
+@if (confirmAction(); as action) {
+<app-confirm-modal
+    [title]="action === 'reject' ? 'Rechazar reporte' : action === 'validate' ? getValidateConfirmTitle(report()!) : 'Poner en revisión'"
+    [icon]="action === 'reject' ? 'bi bi-x-circle' : action === 'validate' ? (isUserReport(report()!) ? 'bi bi-person-x' : 'bi bi-check-circle') : 'bi bi-eye'"
+    [iconColor]="action === 'reject' ? 'danger' : action === 'validate' ? (isUserReport(report()!) ? 'danger' : 'success') : 'primary'"
+    [subtitle]="getReasonLabel(report()!.reason)" [subtitleId]="report()!.id"
+    [message]="action === 'reject' ? '¿Estás seguro que deseas rechazar este reporte?' : action === 'validate' ? getValidateConfirmMessage(report()!) : '¿Deseas marcar este reporte como en revisión?'"
+    [confirmText]="action === 'reject' ? 'Rechazar' : action === 'validate' ? getValidateConfirmText(report()!) : 'Poner en revisión'"
+    [confirmIcon]="action === 'reject' ? 'bi bi-x-circle' : action === 'validate' ? (isUserReport(report()!) ? 'bi bi-person-x' : 'bi bi-check-circle') : 'bi bi-eye'"
+    [processing]="processingAction()"
+    (confirmed)="confirmActionExecute()" (cancelled)="closeConfirm()">
+</app-confirm-modal>
+}
+
+<app-footer></app-footer>

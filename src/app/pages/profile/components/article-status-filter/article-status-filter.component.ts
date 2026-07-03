@@ -9,7 +9,7 @@ export interface ArticleStatusFilter {
 export const ARTICLE_STATUS_FILTERS: ArticleStatusFilter[] = [
   { label: 'Publicados', value: 'published' },
   { label: 'Borradores', value: 'draft' },
-  { label: 'En revisión', value: 'under_review' },
+  { label: 'En revisión', value: 'under review' },
   { label: 'Reservados', value: 'reserved' },
   { label: 'Vendidos', value: 'sold' },
   { label: 'Todos', value: 'all' },

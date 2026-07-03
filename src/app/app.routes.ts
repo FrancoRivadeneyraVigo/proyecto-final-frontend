@@ -13,6 +13,7 @@ import { ArticleFormComponent } from './shared/components/article-form/article-f
 import { AdminComponent } from './pages/admin/admin.component';
 import { adminGuard } from './shared/guards/admin-guard';
 import { ProfileDetailComponent } from './pages/admin/profile-detail/profile-detail.component';
+import { ReportDetailComponent } from './pages/admin/report-detail/report-detail.component';
 
 export const routes: Routes = [
     {path: "", pathMatch: "full", redirectTo: "home"},
@@ -30,5 +31,6 @@ export const routes: Routes = [
     {path: "articles/:id", component: ArticleDetailComponent},
     {path: "admin", component: AdminComponent, canActivate: [adminGuard]},
     {path: "admin/profile/:id", component: ProfileDetailComponent, canActivate: [adminGuard]},
+    {path: "admin/reports/:id", component: ReportDetailComponent, canActivate: [adminGuard]},
     {path: "**", component: Error404Component}
 ];

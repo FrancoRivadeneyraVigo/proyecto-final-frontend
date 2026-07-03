@@ -7,7 +7,7 @@ import { IArticle } from '../../../../shared/models/article.interface';
 const STATUS_LABELS: Record<string, string> = {
   PUBLISHED: 'Publicado',
   DRAFT: 'Borrador',
-  UNDER_REVIEW: 'En revisión',
+  'UNDER REVIEW': 'En revisión',
   RESERVED: 'Reservado',
   SOLD: 'Vendido',
 };
