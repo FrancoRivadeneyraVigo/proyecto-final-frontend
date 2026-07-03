@@ -15,7 +15,7 @@ export class StatsService {
       ? `${this.apiUrl}/stats/reportes-por-estado?periodo=${periodo}`
       : `${this.apiUrl}/stats/reportes-por-estado`;
 
-    return await lastValueFrom(
+    return lastValueFrom(
       this.httpClient.get<{ status: string, total: number }[]>(url)
     );
   }
@@ -25,18 +25,17 @@ export class StatsService {
       ? `${this.apiUrl}/stats/usuarios-por-estado?periodo=${periodo}`
       : `${this.apiUrl}/stats/usuarios-por-estado`;
 
-    return await lastValueFrom(
+    return lastValueFrom(
       this.httpClient.get<{ status: string, total: number }[]>(url)
     )
   }
-
 
   async getArticlesByDate(periodo?: string): Promise<{date: string, total: number}[]> {
     const url = periodo 
       ? `${this.apiUrl}/stats/articulos-por-fecha?periodo=${periodo}`
       : `${this.apiUrl}/stats/articulos-por-fecha`;
     
-    return await lastValueFrom(
+    return lastValueFrom(
       this.httpClient.get<{date: string, total: number}[]>(url)
     )
   }
@@ -46,7 +45,7 @@ export class StatsService {
       ? `${this.apiUrl}/stats/usuarios-por-fecha?periodo=${periodo}`
       : `${this.apiUrl}/stats/usuarios-por-fecha`;
 
-    return await lastValueFrom(
+    return lastValueFrom(
       this.httpClient.get<{date: string, total: number}[]>(url)
     )
   } 

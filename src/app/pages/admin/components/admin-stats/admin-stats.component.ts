@@ -81,21 +81,28 @@ export class AdminStatsComponent implements OnInit {
 
 
   async onPeriodChange(period: string): Promise<void> {
-    this.activePeriod.set(period);
 
-    const reportsByStatusResponse = await this.statsService.getReportsByStatus(period);
-    this.reportsByStatus.set(reportsByStatusResponse);
-
-    const usersByStatusResponse = await this.statsService.getUsersByStatus(period);
-    this.usersByStatus.set(usersByStatusResponse);
-
-    const articlesByDateResponse = await this.statsService.getArticlesByDate(period);
-    this.articlesByDate.set(articlesByDateResponse);
-
-    const sessionByDateResponse = await this.statsService.getSessionByDate(period);
-    this.sessionByDate.set(sessionByDateResponse);
-
-    this.updateChart();
+    try {
+      this.activePeriod.set(period);
+  
+      const reportsByStatusResponse = await this.statsService.getReportsByStatus(period);
+      this.reportsByStatus.set(reportsByStatusResponse);
+  
+      const usersByStatusResponse = await this.statsService.getUsersByStatus(period);
+      this.usersByStatus.set(usersByStatusResponse);
+  
+      const articlesByDateResponse = await this.statsService.getArticlesByDate(period);
+      this.articlesByDate.set(articlesByDateResponse);
+  
+      const sessionByDateResponse = await this.statsService.getSessionByDate(period);
+      this.sessionByDate.set(sessionByDateResponse);
+  
+      this.updateChart();
+      
+    } catch (error) {
+      toast.error(this.getBackendErrorMessage(error, 'Error al cambiar el período'))
+      
+    }
   }
 
 
