@@ -140,7 +140,7 @@
         <p class="card-text">{{ article.description || 'Lorem ipsum dolor sit amet consectetur. Massa magna vel posuere tristique consequat. Libero ornare ultricies tortor venenatis tincidunt pulvinar consequat amet. Rutrum odio tortor tincidunt placerat vestibulum adipiscing in et lacus. Ultrices urna amet nam nunc vel ipsum. Lectus dolor lobortis euismod cras.' }}</p>
     </section>
 
-    @if (!isOwner) {
+    @if (!isOwner && isLoggedIn) {
     <section class="info-card report-card">
         <div class="report-text">
             <h6 class="report-title"><i class="bi bi-exclamation-circle"></i> ¿Has detectado algún problema con este producto?</h6>
