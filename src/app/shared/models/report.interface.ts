@@ -77,6 +77,10 @@ export interface IRejectReportRequest {
   moderator_note?: string;
 }
 
+export interface IUpdateModeratorNoteRequest {
+  moderator_note: string | null;
+}
+
 export interface ICreateProfileReportRequest {
   reason: ReportReason;
   comments: string;

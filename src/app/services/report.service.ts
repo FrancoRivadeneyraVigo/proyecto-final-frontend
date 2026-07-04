@@ -7,6 +7,7 @@ import {
   IReportDetail,
   IReportFilters,
   IReportsPaginatedResponse,
+  IUpdateModeratorNoteRequest,
 } from '../shared/models/report.interface';
 import { BACKEND_API_URL } from '../shared/utils/api-url';
 
@@ -71,6 +72,18 @@ export class ReportService {
   rejectReport(id: number, payload: IRejectReportRequest = {}): Promise<void> {
     return lastValueFrom(
       this.httpClient.patch<void>(`${this.moderationUrl}/reportes/${id}/rechazar`, payload)
+    );
+  }
+
+  updateModeratorNote(
+    id: number,
+    payload: IUpdateModeratorNoteRequest
+  ): Promise<IReportDetail> {
+    return lastValueFrom(
+      this.httpClient.patch<IReportDetail>(
+        `${this.moderationUrl}/reportes/${id}/nota_moderador`,
+        payload
+      )
     );
   }
 

@@ -53,9 +53,33 @@
     margin: 0;
 }
 
+.report-comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
 .report-comment-block p {
     margin: 0;
     color: var(--bs-light-text-emphasis);
+}
+
+.moderator-note-input {
+    border-radius: 10px;
+    border-color: var(--bs-light);
+    resize: vertical;
+}
+
+.moderator-note-input:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem hsla(226, 80%, 56%, 0.15);
+}
+
+.moderator-note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 }
 
 .report-meta {
@@ -92,5 +116,11 @@
 
     .report-detail-actions {
         flex-wrap: wrap;
+    }
+
+    .report-comment-header,
+    .moderator-note-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 }

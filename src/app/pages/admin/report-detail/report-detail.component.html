@@ -96,8 +96,30 @@
                         <p>{{ report()!.comments || 'Sin comentario' }}</p>
                     </div>
                     <div class="report-comment-block">
-                        <h5>Comentario del moderador</h5>
+                        <div class="report-comment-header">
+                            <h5>Comentario del moderador</h5>
+                            @if (canEditModeratorNote(report()!) && !editingModeratorNote()) {
+                            <app-button [text]="'Editar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-pencil'" (click)="startEditingModeratorNote(report()!)"></app-button>
+                            }
+                        </div>
+                        @if (editingModeratorNote()) {
+                        <textarea id="moderator-note" class="form-control moderator-note-input" rows="4"
+                            maxlength="1000" placeholder="Añade un comentario del moderador"
+                            [ngModel]="moderatorNoteDraft()" (ngModelChange)="updateModeratorNoteDraft($event)"
+                            [disabled]="savingModeratorNote()"></textarea>
+                        <div class="moderator-note-actions">
+                            <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                                [iconLeft]="'bi bi-x'" [disabled]="savingModeratorNote()"
+                                (click)="cancelEditingModeratorNote()"></app-button>
+                            <app-button [text]="savingModeratorNote() ? 'Guardando...' : 'Guardar'"
+                                [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-check'"
+                                [disabled]="savingModeratorNote() || !hasModeratorNoteChanges(report()!)"
+                                (click)="saveModeratorNote()"></app-button>
+                        </div>
+                        } @else {
                         <p>{{ report()!.moderator_note || 'Sin comentario' }}</p>
+                        }
                     </div>
                 </div>
             </section>

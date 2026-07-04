@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { ReportService } from '../../../services/report.service';
 import { AuthService } from '../../../services/auth.service';
@@ -43,6 +44,7 @@ type ConfirmAction = 'reject' | 'validate' | 'underReview' | null;
   imports: [
     RouterLink,
     CommonModule,
+    FormsModule,
     ButtonComponent,
     NavbarComponent,
     FooterComponent,
@@ -60,6 +62,9 @@ export class ReportDetailComponent {
   loading = signal(true);
   confirmAction = signal<ConfirmAction>(null);
   processingAction = signal(false);
+  editingModeratorNote = signal(false);
+  savingModeratorNote = signal(false);
+  moderatorNoteDraft = signal('');
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -71,9 +76,13 @@ export class ReportDetailComponent {
     try {
       const result = await this.reportService.getReportDetail(id);
       this.report.set(result);
+      this.moderatorNoteDraft.set(result.moderator_note ?? '');
+      this.editingModeratorNote.set(false);
     } catch (error) {
       toast.error(getHttpErrorMessage(error, 'No se pudo cargar el reporte. Inténtalo de nuevo más tarde.'));
       this.report.set(null);
+      this.moderatorNoteDraft.set('');
+      this.editingModeratorNote.set(false);
     } finally {
       this.loading.set(false);
     }
@@ -115,6 +124,10 @@ export class ReportDetailComponent {
     return this.canModerateRole() && !this.isResolved(report) && report.status === 'UNDER REVIEW';
   }
 
+  canEditModeratorNote(report: IReportDetail): boolean {
+    return this.canModerateRole() && report.status === 'UNDER REVIEW';
+  }
+
   canMarkUnderReview(report: IReportDetail): boolean {
     return this.canModerateRole() && !this.isResolved(report) && report.status === 'PENDING';
   }
@@ -143,6 +156,66 @@ export class ReportDetailComponent {
 
   isResolvedRejected(status: ReportStatus, resolution: ReportResolution | null): boolean {
     return status === 'RESOLVED' && resolution === 'REJECTED';
+  }
+
+  startEditingModeratorNote(report: IReportDetail): void {
+    if (!this.canEditModeratorNote(report)) {
+      return;
+    }
+
+    this.moderatorNoteDraft.set(report.moderator_note ?? '');
+    this.editingModeratorNote.set(true);
+  }
+
+  updateModeratorNoteDraft(value: string): void {
+    this.moderatorNoteDraft.set(value);
+  }
+
+  cancelEditingModeratorNote(): void {
+    if (this.savingModeratorNote()) {
+      return;
+    }
+
+    this.moderatorNoteDraft.set(this.report()?.moderator_note ?? '');
+    this.editingModeratorNote.set(false);
+  }
+
+  hasModeratorNoteChanges(report: IReportDetail): boolean {
+    return this.normalizeModeratorNote(this.moderatorNoteDraft()) !== this.normalizeModeratorNote(report.moderator_note);
+  }
+
+  async saveModeratorNote(): Promise<void> {
+    const report = this.report();
+    if (!report || this.savingModeratorNote()) {
+      return;
+    }
+
+    if (!this.canEditModeratorNote(report)) {
+      toast.error('Solo se puede editar el comentario cuando el reporte está en revisión.');
+      this.cancelEditingModeratorNote();
+      return;
+    }
+
+    const moderatorNote = this.normalizeModeratorNote(this.moderatorNoteDraft());
+    if ((moderatorNote?.length ?? 0) > 1000) {
+      toast.error('El comentario del moderador no puede superar los 1000 caracteres.');
+      return;
+    }
+
+    this.savingModeratorNote.set(true);
+    try {
+      const updatedReport = await this.reportService.updateModeratorNote(report.id, {
+        moderator_note: moderatorNote,
+      });
+      this.report.set(updatedReport);
+      this.moderatorNoteDraft.set(updatedReport.moderator_note ?? '');
+      this.editingModeratorNote.set(false);
+      toast.success('Comentario del moderador actualizado correctamente');
+    } catch (error) {
+      toast.error(getHttpErrorMessage(error, 'No se pudo actualizar el comentario del moderador.'));
+    } finally {
+      this.savingModeratorNote.set(false);
+    }
   }
 
   openConfirm(action: ConfirmAction): void {
@@ -202,5 +275,9 @@ export class ReportDetailComponent {
     } finally {
       this.processingAction.set(false);
     }
+  }
+
+  private normalizeModeratorNote(value: string | null | undefined): string | null {
+    return value?.trim() || null;
   }
 }
