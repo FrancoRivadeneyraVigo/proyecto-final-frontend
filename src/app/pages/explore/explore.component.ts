@@ -92,7 +92,7 @@ export class ExploreComponent implements OnInit {
   readonly models = signal<IModel[]>([]);
   readonly styles = signal<IStyle[]>([]);
 
-  search = '';
+  readonly searchTerm = signal<string>('');
 
   selectedBrand?: number;
 
@@ -141,7 +141,7 @@ export class ExploreComponent implements OnInit {
 
     const searchParam = this.route.snapshot.queryParamMap.get('search')
     if (searchParam) {
-      this.search = searchParam;
+      this.searchTerm.set(searchParam);
     }
 
     try {
@@ -295,58 +295,77 @@ export class ExploreComponent implements OnInit {
     return value.toLocaleString('es-ES');
   }
 
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+  }
+
+  async onSearch(): Promise<void> {
+    await this.applyFilters();
+  }
+
   // Filtrado
   async applyFilters() {
 
-    this.loading.set(true);
+  this.loading.set(true);
 
-    try {
+  try {
 
-      if (this.search.trim()) {
+    const term = this.searchTerm().trim();
 
-        const result = await this.articleService.searchArticles(this.search);
+    if (term) {
 
-        this.filteredArticles.set(result as unknown as IArticleSummary[]);
+      const result = await this.articleService.searchArticles(term);
 
-      } else {
+      this.filteredArticles.set(result as unknown as IArticleSummary[]);
 
-        const filters = {
-          minPrice: this.minPrice,
-          maxPrice: this.maxPrice,
+    } else {
 
-          brandId: this.selectedBrand,
-          modelIds: this.selectedModels.length ? this.selectedModels.join(',') : undefined,
-          styleId: this.selectedStyle,
+      const filters = {
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice,
 
-          gender: this.selectedGenders.length ? this.selectedGenders.join(',') : undefined,
-          movementType: this.selectedMovements.length ? this.selectedMovements.join(',') : undefined,
-          condition: this.selectedConditions.length ? this.selectedConditions.join(',') : undefined,
+        brandId: this.selectedBrand,
+        modelIds: this.selectedModels.length ? this.selectedModels.join(',') : undefined,
+        styleId: this.selectedStyle,
 
-          yearOfManufacture: this.year,
+        gender: this.selectedGenders.length ? this.selectedGenders.join(',') : undefined,
+        movementType: this.selectedMovements.length ? this.selectedMovements.join(',') : undefined,
+        condition: this.selectedConditions.length ? this.selectedConditions.join(',') : undefined,
 
-          originalBox: this.originalBox ? true : undefined,
-          originalPapers: this.originalPapers ? true : undefined,
-          shippingAvailable: this.shipping ? true : undefined
-        };
+        yearOfManufacture: this.year,
 
-        const result = await this.articleService.filterArticles(filters);
+        originalBox: this.originalBox ? true : undefined,
+        originalPapers: this.originalPapers ? true : undefined,
+        shippingAvailable: this.shipping ? true : undefined
+      };
 
-        this.filteredArticles.set(result);
+      const result = await this.articleService.filterArticles(filters);
 
-      }
-
-      this.currentPage.set(1);
-
-    } finally {
-
-      this.loading.set(false);
+      this.filteredArticles.set(result);
 
     }
 
+    this.currentPage.set(1);
+
+  } catch (error: any) {
+
+    this.filteredArticles.set([]);
+
+    const errorMessage = error?.error?.message || error?.message || 'No se han podido cargar los resultados';
+
+    toast.error(errorMessage);
+
+  } finally {
+
+    this.loading.set(false);
+
   }
 
+}
+
   async resetFilters() {
-    this.search = '';
+    this.searchTerm.set('');
 
     this.selectedBrand = undefined;
     this.selectedModels = [];

@@ -1,0 +1,51 @@
+<div class="roles-modal-backdrop" (click)="onCancel()">
+    <div class="roles-modal" (click)="$event.stopPropagation()">
+
+        <div class="roles-modal-header">
+            <h5>
+                <i class="bi bi-people"></i>
+                Gestionar roles
+            </h5>
+            <button type="button" class="roles-modal-close" (click)="onCancel()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        @if (userName()) {
+        <h5 class="roles-modal-name">{{ userName() }}</h5>
+            @if (userId()) {
+            <span class="body-medium text-muted">ID: {{ userId() }}</span>       
+                }
+        }
+
+        <form [formGroup]="rolesForm()">
+            <div class="roles-modal-body">
+                <p class="body-medium">Selecciona los roles que tendrá este usuario.</p>
+                <div class="roles-checkbox-group">
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="admin" />
+                        Admin
+                    </label>
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="moderator" />
+                        Moderador
+                    </label>
+                    <label class="roles-checkbox">
+                        <input type="checkbox" formControlName="user" />
+                        Usuario
+                    </label>
+                </div>
+            </div>
+
+            <div class="roles-modal-footer">
+                <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-x'" [disabled]="processing()" (click)="onCancel()">
+                </app-button>
+                <app-button [text]="'Guardar'" [class]="'btn-primary'" [showIconLeft]="true"
+                    [iconLeft]="'bi bi-check-lg'" [disabled]="processing()" (click)="onConfirm()">
+                </app-button>
+            </div>
+        </form>
+
+    </div>
+</div>
