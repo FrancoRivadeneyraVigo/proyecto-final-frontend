@@ -116,4 +116,8 @@
     .profile-detail-actions {
         flex-wrap: wrap;
     }
+
+    .admin-page {
+        padding: 24px; 
+    }
 }
