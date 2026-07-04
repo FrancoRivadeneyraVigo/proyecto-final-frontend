@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import {
   IArticle,
   IArticleDetail,
@@ -10,6 +9,7 @@ import {
   ICreateArticle,
   IUpdateArticle,
 } from '../shared/models/article.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 
 @Injectable({
@@ -17,8 +17,8 @@ import {
 })
 export class ArticleService {
   private httpClient = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
-  private articlesUrl = `${environment.apiUrl}/articles`;
+  private apiUrl = BACKEND_API_URL;
+  private articlesUrl = `${BACKEND_API_URL}/articles`;
 
   async getByUserId(
     userId: string,
@@ -74,7 +74,7 @@ export class ArticleService {
   async createArticle(article: ICreateArticle): Promise<IArticle> {
     const response = await lastValueFrom(
       this.httpClient.post<{ article: IArticle }>(
-        `${environment.apiUrl}/articles`,
+        `${BACKEND_API_URL}/articles`,
         article
       )
     );
@@ -95,7 +95,7 @@ export class ArticleService {
 
     await lastValueFrom(
       this.httpClient.post(
-        `${environment.apiUrl}/articles/${articleId}/images`,
+        `${BACKEND_API_URL}/articles/${articleId}/images`,
         formData
       )
     );
@@ -117,14 +117,14 @@ export class ArticleService {
   
   async getAll(limit?: number): Promise<IArticlesPaginatedResponse<IArticleSummary>> {
     return await lastValueFrom(
-      this.httpClient.get<IArticlesPaginatedResponse<IArticleSummary>>(`${environment.apiUrl}/articles?limit=${limit}`)
+      this.httpClient.get<IArticlesPaginatedResponse<IArticleSummary>>(`${BACKEND_API_URL}/articles?limit=${limit}`)
     );
 
   }
 
   async searchArticles (term:string): Promise<IArticle[]> {
     return await lastValueFrom(
-      this.httpClient.get<IArticle[]>(`${environment.apiUrl}/articles/search/${term}`)
+      this.httpClient.get<IArticle[]>(`${BACKEND_API_URL}/articles/search/${term}`)
     );
   }
 

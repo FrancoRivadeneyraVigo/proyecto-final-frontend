@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import {
   ICreateReportRequest,
   IRejectReportRequest,
@@ -9,14 +8,15 @@ import {
   IReportFilters,
   IReportsPaginatedResponse,
 } from '../shared/models/report.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportService {
   private httpClient = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/reports`;
-  private moderationUrl = `${environment.apiUrl}/moderacion`;
+  private baseUrl = `${BACKEND_API_URL}/reports`;
+  private moderationUrl = `${BACKEND_API_URL}/moderacion`;
 
   createReport(payload: ICreateReportRequest): Promise<void> {
     return lastValueFrom(this.httpClient.post<void>(this.baseUrl, payload));

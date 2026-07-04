@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { ILoginRequest, ILoginResponse, IMeResponse, IRegisterRequest } from '../shared/models/auth.interface';
 import { IProfile } from '../shared/models/profile.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 // Clave usada para guardar y recuperar el token en localStorage
 const TOKEN_KEY = 'auth_token';
@@ -13,8 +13,8 @@ const TOKEN_KEY = 'auth_token';
 })
 export class AuthService {
   private httpClient = inject(HttpClient);
-  private baseUrl: string = `${environment.apiUrl}/auth`;
-  private usersUrl: string = `${environment.apiUrl}/users`;
+  private baseUrl: string = `${BACKEND_API_URL}/auth`;
+  private usersUrl: string = `${BACKEND_API_URL}/users`;
 
   // Estado reactivo: null = no hay sesión, IProfile = usuario logueado
   currentUser = signal<IProfile | null>(null);

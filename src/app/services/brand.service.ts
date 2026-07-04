@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { lastValueFrom } from "rxjs";
-import { environment } from "../../environments/environment";
 import { IBrand, IBrandsResponse } from "../shared/models/ibrand.interface";
+import { BACKEND_API_URL } from "../shared/utils/api-url";
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import { IBrand, IBrandsResponse } from "../shared/models/ibrand.interface";
 export class BrandService {
 
   private httpClient = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = BACKEND_API_URL;
 
   async getAll(
     page = 1,

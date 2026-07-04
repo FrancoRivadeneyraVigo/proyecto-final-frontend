@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { IChatMessage, IChatMessagesResponse, IChatSummary, ICreateChatResponse, ISendMessageRequest } from '../shared/models/chat.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
   private httpClient = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/chats`;
-  private profileChatsUrl = `${environment.apiUrl}/profiles/chats`;
+  private baseUrl = `${BACKEND_API_URL}/chats`;
+  private profileChatsUrl = `${BACKEND_API_URL}/profiles/chats`;
 
   async getChats(): Promise<IChatSummary[]> {
     const chats = await lastValueFrom(
