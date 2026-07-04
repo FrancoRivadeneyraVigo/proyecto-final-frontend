@@ -92,7 +92,7 @@ export class ProfileComponent {
       }
 
       this.routeUserId.set(userId);
-      void this.loadProfile(userId);
+      this.loadProfile(userId);
     });
   }
 
@@ -112,7 +112,7 @@ export class ProfileComponent {
       this.user.set(await this.profileService.getById(userId));
       this.scrollToActivityIfRequested();
     } catch (error) {
-      if (error instanceof HttpErrorResponse && error.status === 404) {
+      if (error instanceof HttpErrorResponse) {
         this.router.navigate(['/404']);
         return;
       }
