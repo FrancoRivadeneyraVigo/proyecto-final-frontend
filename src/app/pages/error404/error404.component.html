@@ -1,1 +1,36 @@
-<p>error404 works!</p>
+<app-navbar></app-navbar>
+
+<section class="not-found-section d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6 text-center">
+
+        <div class="not-found-icon-wrapper mx-auto">
+          <img src="images/icon-reloj.svg" alt="Icono de reloj" class="not-found-icon" />
+        </div>
+
+        <h1 class="not-found-code">404</h1>
+
+        <h2 class="not-found-title">Esta página se ha perdido en el tiempo</h2>
+
+        <p class="not-found-description">
+          Puede que el enlace esté roto o que el reloj que buscabas ya no esté disponible.
+          Vuelve al inicio y sigue explorando nuestra colección.
+        </p>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+          <button class="btn btn-primary not-found-button" [routerLink]="['/']">
+            <i class="bi bi-house-door me-2"></i><span>Volver al inicio</span>
+          </button>
+
+          <button class="btn btn-outline-primary not-found-button" [routerLink]="['/explore']">
+            <i class="bi bi-search me-2"></i><span>Explorar relojes</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
