@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { IAdminProfile, IAdminProfileDetail } from '../shared/models/profile.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
   private httpClient = inject(HttpClient);
-  private baseUrl: string = `${environment.apiUrl}/profiles`;
+  private baseUrl: string = `${BACKEND_API_URL}/profiles`;
 
   // Trae todos los perfiles combinando los 3 roles, agrupando duplicados
   // (un mismo usuario puede tener varios roles) y concatenando sus roles con coma
