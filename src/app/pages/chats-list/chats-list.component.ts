@@ -111,7 +111,7 @@ export class ChatsListComponent implements OnInit {
   }
 
   chatPreview(chat: IChatSummary): string {
-    return chat.last_message || 'Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget.';
+    return chat.last_message || '';
   }
 
 

@@ -124,8 +124,7 @@
             </div>
 
             <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
-                <input class="form-control" placeholder="Lorem ipsum dolor sit amet consectetur."
-                    formControlName="message">
+                <input class="form-control" placeholder="" formControlName="message">
                 <app-button [class]="'btn-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-send'" [type]="'submit'"
                     [disabled]="messageForm.invalid || isSending()">
                 </app-button>
