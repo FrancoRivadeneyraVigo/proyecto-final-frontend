@@ -351,6 +351,13 @@ textarea.form-control {
     margin-top: .5rem;
 }
 
+.field-error {
+    margin-top: .35rem;
+    color: var(--bs-danger);
+    font-size: .82rem;
+    font-weight: 500;
+}
+
 /* Responsive */
 
 @media (max-width: 992px) {
