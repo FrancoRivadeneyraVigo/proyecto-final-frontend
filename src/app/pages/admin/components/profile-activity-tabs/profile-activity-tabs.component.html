@@ -56,12 +56,12 @@
     <ul class="list-group">
         @for (item of filteredSales(); track item.title) {
             <li class="list-group-item list-group-item-action activity-row" [routerLink]="['/articles', item.id]">
-            <div class="activity-image">
+            <div class="activity-img">
                 @if (item.cover_image) {
-                    <img [src]="item.cover_image" [alt]="item.title" class="activity-img" />
-                } @else {
-                    <i class="bi bi-watch"></i>
-                }
+                    <img [src]="item.cover_image" [alt]="item.title" class="activity-img">
+                    } @else {
+                        <i class="bi bi-watch"></i> 
+                    } 
             </div>
             <div class="profile-info">
                 <h5>{{ item.title }}</h5>
@@ -102,11 +102,11 @@
     <ul class="list-group">
         @for (item of purchases(); track item.title) {
             <li class="list-group-item list-group-item-action activity-row" [routerLink]="['/articles', item.id]">
-            <div class="activity-image">
+            <div class="activity-img">
                 @if (item.cover_image) {
-                <img [src]="item.cover_image" [alt]="item.title" class="activity-img" />
+                    <img [src]="item.cover_image" [alt]="item.title" class="activity-img">
                 } @else {
-                <i class="bi bi-watch"></i>
+                    <i class="bi bi-watch"></i> 
                 }      
             </div>
             <div class="profile-info">

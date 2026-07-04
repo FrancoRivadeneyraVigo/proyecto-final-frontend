@@ -44,6 +44,13 @@
     cursor: pointer;
 }
 
+.activity-row .body-medium.text-muted {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .activity-img {
     display: flex;
     align-items: center;

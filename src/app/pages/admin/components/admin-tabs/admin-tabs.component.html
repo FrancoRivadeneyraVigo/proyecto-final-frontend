@@ -1,6 +1,6 @@
 <section class="admin-tabs">
     <nav class="admin-tabs-nav">
-          @if (role === 'admin') {
+        @if (role === 'admin') {
         <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'profiles'"
             (click)="setActiveTab('profiles')">
             Gestión de perfiles
