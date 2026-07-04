@@ -69,7 +69,8 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    min-height: 220px;
+    flex: 1;
+    justify-content: space-between;
 }
 
 .product-title {
