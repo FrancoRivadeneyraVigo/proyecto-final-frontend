@@ -29,14 +29,6 @@ export class ArticleCardComponent {
   // Signal para controlar si mostramos o no el modal en el HTML
   showDeleteModal = signal<boolean>(false);
 
-  initials = computed(() => {
-    const words = this.article().title.trim().split(/\s+/);
-    if (words.length >= 2) {
-      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-    }
-    return this.article().title.slice(0, 2).toUpperCase();
-  });
-
   statusLabel = computed(() => STATUS_LABELS[this.article().status] ?? this.article().status);
 
   onEdit(): void {

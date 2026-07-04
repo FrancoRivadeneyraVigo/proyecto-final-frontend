@@ -11,7 +11,6 @@ import { AdminService } from '../../../services/admin.service';
 import { IProfileDetailUser, IAdminRole, IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile.interface';
 
 // Shared components
-import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 

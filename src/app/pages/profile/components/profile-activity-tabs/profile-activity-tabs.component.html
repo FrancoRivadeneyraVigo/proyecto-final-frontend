@@ -8,14 +8,6 @@
         >
             Artículos
         </button>
-        <button
-            type="button"
-            class="profile-activity-nav-link"
-            [class.active]="activeTab() === 'ratings'"
-            (click)="setActiveTab('ratings')"
-        >
-            Valoraciones
-        </button>
         @if (isMyProfile()) {
         <button
             type="button"
@@ -32,9 +24,6 @@
         @switch (activeTab()) {
             @case ('articles') {
             <app-my-articles [userId]="userId()" [isOwner]="isMyProfile()" />
-            }
-            @case ('ratings') {
-            <app-ratings [reviews]="reviews()" [loading]="loadingActivity()" [error]="activityError()" />
             }
             @case ('favorites') {
             @if (isMyProfile()) {

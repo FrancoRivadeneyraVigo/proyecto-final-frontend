@@ -62,7 +62,6 @@ export class ReportDetailComponent {
   processingAction = signal(false);
 
   constructor() {
-    window.scrollTo(0, 0);
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadReport(id);
   }
