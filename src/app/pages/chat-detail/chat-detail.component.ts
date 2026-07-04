@@ -133,8 +133,7 @@ export class ChatDetailComponent implements OnInit {
   }
 
   get articleDescription(): string {
-    return this.article?.description
-      || 'Lorem ipsum dolor sit amet consectetur. Erat mauris sit sed ut eget. Lectus interdum urna';
+    return this.article?.description || '';
   }
 
   get articlePrice(): string {
