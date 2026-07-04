@@ -4,10 +4,10 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   IProfile,
+  IProfileActivity,
   IUpdateProfileRequest,
   IUploadPhotoResponse,
 } from '../shared/models/profile.interface';
-import { IProfileActivity } from '../shared/models/profile-activity.interface';
 
 @Injectable({
   providedIn: 'root',

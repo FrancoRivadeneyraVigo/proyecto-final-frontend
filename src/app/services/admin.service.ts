@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IAdminProfile } from '../shared/models/profile.interface';
-import { IAdminProfileDetail } from '../shared/models/profile-activity.interface';
+import { IAdminProfile, IAdminProfileDetail } from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IArticleSummary } from '../../models/article-detail.interface';
+import { IArticleSummary } from '../../models/article.interface';
 
 @Component({
   selector: 'app-product-card',

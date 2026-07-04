@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core'; 
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component'; 
 import { IArticle } from '../../../../shared/models/article.interface';
@@ -14,7 +14,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 @Component({
   selector: 'app-article-card',
-  imports: [ButtonComponent, ConfirmModalComponent], 
+  imports: [ButtonComponent, ConfirmModalComponent, RouterLink],
   templateUrl: './article-card.component.html',
   styleUrl: './article-card.component.css',
 })

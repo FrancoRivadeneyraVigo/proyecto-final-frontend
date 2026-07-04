@@ -8,8 +8,7 @@ import { toast } from 'ngx-sonner';
 import { AdminService } from '../../../services/admin.service';
 
 // Interfaces
-import { IProfileDetailUser, IAdminRole } from '../../../shared/models/profile.interface';
-import { IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile-activity.interface';
+import { IProfileDetailUser, IAdminRole, IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile.interface';
 
 // Shared components
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
