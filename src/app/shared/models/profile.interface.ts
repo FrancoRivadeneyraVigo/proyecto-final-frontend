@@ -46,6 +46,11 @@ export interface IAdminProfile extends IProfile {
   status: string;
 }
 
+export interface IAdminRole {
+    roleId: number;
+    rol: string;
+}
+
 export interface IProfileDetailUser extends IProfile {
   email: string;
   status: string;
@@ -54,11 +59,13 @@ export interface IProfileDetailUser extends IProfile {
 }
 
 export interface IPurchaseSale {
+  id: number;
   title: string;
   description: string;
   price: string;
   condition: string;
   status: string;
+  cover_image?: string | null;
 }
 
 export interface IReview {

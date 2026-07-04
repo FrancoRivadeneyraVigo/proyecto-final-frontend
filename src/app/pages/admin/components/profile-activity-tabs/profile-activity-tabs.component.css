@@ -41,9 +41,10 @@
     display: flex;
     align-items: start;
     gap: 16px;
+    cursor: pointer;
 }
 
-.activity-image {
+.activity-img {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,6 +55,7 @@
     background-color: var(--bs-primary-bg-subtle);
     color: var(--bs-primary-text-emphasis);
     font-size: 20px;
+    object-fit: cover;
 }
 
 .profile-info {

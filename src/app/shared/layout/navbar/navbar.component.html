@@ -8,7 +8,7 @@
                 </div>
             </a>
             <!-- Mobile button -->
-            <button class="btn btn-light navbar-toggler" type="button" data-bs-toggle="collapse"
+            <button class="btn btn-light navbar-toggler navbar-toggler-custom d-lg-none" type="button" data-bs-toggle="collapse"
                 data-bs-target="#mainNavbar">
                 <i class="bi bi-list"></i>
             </button>
@@ -61,10 +61,6 @@
                             <a routerLink="/chats" class="nav-link"><i class="bi bi-envelope me-2"></i> Chats</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"><i class="bi bi-bell me-2"></i>
-                                Notificaciones</a>
-                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link text-danger" (click)="onLogout()">
@@ -73,7 +69,7 @@
                         </li>
                     </ul>
                 </div>
-                <!-- computer -->
+                <!-- desktop -->
                 <div class="d-none d-lg-flex gap-3 align-items-center">
                     <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]" [queryParams]="{ tab: 'favorites' }" fragment="profile-activity">
                         <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
@@ -82,7 +78,6 @@
                         <app-button [class]="'btn-light'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-envelope'"></app-button>
                     </a>
-                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
 
                     @if (currentUser(); as user) {
                     <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
