@@ -25,7 +25,7 @@
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']">Vender</a>
                     </li>
-                    @if (currentUser()?.rol === 'admin') {
+                    @if (currentUser()?.rol === 'admin' || currentUser()?.rol === 'moderator') {
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']">Administrar</a>
                     </li>

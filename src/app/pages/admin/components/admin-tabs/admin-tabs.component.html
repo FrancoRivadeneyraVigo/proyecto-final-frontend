@@ -1,21 +1,27 @@
 <section class="admin-tabs">
     <nav class="admin-tabs-nav">
+          @if (role === 'admin') {
         <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'profiles'"
             (click)="setActiveTab('profiles')">
             Gestión de perfiles
         </button>
+        }
         <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reports'"
             (click)="setActiveTab('reports')">
             Gestión de reportes
         </button>
-        <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'styles'"
+        @if (role === 'admin') { 
+            <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'styles'"
             (click)="setActiveTab('styles')">
             Gestión de estilos
         </button>
+    }
+        @if (role === 'admin') {
         <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'stats'"
             (click)="setActiveTab('stats')">
             Estadísticas
         </button>
+        }
     </nav>
     <section class="admin-tabs-panel">
         @switch (activeTab()) {
@@ -26,10 +32,14 @@
         <app-reports-management />
         }
         @case ('styles') {
-        <app-styles-management />
+            @if (role === 'admin') {
+        <app-styles-management/>
+        }
         }
         @case ('stats') {
+            @if (role === 'admin') {
             <app-admin-stats></app-admin-stats>
+            }
         }
         }
     </section>
