@@ -1,6 +1,12 @@
 <a class="product-card" [routerLink]="['/articles', article().id]">
     <div class="product-image-wrapper">
-        <img class="product-image" [src]="coverImage" [alt]="article().title">
+        @if (article().cover) {
+        <img class="product-image" [src]="article().cover" [alt]="article().title">
+        } @else {
+        <div class="product-image-placeholder">
+            <i class="bi bi-watch"></i>
+        </div>
+        }
         @if (showFavorite()) {
         <button type="button" class="favorite-btn" (click)="onFavoriteClick($event)"
             [class.is-favorite]="article().is_favorite" aria-label="Guardar en favoritos">

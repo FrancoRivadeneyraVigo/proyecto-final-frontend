@@ -63,7 +63,7 @@ ngOnInit(): void {
   get images(): string[] {
     const article = this.article();
     const urls = article?.images?.map((image) => image.image_url) ?? [];
-    return urls.length ? urls : ['images/hero-watch.webp'];
+    return urls;
   }
 
   get currentImage(): string {
