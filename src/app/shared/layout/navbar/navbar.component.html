@@ -2,28 +2,61 @@
     <div class="container-fluid">
         <div class="container-xxl d-flex flex-wrap justify-content-between align-items-center px-0 py-0">
             <!-- Logo -->
+            <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <div class="brand-icon">
-                    <img src="images/logo.svg" alt="a•tiempo" class="brand-logo" />
+                    <img src="images/logo-no-text.svg" alt="a•tiempo" class="brand-logo d-lg-none" />
+                    <img src="images/logo.svg" alt="a•tiempo" class="brand-logo d-none d-lg-block" />
                 </div>
             </a>
 
-            <!-- Mobile: avatar + toggle -->
-            <div class="d-flex d-lg-none align-items-center gap-3">
+            <!-- Acciones: MISMO bloque para mobile y desktop, el CSS decide el orden/tamaño -->
+            <div class="navbar-actions d-flex align-items-center gap-2 order-lg-3">
+                @if (!currentUser()) {
+                <!-- Crear cuenta / Iniciar sesión: solo visible en desktop, en mobile viven dentro del collapse -->
+                <span class="d-none d-lg-inline-flex gap-2">
+                    <a routerLink="/register" (click)="closeMenu()">
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-person-circle'">
+                        </app-button>
+                    </a>
+                    <a routerLink="/login" (click)="closeMenu()">
+                        <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
+                            [iconLeft]="'bi bi-box-arrow-in-right'">
+                        </app-button>
+                    </a>
+                </span>
+                } @else {
+                <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]" [queryParams]="{ tab: 'favorites' }"
+                    fragment="profile-activity" (click)="closeMenu()">
+                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
+                </a>
+                <a routerLink="/chats" (click)="closeMenu()">
+                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-envelope'"></app-button>
+                </a>
+
                 @if (currentUser(); as user) {
                 <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link" (click)="closeMenu()">
                     <app-avatar [name]="user.name" [surname]="user.surname" [photoUrl]="user.photo_url"></app-avatar>
                 </a>
                 }
-                <button class="btn btn-light navbar-toggler navbar-toggler-custom" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+
+                <!-- Cerrar sesión: solo visible en desktop, en mobile vive dentro del collapse -->
+                <span class="d-none d-lg-inline-flex">
+                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
+                        [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()"></app-button>
+                </span>
+                }
+
+                <!-- Toggle: solo visible en mobile, controla solo los enlaces principales -->
+                <button class="btn btn-light navbar-toggler navbar-toggler-custom d-lg-none" type="button"
+                    (click)="toggleMenu()">
                     <i class="bi bi-list"></i>
                 </button>
             </div>
 
-            <div class="collapse navbar-collapse justify-content-between bg-whitemt-2 mt-lg-0 pt-3 p-lg-0"
-                id="mainNavbar" #mainNavbar>
-                <!-- Menu -->
+            <!-- Enlaces principales: colapsables solo en mobile -->
+            <div class="collapse navbar-collapse order-lg-2" id="mainNavbar" #mainNavbar>
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']"
@@ -37,73 +70,40 @@
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']"
                             (click)="closeMenu()">Vender</a>
                     </li>
-                    @if (currentUser()?.rol === 'admin' || currentUser()?.rol === 'moderator') {
+                    @if (currentUser()?.rol === 'admin') {
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']"
                             (click)="closeMenu()">Administrar</a>
                     </li>
                     }
-                </ul>
 
-                @if (!currentUser()) {
-                <!-- Not logged -->
-                <div class="d-flex gap-3 align-items-center">
-                    <a routerLink="/register" (click)="closeMenu()">
-                        <app-button [text]="'Crear cuenta'" [class]="'btn-light'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-person-circle'">
-                        </app-button>
-                    </a>
-                    <a routerLink="/login" (click)="closeMenu()">
-                        <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-box-arrow-in-right'">
-                        </app-button>
-                    </a>
-                </div>
-                } @else {
-                <!-- Logged -->
-
-                <!-- mobile -->
-                <div class="d-lg-none d-flex flex-column align-items-center w-100 pb-3 pt-2">
-                    <ul class="navbar-nav w-100">
-                        <li class="nav-item">
-                            <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]"
-                                [queryParams]="{ tab: 'favorites' }" fragment="profile-activity" class="nav-link"
-                                (click)="closeMenu()"><i class="bi bi-heart me-2"></i> Mis favoritos</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="/chats" class="nav-link" (click)="closeMenu()"><i
-                                    class="bi bi-envelope me-2"></i> Chats</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" (click)="onLogout()">
-                                <i class="bi bi-box-arrow-right me-2 text-danger"></i> Cerrar sesión
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- desktop -->
-                <div class="d-none d-lg-flex gap-3 align-items-center">
-                    <a [routerLink]="['/profile', currentUser()?.fk_usuarios_id]" [queryParams]="{ tab: 'favorites' }"
-                        fragment="profile-activity">
-                        <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-heart'"></app-button>
-                    </a>
-                    <a routerLink="/chats">
-                        <app-button [class]="'btn-light'" [showIconLeft]="true"
-                            [iconLeft]="'bi bi-envelope'"></app-button>
-                    </a>
-
-                    @if (currentUser(); as user) {
-                    <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
-                        <app-avatar [name]="user.name" [surname]="user.surname"
-                            [photoUrl]="user.photo_url"></app-avatar>
-                    </a>
-                    <app-button [text]="'Cerrar sesión'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                        [iconLeft]="'bi bi-box-arrow-right'" (click)="onLogout()"></app-button>
+                    @if (!currentUser()) {
+                    <li class="d-lg-none">
+                        <hr class="navbar-separator" />
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" routerLink="/register" (click)="closeMenu()">
+                            <i class="bi bi-person-circle"></i> Crear cuenta
+                        </a>
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" routerLink="/login" (click)="closeMenu()">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                        </a>
+                    </li>
                     }
-                </div>
-                }
+
+                    @if (currentUser()) {
+                    <li class="d-lg-none">
+                        <hr class="navbar-separator" />
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" (click)="onLogout()">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                        </a>
+                    </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>

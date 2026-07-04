@@ -25,10 +25,16 @@ export class NavbarComponent {
     this.router.navigate(['/login']);
   }
 
+  private getInstance(): Collapse {
+    const el = this.mainNavbarRef.nativeElement;
+    return Collapse.getInstance(el) ?? new Collapse(el, { toggle: false });
+  }
+
+  toggleMenu(): void {
+    this.getInstance().toggle();
+  }
+
   closeMenu(): void {
-    const el = this.mainNavbarRef?.nativeElement;
-    if (!el) return;
-    const instance = Collapse.getInstance(el) ?? new Collapse(el, { toggle: false });
-    instance.hide();
+    this.getInstance().hide();
   }
 }

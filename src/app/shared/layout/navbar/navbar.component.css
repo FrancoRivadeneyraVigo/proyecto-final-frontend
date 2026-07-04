@@ -14,7 +14,6 @@
         justify-content: space-between;
         align-items: center;
     }
-
 }
 
 .navbar-nav .nav-link {
@@ -38,13 +37,22 @@
     color: inherit;
 }
 
-/* Botones del menu en mobile */
+.navbar-nav ul {
+    margin: 0;
+}
+
+/* Bloque de acciones: siempre visible, mismo bloque para mobile y desktop */
+.navbar-actions {
+    flex-wrap: nowrap;
+}
+
+/* Botón hamburguesa */
 .navbar-toggler-custom {
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: box-shadow 0.15s ease-in-out;
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -65,21 +73,28 @@
     opacity: 0.85;
 }
 
-@media (max-width: 991.98px) {
+/* Separador dentro del menú mobile (logout / registro-login) */
+.navbar-separator {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid var(--bs-border-color, #dee2e6);
+    opacity: 1;
+}
 
-    
+@media (max-width: 991.98px) {
     .navbar .container-xxl {
         flex-wrap: wrap;
         justify-content: space-between;
     }
 
+    /* En mobile, reducimos el gap para que quepan los iconos */
+    .navbar-actions {
+        gap: 0.5rem;
+    }
+
+    /* Los enlaces principales van debajo, ocupando todo el ancho, al desplegarse */
     .navbar-collapse {
         flex: 1 0 100%;
         margin-top: 1rem;
-    }
-
-        
-    .navbar-nav {
-        padding-bottom: 1rem;
     }
 }
