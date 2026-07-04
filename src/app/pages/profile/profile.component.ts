@@ -29,6 +29,7 @@ import { ReportUserComponent } from './report-user/report-user.component';
 export class ProfileComponent {
   routeUserId = signal<string | null>(null);
   user = signal<IProfile | null>(null);
+  loading = signal(false);
   isEditing = signal(false);
   saving = signal(false);
   selectedPhotoFile = signal<File | null>(null);
@@ -96,16 +97,18 @@ export class ProfileComponent {
   }
 
   private async loadProfile(userId: string): Promise<void> {
+    this.loading.set(true);
     this.resetPhotoEditState();
     this.isEditing.set(false);
     this.profileForm.reset();
-
-    if (!this.authService.currentUser()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    this.user.set(null);
 
     try {
+      if (!this.authService.currentUser()) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
       this.user.set(await this.profileService.getById(userId));
       this.scrollToActivityIfRequested();
     } catch (error) {
@@ -114,6 +117,8 @@ export class ProfileComponent {
         return;
       }
       throw error;
+    } finally {
+      this.loading.set(false);
     }
   }
 

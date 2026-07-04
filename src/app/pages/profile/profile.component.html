@@ -8,7 +8,12 @@
         </div>
 
         <div class="profile-hero-inner container-xxl">
-            @if (user(); as profile) {
+            @if (loading()) {
+            <div class="profile-card section profile-loading-state" role="status" aria-live="polite">
+                <span class="spinner-border text-primary" aria-hidden="true"></span>
+                <p class="body-medium text-muted">Cargando perfil...</p>
+            </div>
+            } @else if (user(); as profile) {
             <header class="profile-hero-text">
                 @if (isMyProfile()) {
                 <h2>Mi perfil</h2>
@@ -244,10 +249,16 @@
                             <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [type]="'button'"
                                 (click)="cancelEditing()">
                             </app-button>
-                            <app-button [text]="'Guardar cambios'" [class]="'btn-primary'" [type]="'submit'"
-                                [showIconLeft]="true" [iconLeft]="'bi bi-check-lg'"
+                            <button type="submit" class="btn btn-primary profile-save-button"
                                 [disabled]="profileForm.invalid || saving()">
-                            </app-button>
+                                @if (saving()) {
+                                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                <span>Guardando...</span>
+                                } @else {
+                                <i class="bi bi-check-lg" aria-hidden="true"></i>
+                                <span>Guardar cambios</span>
+                                }
+                            </button>
                         </div>
                     </form>
                 </div>
