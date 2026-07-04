@@ -122,16 +122,6 @@ export class ProfileComponent {
     }
   }
 
-  ratingText(profile: IProfile): string {
-    const rating = Number(profile.rating ?? 0);
-    return rating.toFixed(2);
-  }
-
-  reviewsLabel(profile: IProfile): string {
-    const count = profile.stats?.reviews_count ?? 0;
-    return `${count} ${count === 1 ? 'valoración' : 'valoraciones'}`;
-  }
-
   statValue(profile: IProfile, key: 'sales_count' | 'purchases_count'): number {
     return profile.stats?.[key] ?? 0;
   }
@@ -352,7 +342,7 @@ export class ProfileComponent {
   private scrollToActivityIfRequested(): void {
     const tab = this.route.snapshot.queryParamMap.get('tab');
 
-    if (tab !== 'favorites' && tab !== 'ratings') {
+    if (tab !== 'favorites') {
       return;
     }
 

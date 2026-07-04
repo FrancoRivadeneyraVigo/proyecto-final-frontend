@@ -23,7 +23,7 @@
                 } @else {
                 <h2>Perfil de {{ profile.name }}</h2>
                 <p class="body-large">
-                    Consulta la información pública, artículos y valoraciones de este usuario.
+                    Consulta la información pública y artículos de este usuario.
                 </p>
                 }
             </header>
@@ -44,10 +44,6 @@
 
                             <div class="profile-info">
                                 <h3>{{ profile.name }} {{ profile.surname }}</h3>
-                                <p class="profile-meta">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>{{ ratingText(profile) }} ({{ reviewsLabel(profile) }})</span>
-                                </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
                                     <span>{{ (profile.city ?? '').trim() || 'Sin localización' }}</span>

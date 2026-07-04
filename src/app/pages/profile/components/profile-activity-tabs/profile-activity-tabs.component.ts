@@ -3,15 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { FavoritesComponent } from '../favorites/favorites.component';
 import { MyArticlesComponent } from '../my-articles/my-articles.component';
-import { RatingsComponent } from '../ratings/ratings.component';
 import { ProfileService } from '../../../../services/profile.service';
-import { IFavorite, IReview } from '../../../../shared/models/profile.interface';
+import { IFavorite } from '../../../../shared/models/profile.interface';
 
-type ActivityTab = 'articles' | 'ratings' | 'favorites';
+type ActivityTab = 'articles' | 'favorites';
 
 @Component({
   selector: 'app-profile-activity-tabs',
-  imports: [MyArticlesComponent, RatingsComponent, FavoritesComponent],
+  imports: [MyArticlesComponent, FavoritesComponent],
   templateUrl: './profile-activity-tabs.component.html',
   styleUrl: './profile-activity-tabs.component.css',
 })
@@ -20,7 +19,6 @@ export class ProfileActivityTabsComponent {
   isMyProfile = input(false);
 
   activeTab = signal<ActivityTab>('articles');
-  reviews = signal<IReview[]>([]);
   favorites = signal<IFavorite[]>([]);
   loadingActivity = signal(false);
   activityError = signal<string | null>(null);
@@ -33,7 +31,7 @@ export class ProfileActivityTabsComponent {
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const tab = params.get('tab');
 
-      if (tab === 'articles' || tab === 'ratings' || tab === 'favorites') {
+      if (tab === 'articles' || tab === 'favorites') {
         this.requestedTab.set(tab);
       }
     });
@@ -46,7 +44,7 @@ export class ProfileActivityTabsComponent {
     effect(() => {
       const tab = this.requestedTab();
 
-      if (tab === 'articles' || tab === 'ratings') {
+      if (tab === 'articles') {
         this.activeTab.set(tab);
       }
 
@@ -74,10 +72,8 @@ export class ProfileActivityTabsComponent {
 
     try {
       const activity = await this.profileService.getActivity(userId);
-      this.reviews.set(activity.reviews ?? []);
       this.favorites.set(activity.favorites ?? []);
     } catch {
-      this.reviews.set([]);
       this.favorites.set([]);
       this.activityError.set('No se pudo cargar la actividad del perfil.');
     } finally {

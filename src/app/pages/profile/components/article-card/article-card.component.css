@@ -28,11 +28,8 @@
     object-fit: cover;
 }
 
-.article-card-initials {
+.article-card-thumbnail i {
     font-size: 32px;
-    font-weight: 700;
-    line-height: 1;
-    text-transform: uppercase;
 }
 
 .article-card-body {
