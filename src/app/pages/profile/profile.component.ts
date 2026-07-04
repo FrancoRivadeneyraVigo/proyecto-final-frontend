@@ -122,7 +122,7 @@ export class ProfileComponent {
     }
   }
 
-  statValue(profile: IProfile, key: 'sales_count' | 'purchases_count'): number {
+  statValue(profile: IProfile, key: 'sales_count' | 'purchases_count' | 'published_count'): number {
     return profile.stats?.[key] ?? 0;
   }
 
