@@ -37,7 +37,6 @@ type ConfirmAction = 'block' | 'unblock' | 'delete' | null;
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    AvatarComponent,
     ButtonComponent,
     NavbarComponent,
     FooterComponent,
