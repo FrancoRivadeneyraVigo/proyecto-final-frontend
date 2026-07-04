@@ -61,10 +61,6 @@
                             <a routerLink="/chats" class="nav-link"><i class="bi bi-envelope me-2"></i> Chats</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"><i class="bi bi-bell me-2"></i>
-                                Notificaciones</a>
-                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link text-danger" (click)="onLogout()">
@@ -82,7 +78,6 @@
                         <app-button [class]="'btn-light'" [showIconLeft]="true"
                             [iconLeft]="'bi bi-envelope'"></app-button>
                     </a>
-                    <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-bell'"></app-button>
 
                     @if (currentUser(); as user) {
                     <a [routerLink]="['/profile', user.fk_usuarios_id]" class="navbar-avatar-link">
