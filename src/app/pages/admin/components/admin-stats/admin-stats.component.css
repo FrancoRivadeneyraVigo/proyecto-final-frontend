@@ -49,10 +49,3 @@ ag-charts {
         width: auto;
     }
 }
-
-@media (max-width: 767px) {
-    .filter-tabs ::ng-deep .btn{
-       font-size: 12px;
-       padding: 6px 8px;
-    }
-}

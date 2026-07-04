@@ -13,13 +13,13 @@
     </app-button>
 </div>
 
-<div class="bg-white p-4 rounded shadow-sm mb-4">
+<div class="bg-white p-4 rounded-4 shadow-sm mb-4">
     <h5 class="mb-4 fw-normal text-black">
         <i class="bi bi-graph-up me-2 text-success"></i>Resumen global
     </h5>
     <div class="row g-3">
         <div class="col-12 col-md-6 col-lg-3">
-            <div class="card p-3 border-0 shadow-sm">
+            <div class="card bg-white p-3 rounded-3 shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg bg-primary-subtle">
                         <i class="bi bi-watch fs-4 text-primary"></i>
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
-            <div class="card p-3 border-0 shadow-sm">
+            <div class="card bg-white p-3 rounded-3 shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg bg-success-subtle">
                         <i class="bi bi-people fs-4 text-success"></i>
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
-            <div class="card p-3 border-0 shadow-sm">
+            <div class="card bg-white p-3 rounded-3 shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg bg-warning-subtle">
                         <i class="bi bi-clipboard-check fs-4 text-warning"></i>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
-            <div class="card p-3 border-0 shadow-sm">
+            <div class="card bg-white p-3 rounded-3 shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg bg-info-subtle">
                         <i class="bi bi-bag-check fs-4 text-info"></i>
@@ -73,12 +73,12 @@
     </div>
 </div>
 
-<div class=" bg-white p-4 rounded shadow-sm mb-4">
+<div class=" bg-white p-4 rounded-4 shadow-sm mb-4">
     <h5 class="mb-4 fw-normal text-black"><i class="bi bi-person-square me-2 text-success"></i>Perfiles</h5>
 
     <div class="row g-3">
         <div class="col-12 col-md-4 col-lg-3">
-            <div class="card p-3 rounded-3 bg-white">
+            <div class="card p-3 rounded-3 bg-white shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg bg-primary-subtle">
                         <i class="bi bi-people fs-4 text-primary"></i>
@@ -126,7 +126,7 @@
         </div>
         @for (item of reportsByStatus(); track item.status) {
         <div class="col-12 col-md-4 col-lg-3">
-            <div class="card bg-white p-3 rounded-3">
+            <div class="card bg-white p-3 rounded-3 shadow-sm">
                 <div class="d-flex align-items-center gap-3">
                     <span class="icon-bg" [class]="statusColorClass(item.status)">
                         <i class="bi fs-4" [class]="statusIcon(item.status)"></i>

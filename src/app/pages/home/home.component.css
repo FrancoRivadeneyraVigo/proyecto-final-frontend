@@ -191,6 +191,10 @@
 
 
 @media (max-width: 767px) {
+    .new-arrivals {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
     .grid-watch {
         grid-template-columns: 1fr;
         gap: 24px;
@@ -210,7 +214,6 @@
     max-width: 280px;
     height: 110px;
     transition: transform 0.2s ease, box-shadow 0.2 ease;
-    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -229,9 +232,14 @@
 
 @media (max-width: 767px) {
     
+    .popular-brands {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     .brand-card {
       aspect-ratio: 1 / 1;
-        max-width: 280px;
+        max-width: 100%;
         height: auto;
 
     }
@@ -281,9 +289,6 @@
     margin: 0 auto 20px auto;
 }
 
-.cta-title {
-    margin-bottom: 15px;
-}
 
 .cta-description {
     font-size: 16px;
@@ -315,7 +320,7 @@
 
 @media (max-width: 767px) {
     .cta-section{
-        padding: 40px 20px;
+        padding: 40px 24px;
     }
 
     .cta-title {
