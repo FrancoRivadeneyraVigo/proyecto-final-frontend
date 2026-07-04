@@ -17,6 +17,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AdminStatsComponent implements OnInit {
   private statsService = inject(StatsService);
+
+  publishedArticles = signal<number>(0);
+  soldArticles = signal<number>(0);
+  activeUsers = signal<number>(0);
+  managedReports = signal<number>(0);
   reportsByStatus = signal<{ status: string, total: number }[]>([]);
   usersByStatus = signal<{ status: string, total: number }[]>([]);
   articlesByDate = signal<{ date: string, total: number }[]>([]);
@@ -59,6 +64,18 @@ export class AdminStatsComponent implements OnInit {
   async loadStats() {
     try {
 
+      const publishedResponse = await this.statsService.getPublishedArticles();
+      this.publishedArticles.set(publishedResponse.total);
+
+      const soldResponse = await this.statsService.getSoldArticles();
+      this.soldArticles.set(soldResponse.total);
+
+      const activeResponse = await this.statsService.getActiveUsers();
+      this.activeUsers.set(activeResponse.total);
+
+      const managedResponse = await this.statsService.getManagedReports();
+      this.managedReports.set(managedResponse.total);
+
       const reportsByStatusResponse = await this.statsService.getReportsByStatus(this.activePeriod());
       this.reportsByStatus.set(reportsByStatusResponse);
 
@@ -84,24 +101,24 @@ export class AdminStatsComponent implements OnInit {
 
     try {
       this.activePeriod.set(period);
-  
+
       const reportsByStatusResponse = await this.statsService.getReportsByStatus(period);
       this.reportsByStatus.set(reportsByStatusResponse);
-  
+
       const usersByStatusResponse = await this.statsService.getUsersByStatus(period);
       this.usersByStatus.set(usersByStatusResponse);
-  
+
       const articlesByDateResponse = await this.statsService.getArticlesByDate(period);
       this.articlesByDate.set(articlesByDateResponse);
-  
+
       const sessionByDateResponse = await this.statsService.getSessionByDate(period);
       this.sessionByDate.set(sessionByDateResponse);
-  
+
       this.updateChart();
-      
+
     } catch (error) {
       toast.error(this.getBackendErrorMessage(error, 'Error al cambiar el período'))
-      
+
     }
   }
 
