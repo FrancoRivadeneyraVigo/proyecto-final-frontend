@@ -21,6 +21,7 @@
 
     <section class="article-main">
         <div class="gallery">
+            @if (images.length) {
             <img class="gallery-image" [src]="currentImage" [alt]="article.title">
             @if (images.length > 1) {
             <button type="button" class="gallery-nav gallery-nav-prev" (click)="prevImage()" aria-label="Imagen anterior">
@@ -29,6 +30,11 @@
             <button type="button" class="gallery-nav gallery-nav-next" (click)="nextImage()" aria-label="Imagen siguiente">
                 <i class="bi bi-chevron-right"></i>
             </button>
+            }
+            } @else {
+                <div class="gallery-placeholder">
+                    <i class="bi bi-watch"></i>
+                </div>
             }
         </div>
 
@@ -140,7 +146,7 @@
         <p class="card-text">{{ article.description || 'Lorem ipsum dolor sit amet consectetur. Massa magna vel posuere tristique consequat. Libero ornare ultricies tortor venenatis tincidunt pulvinar consequat amet. Rutrum odio tortor tincidunt placerat vestibulum adipiscing in et lacus. Ultrices urna amet nam nunc vel ipsum. Lectus dolor lobortis euismod cras.' }}</p>
     </section>
 
-    @if (!isOwner) {
+    @if (!isOwner && isLoggedIn) {
     <section class="info-card report-card">
         <div class="report-text">
             <h6 class="report-title"><i class="bi bi-exclamation-circle"></i> ¿Has detectado algún problema con este producto?</h6>
