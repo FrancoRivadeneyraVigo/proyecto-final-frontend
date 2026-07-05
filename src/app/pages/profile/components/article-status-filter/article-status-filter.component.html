@@ -1,5 +1,5 @@
 <div class="status-filter">
-    @for (filter of filters; track filter.value) {
+    @for (filter of visibleFilters(); track filter.value) {
     <app-button
         [class]="activeStatus() === filter.value ? 'btn-primary' : 'btn-outline-primary'"
         [text]="filter.label"
