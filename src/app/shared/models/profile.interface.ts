@@ -3,7 +3,7 @@ import { IArticle } from './article.interface';
 export interface IProfileStats {
   sales_count: number;
   purchases_count: number;
-  reviews_count: number;
+  published_count: number;
   member_since: number | null;
 }
 

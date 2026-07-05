@@ -91,7 +91,7 @@
 @media (max-width: 575px) {
     .article-card {
         flex-direction: column;
-        padding: 20px;
+        padding: 24px;
     }
 
     .article-card-thumbnail {

@@ -16,12 +16,12 @@
             } @else if (user(); as profile) {
             <header class="profile-hero-text">
                 @if (isMyProfile()) {
-                <h2>Mi perfil</h2>
+                <h3>Mi perfil</h3>
                 <p class="body-large">
                     Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
                 </p>
                 } @else {
-                <h2>Perfil de {{ profile.name }}</h2>
+                <h3>Perfil de {{ profile.name }}</h3>
                 <p class="body-large">
                     Consulta la información pública y artículos de este usuario.
                 </p>
@@ -90,6 +90,10 @@
                         <div class="profile-stat">
                             <span class="profile-stat-label">Compras</span>
                             <span class="profile-stat-value">{{ statValue(profile, 'purchases_count') }}</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-label">Artículos Publicados</span>
+                            <span class="profile-stat-value">{{ statValue(profile, 'published_count') }}</span>
                         </div>
                         <div class="profile-stat">
                             <span class="profile-stat-label">Miembro desde</span>
