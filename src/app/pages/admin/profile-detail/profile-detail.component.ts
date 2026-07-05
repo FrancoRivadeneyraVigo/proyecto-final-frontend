@@ -9,7 +9,7 @@ import { AdminService } from '../../../services/admin.service';
 import { AuthService } from '../../../services/auth.service';
 
 // Interfaces
-import { IProfileDetailUser, IAdminRole, IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile.interface';
+import { IProfileDetailUser, IAdminRole, IPurchaseSale, IReport, IFavorite } from '../../../shared/models/profile.interface';
 
 // Shared components
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -27,7 +27,7 @@ import { RolesModalComponent } from '../components/roles-modal/roles-modal.compo
 import { getHttpErrorMessage } from '../../../shared/utils/http-error-message';
 
 // Types
-type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
+type AdminProfileTab = 'sales' | 'purchases' | 'favorites' | 'reports';
 type ConfirmAction = 'block' | 'unblock' | 'delete' | null;
 
 @Component({
@@ -64,7 +64,6 @@ export class ProfileDetailComponent {
   activeTab = signal<AdminProfileTab>('sales');
   sales = signal<IPurchaseSale[]>([]);
   purchases = signal<IPurchaseSale[]>([]);
-  reviews = signal<IReview[]>([]);
   favorites = signal<IFavorite[]>([]);
   reports = signal<IReport[]>([]);
 
@@ -106,7 +105,6 @@ export class ProfileDetailComponent {
       this.profile.set(result.user);
       this.sales.set(result.sales);
       this.purchases.set(result.purchases);
-      this.reviews.set(result.reviews);
       this.favorites.set(result.favorites);
       this.reports.set(result.reports);
 

@@ -1,10 +1,10 @@
 import { Component, computed, input, signal } from '@angular/core';
-import { IFavorite, IPurchaseSale, IReport, IReview } from '../../../../shared/models/profile.interface';
+import { IFavorite, IPurchaseSale, IReport } from '../../../../shared/models/profile.interface';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { RouterLink } from '@angular/router';
 
-type AdminProfileTab = 'sales' | 'purchases' | 'reviews' | 'favorites' | 'reports';
+type AdminProfileTab = 'sales' | 'purchases' | 'favorites' | 'reports';
 type ArticleStatusFilter = 'PUBLISHED' | 'DRAFT' | 'UNDER REVIEW' | 'RESERVED' | 'SOLD' | 'RETIRED' | 'all';
 type ReportStatusFilter = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'all';
 
@@ -17,7 +17,6 @@ type ReportStatusFilter = 'PENDING' | 'UNDER REVIEW' | 'RESOLVED' | 'all';
 export class ProfileActivityTabsComponent {
   sales = input.required<IPurchaseSale[]>();
   purchases = input.required<IPurchaseSale[]>();
-  reviews = input.required<IReview[]>();
   favorites = input.required<IFavorite[]>();
   reports = input.required<IReport[]>();
 

@@ -3,8 +3,6 @@
         (click)="setActiveTab('sales')">Ventas</button>
     <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'purchases'"
         (click)="setActiveTab('purchases')">Compras</button>
-    <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reviews'"
-        (click)="setActiveTab('reviews')">Valoraciones</button>
     <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'favorites'"
         (click)="setActiveTab('favorites')">Favoritos</button>
     <button type="button" class="admin-tabs-nav-link" [class.active]="activeTab() === 'reports'"
@@ -141,38 +139,51 @@
     </ul>
     }
     }
-    @case ('reviews') {
-    @if (reviews().length === 0) {
-    <app-empty-state [title]="'Sin valoraciones'"
-        [text]="'Este usuario no tiene valoraciones registradas'"></app-empty-state>
-    } @else {
-    <ul class="list-group">
-        @for (item of reviews(); track item.fk_article_id) {
-        <li class="list-group-item activity-row">
-            <div class="profile-info">
-                <h5>⭐ {{ item.stars }}</h5>
-                <p class="body-medium text-muted">{{ item.comentario }}</p>
-            </div>
-        </li>
-        }
-    </ul>
-    }
-    }
     @case ('favorites') {
     @if (favorites().length === 0) {
     <app-empty-state [title]="'Sin favoritos'" [text]="'Este usuario no tiene artículos favoritos'"></app-empty-state>
     } @else {
     <ul class="list-group">
-        @for (item of favorites(); track item.fk_articles_id) {
-        <li class="list-group-item activity-row">
+        @for (item of favorites(); track item.id) {
+        <li class="list-group-item list-group-item-action activity-row" [routerLink]="['/articles', item.id]">
+            <div class="activity-img">
+                @if (item.cover) {
+                <img [src]="item.cover" [alt]="item.title" class="activity-img">
+                } @else {
+                <i class="bi bi-watch"></i>
+                }
+            </div>
             <div class="profile-info">
-                <h5>Artículo #{{ item.fk_articles_id }}</h5>
+                <h5>{{ item.title }}</h5>
+                <p class="body-medium text-muted">{{ item.description }}</p>
+                <h4 class="activity-price">{{ item.price }}€</h4>
+            </div>
+            <span class="body-medium profile-rol">
+                @switch (item.condition) {
+                @case ('NEW') { Nuevo }
+                @case ('VERY_GOOD') { Como nuevo }
+                @case ('GOOD') { Buen estado }
+                @case ('USED') { Usado }
+                @default { Desconocido }
+                }
+            </span>
+            <div class="profile-badge-warpper">
+                <span class="badge" [class.badge-active]="item.status === 'PUBLISHED'"
+                    [class.badge-blocked]="item.status === 'RESERVED'"
+                    [class.badge-deleted]="item.status === 'SOLD' || item.status === 'RETIRED'">
+                    @switch (item.status) {
+                    @case ('PUBLISHED') { Publicado }
+                    @case ('RESERVED') { Reservado }
+                    @case ('SOLD') { Vendido }
+                    @case ('RETIRED') { Retirado }
+                    @default { Desconocido }
+                    }
+                </span>
             </div>
         </li>
         }
     </ul>
-    }
-    }
+    }   }
     @case ('reports') {
     @if (filteredReports().length === 0) {
     <app-empty-state [title]="'Sin reportes'" [text]="'Este usuario no tiene reportes registrados'"></app-empty-state>
