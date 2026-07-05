@@ -30,7 +30,7 @@
     <p class="text-muted text-center py-4">No hay perfiles para este filtro</p>
     } @else {
     <ul class="list-group">
-        @for (profile of filteredProfiles(); track profile.id) {
+        @for (profile of paginatedProfiles(); track profile.id) {
         <li class="list-group-item list-group-item-action profile-row"
             [routerLink]="['/admin/profile', profile.fk_usuarios_id]">
             <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
@@ -54,5 +54,28 @@
         </li>
         }
     </ul>
+    @if (totalPages() > 1) {
+        <nav aria-label="Paginación de perfiles">
+            <ul class="pagination justify-content-center mt-4">
+                <li class="page-item" [class.disabled]="currentPage() === 1">
+                    <button type="button" class="page-link" (click)="previousPage()">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </li>
+        
+                @for (page of pagesArray(); track page) {
+                <li class="page-item" [class.active]="page === currentPage()">
+                    <button type="button" class="page-link" (click)="goToPage(page)">{{ page }}</button>
+                </li>
+                }
+        
+                <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                    <button type="button" class="page-link" (click)="nextPage()">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     }
+}
 </section>
