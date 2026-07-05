@@ -8,6 +8,7 @@
 
     <app-article-status-filter
         [activeStatus]="activeStatus()"
+        [isOwner]="isOwner()"
         (statusChange)="onStatusChange($event)"
     />
 
