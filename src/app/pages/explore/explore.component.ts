@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 
+
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
@@ -12,10 +13,11 @@ import { BrandService } from '../../services/brand.service';
 import { ModelService } from '../../services/model.service';
 import { StyleService } from '../../services/styles.service';
 
-import { IArticleSummary } from '../../shared/models/article-detail.interface';
+import { IArticleSummary } from '../../shared/models/article.interface';
 import { IBrand } from '../../shared/models/ibrand.interface';
 import { IModel } from '../../shared/models/imodel.interface';
 import { IStyle } from '../../shared/models/istyle.interface';
+import { ActivatedRoute } from '@angular/router';
 
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 50000;
@@ -53,7 +55,7 @@ const GENDER_TRANSLATIONS: Record<string, string> = {
     NavbarComponent,
     FooterComponent,
     ProductCardComponent,
-],
+  ],
   templateUrl: './explore.component.html',
   styleUrl: './explore.component.css'
 })
@@ -68,6 +70,8 @@ export class ExploreComponent implements OnInit {
   private brandService = inject(BrandService);
   private modelService = inject(ModelService);
   private styleService = inject(StyleService);
+
+  private route = inject(ActivatedRoute);
 
   // Listas fijas para los selects/checkboxes que no vienen de la API
   readonly movementTypes = MOVEMENT_TYPES;
@@ -88,7 +92,7 @@ export class ExploreComponent implements OnInit {
   readonly models = signal<IModel[]>([]);
   readonly styles = signal<IStyle[]>([]);
 
-  search = '';
+  readonly searchTerm = signal<string>('');
 
   selectedBrand?: number;
 
@@ -135,12 +139,23 @@ export class ExploreComponent implements OnInit {
   async ngOnInit() {
     this.loading.set(true);
 
+    const searchParam = this.route.snapshot.queryParamMap.get('search')
+    if (searchParam) {
+      this.searchTerm.set(searchParam);
+    }
+
     try {
       await Promise.all([
-        this.loadArticles().catch(err => console.error('Error cargando artículos:', err)),
         this.loadBrands().catch(err => console.error('Error cargando marcas:', err)),
         this.loadStyles().catch(err => console.error('Error cargando estilos (público):', err))
       ]);
+
+      if (searchParam) {
+        await this.applyFilters();
+      } else {
+        await this.loadArticles();
+      }
+
     } catch (error) {
       console.error('Error general en la inicialización:', error);
     } finally {
@@ -152,7 +167,7 @@ export class ExploreComponent implements OnInit {
 
     const response = await this.articleService.getAll(500);
 
-    this.filteredArticles.set(response.data as unknown as IArticleSummary[]);
+    this.filteredArticles.set(response.data);
 
   }
 
@@ -280,58 +295,77 @@ export class ExploreComponent implements OnInit {
     return value.toLocaleString('es-ES');
   }
 
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+  }
+
+  async onSearch(): Promise<void> {
+    await this.applyFilters();
+  }
+
   // Filtrado
   async applyFilters() {
 
-    this.loading.set(true);
+  this.loading.set(true);
 
-    try {
+  try {
 
-      if (this.search.trim()) {
+    const term = this.searchTerm().trim();
 
-        const result = await this.articleService.searchArticles(this.search);
+    if (term) {
 
-        this.filteredArticles.set(result as unknown as IArticleSummary[]);
+      const result = await this.articleService.searchArticles(term);
 
-      } else {
+      this.filteredArticles.set(result as unknown as IArticleSummary[]);
 
-        const filters = {
-          minPrice: this.minPrice,
-          maxPrice: this.maxPrice,
+    } else {
 
-          brandId: this.selectedBrand,
-          modelIds: this.selectedModels.length ? this.selectedModels.join(',') : undefined,
-          styleId: this.selectedStyle,
+      const filters = {
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice,
 
-          gender: this.selectedGenders.length ? this.selectedGenders.join(',') : undefined,
-          movementType: this.selectedMovements.length ? this.selectedMovements.join(',') : undefined,
-          condition: this.selectedConditions.length ? this.selectedConditions.join(',') : undefined,
+        brandId: this.selectedBrand,
+        modelIds: this.selectedModels.length ? this.selectedModels.join(',') : undefined,
+        styleId: this.selectedStyle,
 
-          yearOfManufacture: this.year,
+        gender: this.selectedGenders.length ? this.selectedGenders.join(',') : undefined,
+        movementType: this.selectedMovements.length ? this.selectedMovements.join(',') : undefined,
+        condition: this.selectedConditions.length ? this.selectedConditions.join(',') : undefined,
 
-          originalBox: this.originalBox ? true : undefined,
-          originalPapers: this.originalPapers ? true : undefined,
-          shippingAvailable: this.shipping ? true : undefined
-        };
+        yearOfManufacture: this.year,
 
-        const result = await this.articleService.filterArticles(filters);
+        originalBox: this.originalBox ? true : undefined,
+        originalPapers: this.originalPapers ? true : undefined,
+        shippingAvailable: this.shipping ? true : undefined
+      };
 
-        this.filteredArticles.set(result);
+      const result = await this.articleService.filterArticles(filters);
 
-      }
-
-      this.currentPage.set(1);
-
-    } finally {
-
-      this.loading.set(false);
+      this.filteredArticles.set(result);
 
     }
 
+    this.currentPage.set(1);
+
+  } catch (error: any) {
+
+    this.filteredArticles.set([]);
+
+    const errorMessage = error?.error?.message || error?.message || 'No se han podido cargar los resultados';
+
+    toast.error(errorMessage);
+
+  } finally {
+
+    this.loading.set(false);
+
   }
 
+}
+
   async resetFilters() {
-    this.search = '';
+    this.searchTerm.set('');
 
     this.selectedBrand = undefined;
     this.selectedModels = [];

@@ -59,7 +59,7 @@
 .profile-detail-actions {
     display: flex;
     align-items: start;
-    gap: 16px;
+    gap: 12px;
 }
 
 .profile-detail-bio {
@@ -89,6 +89,24 @@
     color: var(--bs-primary);
 }
 
+.actions-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.roles-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.roles-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 /* ============ Mobile ============ */
 @media (max-width: 768px) {
     .profile-detail-header {
@@ -97,5 +115,9 @@
 
     .profile-detail-actions {
         flex-wrap: wrap;
+    }
+
+    .admin-page {
+        padding: 24px; 
     }
 }

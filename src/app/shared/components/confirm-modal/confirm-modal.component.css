@@ -43,8 +43,11 @@
     height: 32px;
     border: none;
     border-radius: 8px;
-    background-color: var(--bs-primary-bg-subtle, #e7eaff);
-    color: var(--bs-body-color, #1a1a2e);
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.confirm-modal-close i {
+    color: var(--bs-primary-text-emphasis);
 }
 
 .confirm-modal-close:hover {

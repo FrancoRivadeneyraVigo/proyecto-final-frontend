@@ -13,9 +13,14 @@ import { IBrand } from '../../models/ibrand.interface';
 import { IModel } from '../../models/imodel.interface';
 import { IProfile } from '../../models/profile.interface';
 import { IStyle } from '../../models/istyle.interface';
-import { IArticleDetail, IArticleImage } from '../../models/article-detail.interface';
+import {
+  ArticleCondition,
+  IArticleDetail,
+  IArticleImage,
+  ICreateArticle,
+  IUpdateArticle,
+} from '../../models/article.interface';
 
-import { ICreateArticle, IUpdateArticle, ArticleCondition } from '../../models/icreate-article.component';
 import { getHttpErrorMessage } from '../../utils/http-error-message';
 
 import { ButtonComponent } from '../button/button.component';
@@ -160,6 +165,98 @@ export class ArticleFormComponent {
     }
 
     void this.loadInitialData();
+
+  }
+
+  isFieldInvalid(field: string): boolean {
+
+    const control = this.articleForm.get(field);
+
+    return !!control && control.invalid && control.touched;
+
+  }
+
+  getFieldError(field: string): string {
+
+    const control = this.articleForm.get(field);
+
+    if (!control || !control.errors) {
+      return '';
+    }
+
+    switch (field) {
+
+      case 'title':
+
+        if (control.errors['required']) {
+          return 'El título es obligatorio.';
+        }
+
+        if (control.errors['maxlength']) {
+          return 'El título no puede superar los 100 caracteres.';
+        }
+
+        break;
+
+      case 'description':
+
+        if (control.errors['required']) {
+          return 'La descripción es obligatoria.';
+        }
+
+        if (control.errors['maxlength']) {
+          return 'La descripción no puede superar los 1000 caracteres.';
+        }
+
+        break;
+
+      case 'brand':
+
+        if (control.errors['required']) {
+          return 'Debes seleccionar una marca.';
+        }
+
+        break;
+
+      case 'fk_models_id':
+
+        if (control.errors['required']) {
+          return 'Debes seleccionar un modelo.';
+        }
+
+        break;
+
+      case 'fk_styles_id':
+
+        if (control.errors['required']) {
+          return 'Debes seleccionar un estilo.';
+        }
+
+        break;
+
+      case 'price':
+
+        if (control.errors['required']) {
+          return 'El precio es obligatorio.';
+        }
+
+        if (control.errors['min']) {
+          return 'El precio debe ser superior a 0 €.';
+        }
+
+        break;
+
+      case 'year_of_manufacture':
+
+        if (control.errors['required']) {
+          return 'El año de fabricación es obligatorio.';
+        }
+
+        break;
+
+    }
+
+    return 'Valor no válido.';
 
   }
 

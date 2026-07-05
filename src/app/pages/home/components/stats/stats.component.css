@@ -42,7 +42,6 @@
     justify-content: center;
     align-items: center;
     gap: 60px;
-
     max-width: 900px;
     margin: 0 auto;
 }
@@ -53,12 +52,14 @@
 }
 
 @media (max-width: 767px) {
+
+
     .stat-value {
         font-size: 36px;
     }
 
     .stats-section {
-        padding: 40px 0;
+        padding: 40px 24px;
     }
 
     .stats-group {

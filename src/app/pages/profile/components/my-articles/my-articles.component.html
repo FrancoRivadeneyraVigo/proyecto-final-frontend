@@ -1,6 +1,6 @@
 <div class="my-articles">
     <header class="my-articles-header">
-        <h2>Artículos</h2>
+        <h3>Artículos</h3>
         <p class="body-large text-muted">
             Consulta tus anuncios en los distintos estados de publicación, revisa su información y realiza las acciones disponibles en cada caso.
         </p>
@@ -8,6 +8,7 @@
 
     <app-article-status-filter
         [activeStatus]="activeStatus()"
+        [isOwner]="isOwner()"
         (statusChange)="onStatusChange($event)"
     />
 

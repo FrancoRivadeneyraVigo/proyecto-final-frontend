@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { IAdminProfile } from '../shared/models/profile.interface';
-import { IAdminProfileDetail } from '../shared/models/profile-activity.interface';
+import { IAdminProfile, IAdminProfileDetail } from '../shared/models/profile.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
   private httpClient = inject(HttpClient);
-  private baseUrl: string = `${environment.apiUrl}/profiles`;
+  private baseUrl: string = `${BACKEND_API_URL}/profiles`;
 
   // Trae todos los perfiles combinando los 3 roles, agrupando duplicados
   // (un mismo usuario puede tener varios roles) y concatenando sus roles con coma
@@ -64,6 +63,34 @@ async unblockProfile(userId: number): Promise<{ message: string }> {
 async deleteProfile(userId: number): Promise<{ message: string }> {
   return lastValueFrom(
     this.httpClient.delete<{ message: string }>(`${this.baseUrl}/${userId}`)
+  );
+}
+
+//Añadir rol
+async addRole(userId: number, rol: string): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.post<{ message: string }>(
+      `${this.baseUrl}/${userId}/roles`,
+      { rol }
+    )
+  );
+}
+
+//Quitar rol
+async removeRole(userId: number, roleId: number): Promise<{ message: string }> {
+  return lastValueFrom(
+    this.httpClient.delete<{ message: string }>(
+      `${this.baseUrl}/${userId}/roles/${roleId}`
+    )
+  );
+}
+
+// Obtener roles de un usuario
+async getProfileRoles(userId: number): Promise<{ roles: { roleId: number; rol: string }[] }> {
+  return lastValueFrom(
+    this.httpClient.get<{ roles: { roleId: number; rol: string }[] }>(
+      `${this.baseUrl}/${userId}/roles`
+    )
   );
 }
 

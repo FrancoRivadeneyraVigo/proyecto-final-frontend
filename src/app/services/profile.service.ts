@@ -1,20 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import {
   IProfile,
+  IProfileActivity,
   IUpdateProfileRequest,
   IUploadPhotoResponse,
 } from '../shared/models/profile.interface';
-import { IProfileActivity } from '../shared/models/profile-activity.interface';
+import { BACKEND_API_URL } from '../shared/utils/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileService {
   private httpClient = inject(HttpClient);
-  private baseUrl: string = `${environment.apiUrl}/profiles`;
+  private baseUrl: string = `${BACKEND_API_URL}/profiles`;
 
   async getById(userId: string): Promise<IProfile> {
     try {

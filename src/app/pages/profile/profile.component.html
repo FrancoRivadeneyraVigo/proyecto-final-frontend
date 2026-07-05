@@ -8,17 +8,22 @@
         </div>
 
         <div class="profile-hero-inner container-xxl">
-            @if (user(); as profile) {
+            @if (loading()) {
+            <div class="profile-card section profile-loading-state" role="status" aria-live="polite">
+                <span class="spinner-border text-primary" aria-hidden="true"></span>
+                <p class="body-medium text-muted">Cargando perfil...</p>
+            </div>
+            } @else if (user(); as profile) {
             <header class="profile-hero-text">
                 @if (isMyProfile()) {
-                <h2>Mi perfil</h2>
+                <h3>Mi perfil</h3>
                 <p class="body-large">
                     Consulta y actualiza tu información personal, gestiona tus datos de contacto y mantén tu perfil al día.
                 </p>
                 } @else {
-                <h2>Perfil de {{ profile.name }}</h2>
+                <h3>Perfil de {{ profile.name }}</h3>
                 <p class="body-large">
-                    Consulta la información pública, artículos y valoraciones de este usuario.
+                    Consulta la información pública y artículos de este usuario.
                 </p>
                 }
             </header>
@@ -39,10 +44,6 @@
 
                             <div class="profile-info">
                                 <h3>{{ profile.name }} {{ profile.surname }}</h3>
-                                <p class="profile-meta">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>{{ ratingText(profile) }} ({{ reviewsLabel(profile) }})</span>
-                                </p>
                                 <p class="profile-meta">
                                     <i class="bi bi-geo-alt-fill"></i>
                                     <span>{{ (profile.city ?? '').trim() || 'Sin localización' }}</span>
@@ -89,6 +90,10 @@
                         <div class="profile-stat">
                             <span class="profile-stat-label">Compras</span>
                             <span class="profile-stat-value">{{ statValue(profile, 'purchases_count') }}</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-label">Artículos Publicados</span>
+                            <span class="profile-stat-value">{{ statValue(profile, 'published_count') }}</span>
                         </div>
                         <div class="profile-stat">
                             <span class="profile-stat-label">Miembro desde</span>
@@ -244,10 +249,16 @@
                             <app-button [text]="'Cancelar'" [class]="'btn-outline-primary'" [type]="'button'"
                                 (click)="cancelEditing()">
                             </app-button>
-                            <app-button [text]="'Guardar cambios'" [class]="'btn-primary'" [type]="'submit'"
-                                [showIconLeft]="true" [iconLeft]="'bi bi-check-lg'"
+                            <button type="submit" class="btn btn-primary profile-save-button"
                                 [disabled]="profileForm.invalid || saving()">
-                            </app-button>
+                                @if (saving()) {
+                                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                <span>Guardando...</span>
+                                } @else {
+                                <i class="bi bi-check-lg" aria-hidden="true"></i>
+                                <span>Guardar cambios</span>
+                                }
+                            </button>
                         </div>
                     </form>
                 </div>

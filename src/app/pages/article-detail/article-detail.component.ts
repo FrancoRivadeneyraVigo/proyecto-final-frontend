@@ -9,7 +9,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { FooterComponent } from '../../shared/layout/footer/footer.component';
-import { IArticleDetail, IArticleSummary } from '../../shared/models/article-detail.interface';
+import { IArticleDetail, IArticleSummary } from '../../shared/models/article.interface';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from './report-article/report-article.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -63,7 +63,7 @@ ngOnInit(): void {
   get images(): string[] {
     const article = this.article();
     const urls = article?.images?.map((image) => image.image_url) ?? [];
-    return urls.length ? urls : ['images/hero-watch.webp'];
+    return urls;
   }
 
   get currentImage(): string {

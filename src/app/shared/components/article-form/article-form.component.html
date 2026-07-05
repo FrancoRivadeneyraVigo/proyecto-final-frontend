@@ -41,8 +41,7 @@
                         </div>
                     </div>
 
-                    <input #imageInput hidden type="file" multiple accept="image/*"
-                        (change)="onImagesSelected($event)">
+                    <input #imageInput hidden type="file" multiple accept="image/*" (change)="onImagesSelected($event)">
 
                     <div class="article-images-grid">
 
@@ -64,23 +63,21 @@
 
                         }
 
-                        @if(imagePreviews.length < maxImages){
-
-                        <button type="button" class="article-image-slot article-image-slot--add"
-                            (click)="triggerImageInput(imageInput)">
+                        @if(imagePreviews.length < maxImages){ <button type="button"
+                            class="article-image-slot article-image-slot--add" (click)="triggerImageInput(imageInput)">
                             <i class="bi bi-plus-lg"></i>
                             <span>Añadir foto</span>
-                        </button>
+                            </button>
 
-                        }
+                            }
 
-                        @for(slot of emptyImageSlots; track $index){
+                            @for(slot of emptyImageSlots; track $index){
 
-                        <div class="article-image-slot article-image-slot--empty">
-                            <i class="bi bi-image"></i>
-                        </div>
+                            <div class="article-image-slot article-image-slot--empty">
+                                <i class="bi bi-image"></i>
+                            </div>
 
-                        }
+                            }
 
                     </div>
 
@@ -108,8 +105,14 @@
                                 Título <span class="required">*</span>
                             </label>
 
-                            <input class="form-control" placeholder="Ej. Omega Speedmaster Professional"
-                                formControlName="title">
+                            <input class="form-control" [class.is-invalid]="isFieldInvalid('title')"
+                                placeholder="Ej. Omega Speedmaster Professional" formControlName="title">
+
+                            @if (isFieldInvalid('title')) {
+                            <div class="field-error">
+                                {{ getFieldError('title') }}
+                            </div>
+                            }
 
                         </div>
 
@@ -119,9 +122,15 @@
                                 Descripción <span class="required">*</span>
                             </label>
 
-                            <textarea rows="4" class="form-control"
+                            <textarea rows="4" class="form-control" [class.is-invalid]="isFieldInvalid('description')"
                                 placeholder="Describe el estado, la historia y los detalles de tu reloj"
                                 formControlName="description"></textarea>
+
+                            @if (isFieldInvalid('description')) {
+                            <div class="field-error">
+                                {{ getFieldError('description') }}
+                            </div>
+                            }
 
                         </div>
 
@@ -152,7 +161,7 @@
                                 Marca <span class="required">*</span>
                             </label>
 
-                            <select class="form-select" formControlName="brand" (change)="onBrandChange()">
+                            <select class="form-select" [class.is-invalid]="isFieldInvalid('brand')" formControlName="brand" (change)="onBrandChange()">
 
                                 <option [ngValue]="null">Seleccionar</option>
 
@@ -161,6 +170,12 @@
                                 }
 
                             </select>
+
+                            @if (isFieldInvalid('brand')) {
+                            <div class="field-error">
+                                {{ getFieldError('brand') }}
+                            </div>
+                            }
 
                         </div>
 
@@ -171,7 +186,7 @@
                                 Modelo <span class="required">*</span>
                             </label>
 
-                            <select class="form-select" formControlName="fk_models_id" (change)="onModelChange()">
+                            <select class="form-select" [class.is-invalid]="isFieldInvalid('fk_models_id')" formControlName="fk_models_id" (change)="onModelChange()">
 
                                 <option [ngValue]="null">Seleccionar</option>
 
@@ -180,6 +195,12 @@
                                 }
 
                             </select>
+
+                            @if (isFieldInvalid('fk_models_id')) {
+                            <div class="field-error">
+                                {{ getFieldError('fk_models_id') }}
+                            </div>
+                            }
 
                         </div>
 
@@ -190,7 +211,7 @@
                                 Estilo <span class="required">*</span>
                             </label>
 
-                            <select class="form-select" formControlName="fk_styles_id">
+                            <select class="form-select" [class.is-invalid]="isFieldInvalid('fk_styles_id')" formControlName="fk_styles_id">
 
                                 <option [ngValue]="null">Seleccionar</option>
 
@@ -199,6 +220,12 @@
                                 }
 
                             </select>
+
+                            @if (isFieldInvalid('fk_styles_id')) {
+                            <div class="field-error">
+                                {{ getFieldError('fk_styles_id') }}
+                            </div>
+                            }
 
                         </div>
 
@@ -219,7 +246,7 @@
                                 Año de fabricación <span class="required">*</span>
                             </label>
 
-                            <input type="number" class="form-control" placeholder="2024"
+                            <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid('year_of_manufacture')" placeholder="2024"
                                 formControlName="year_of_manufacture">
 
                         </div>
@@ -280,7 +307,14 @@
                                 Precio (€) <span class="required">*</span>
                             </label>
 
-                            <input type="number" class="form-control" placeholder="0,00" formControlName="price">
+                            <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid('price')"
+                                placeholder="0,00" formControlName="price">
+
+                            @if (isFieldInvalid('price')) {
+                            <div class="field-error">
+                                {{ getFieldError('price') }}
+                            </div>
+                            }
 
                         </div>
 

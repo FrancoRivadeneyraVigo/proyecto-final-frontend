@@ -63,6 +63,14 @@
     padding: 32px;
 }
 
+.profile-loading-state {
+    min-height: 260px;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+}
+
 .profile-header {
     display: flex;
     align-items: flex-start;
@@ -170,7 +178,7 @@
 
 .profile-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
 }
 
@@ -284,6 +292,13 @@
     gap: 12px;
     flex-wrap: wrap;
     padding-top: 8px;
+}
+
+.profile-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .profile-edit-avatar-preview {

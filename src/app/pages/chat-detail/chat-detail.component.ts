@@ -3,7 +3,6 @@ import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angul
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { ArticleService } from '../../services/article.service';
 import { ChatService } from '../../services/chat.service';
@@ -11,6 +10,7 @@ import { ReviewService } from '../../services/review.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { NavbarComponent } from '../../shared/layout/navbar/navbar.component';
 import { ChatArticleStatus, IChatArticleDetail, IChatDetail, IChatMessage } from '../../shared/models/chat.interface';
+import { BACKEND_BASE_URL } from '../../shared/utils/api-url';
 import { getHttpErrorMessage } from '../../shared/utils/http-error-message';
 import { ReportArticleComponent } from '../article-detail/report-article/report-article.component';
 import { ReportProfileComponent } from './report-profile/report-profile.component';
@@ -154,7 +154,7 @@ export class ChatDetailComponent implements OnInit {
       return cover;
     }
 
-    return `${environment.apiUrl.replace('/api', '')}${cover.startsWith('/') ? cover : `/${cover}`}`;
+    return `${BACKEND_BASE_URL}${cover.startsWith('/') ? cover : `/${cover}`}`;
   }
 
   isOwnMessage(message: IChatMessage): boolean {
@@ -176,7 +176,7 @@ export class ChatDetailComponent implements OnInit {
     const labels: Record<string, string> = {
       DRAFT: 'Borrador',
       PUBLISHED: 'Publicado',
-      UNDER_REVIEW: 'En revision',
+      'UNDER REVIEW': 'En revision',
       SOLD: 'Vendido',
       RESERVED: 'Reservado',
       RETIRED: 'Retirado',

@@ -29,6 +29,7 @@ import { ReportUserComponent } from './report-user/report-user.component';
 export class ProfileComponent {
   routeUserId = signal<string | null>(null);
   user = signal<IProfile | null>(null);
+  loading = signal(false);
   isEditing = signal(false);
   saving = signal(false);
   selectedPhotoFile = signal<File | null>(null);
@@ -91,43 +92,37 @@ export class ProfileComponent {
       }
 
       this.routeUserId.set(userId);
-      void this.loadProfile(userId);
+      this.loadProfile(userId);
     });
   }
 
   private async loadProfile(userId: string): Promise<void> {
+    this.loading.set(true);
     this.resetPhotoEditState();
     this.isEditing.set(false);
     this.profileForm.reset();
-
-    if (!this.authService.currentUser()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    this.user.set(null);
 
     try {
+      if (!this.authService.currentUser()) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
       this.user.set(await this.profileService.getById(userId));
       this.scrollToActivityIfRequested();
     } catch (error) {
-      if (error instanceof HttpErrorResponse && error.status === 404) {
+      if (error instanceof HttpErrorResponse) {
         this.router.navigate(['/404']);
         return;
       }
       throw error;
+    } finally {
+      this.loading.set(false);
     }
   }
 
-  ratingText(profile: IProfile): string {
-    const rating = Number(profile.rating ?? 0);
-    return rating.toFixed(2);
-  }
-
-  reviewsLabel(profile: IProfile): string {
-    const count = profile.stats?.reviews_count ?? 0;
-    return `${count} ${count === 1 ? 'valoración' : 'valoraciones'}`;
-  }
-
-  statValue(profile: IProfile, key: 'sales_count' | 'purchases_count'): number {
+  statValue(profile: IProfile, key: 'sales_count' | 'purchases_count' | 'published_count'): number {
     return profile.stats?.[key] ?? 0;
   }
 
@@ -347,7 +342,7 @@ export class ProfileComponent {
   private scrollToActivityIfRequested(): void {
     const tab = this.route.snapshot.queryParamMap.get('tab');
 
-    if (tab !== 'favorites' && tab !== 'ratings') {
+    if (tab !== 'favorites') {
       return;
     }
 
