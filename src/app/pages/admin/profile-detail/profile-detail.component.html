@@ -72,7 +72,7 @@
                                 (click)="openRolesModal()">
                             </app-button>
                         
-                            @if (profile()!.status !== 'DELETED') {
+                            @if (profile()!.status !== 'DELETED' && !isOwnProfile()) {
                             @if (profile()!.status === 'ACTIVE') {
                             <app-button [text]="'Bloquear'" [class]="'btn-outline-primary'" [showIconLeft]="true" [iconLeft]="'bi bi-lock'"
                                 (click)="openConfirm('block')"></app-button>

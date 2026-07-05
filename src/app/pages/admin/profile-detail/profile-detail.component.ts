@@ -6,6 +6,7 @@ import { toast } from 'ngx-sonner';
 
 // Services
 import { AdminService } from '../../../services/admin.service';
+import { AuthService } from '../../../services/auth.service';
 
 // Interfaces
 import { IProfileDetailUser, IAdminRole, IPurchaseSale, IReview, IReport, IFavorite } from '../../../shared/models/profile.interface';
@@ -50,6 +51,7 @@ export class ProfileDetailComponent {
 
   // ─── Services ───────────────────────────────────────────────────────────────
   private adminService = inject(AdminService);
+  private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
 
   // ─── Profile state ───────────────────────────────────────────────────────────
@@ -65,6 +67,15 @@ export class ProfileDetailComponent {
   reviews = signal<IReview[]>([]);
   favorites = signal<IFavorite[]>([]);
   reports = signal<IReport[]>([]);
+
+  // ─── Current user comparison ─────────────────────────────────────────────────
+  currentUser = this.authService.currentUser;
+  isOwnProfile = computed(() => {
+    const current = this.currentUser();
+    const viewed = this.profile();
+    if (!current || !viewed) return false;
+    return current.fk_usuarios_id === viewed.fk_usuarios_id;
+  });
 
   // ─── Confirm modal state ─────────────────────────────────────────────────────
   confirmAction = signal<ConfirmAction>(null);
