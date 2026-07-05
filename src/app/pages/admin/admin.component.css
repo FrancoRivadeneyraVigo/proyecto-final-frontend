@@ -25,6 +25,6 @@ gap: 32px;
 
 @media (max-width: 767px) {
     .admin-page {
-        padding: 32px 24px;
+        padding: 24px 24px;
     }
 }
