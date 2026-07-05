@@ -70,15 +70,15 @@
                 </div>
                 <div>
                     <dt><i class="bi bi-tag"></i> Estilo</dt>
-                    <dd>{{ article.style_name || 'Unisex' }}</dd>
+                    <dd>{{ article.style?.name || '-' }}</dd>
                 </div>
                 <div>
                     <dt><i class="bi bi-gear"></i> Movimiento</dt>
-                    <dd>{{ article.movement_type || 'Automático' }}</dd>
+                    <dd>{{ article.model?.movement_type || '-'}}</dd>
                 </div>
                 <div>
                     <dt><i class="bi bi-card-text"></i> Referencia</dt>
-                    <dd>{{ article.reference || '126610LN' }}</dd>
+                    <dd>{{ article.model?.reference || '-'}}</dd>
                 </div>
             </dl>
 
