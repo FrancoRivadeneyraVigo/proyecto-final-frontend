@@ -3,7 +3,8 @@ export type ArticleStatus =
   | 'PUBLISHED'
   | 'UNDER REVIEW'
   | 'RESERVED'
-  | 'SOLD';
+  | 'SOLD'
+  | 'RETIRED';
 
 export type ArticleCondition =
   | 'NEW'
