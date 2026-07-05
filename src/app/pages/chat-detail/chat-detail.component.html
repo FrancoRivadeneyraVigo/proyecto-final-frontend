@@ -62,22 +62,22 @@
             <div class="article-actions">
                 @if (showReserveAction) {
                 <app-button [text]="'Reservado'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-bag-check'" [disabled]="isUpdatingArticle()"
+                    [iconLeft]="'bi bi-bag-check'" [disabled]="isUpdatingArticle()" [fullWidth]="true"
                     (click)="updateArticleStatus('reserved')"></app-button>
                 }
 
                 @if (showReservedActions) {
                 <app-button [text]="'No reservado'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-arrow-counterclockwise'" [disabled]="isUpdatingArticle()"
+                    [iconLeft]="'bi bi-arrow-counterclockwise'" [disabled]="isUpdatingArticle()" [fullWidth]="true"
                     (click)="updateArticleStatus('published')"></app-button>
                 <app-button [text]="'Vendido'" [class]="'btn-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-currency-euro'" [disabled]="isUpdatingArticle()"
+                    [iconLeft]="'bi bi-currency-euro'" [disabled]="isUpdatingArticle()" [fullWidth]="true"
                     (click)="updateArticleStatus('sold')"></app-button>
                 }
 
                 @if (showReportArticleAction) {
                 <app-button [text]="'Reportar producto'" [class]="'btn-outline-primary'" [showIconLeft]="true"
-                    [iconLeft]="'bi bi-flag'" (click)="onReportArticle()"></app-button>
+                    [iconLeft]="'bi bi-flag'" [fullWidth]="true" (click)="onReportArticle()"></app-button>
                 }
             </div>
         </aside>
@@ -122,6 +122,13 @@
                 }
                 <div #messagesEnd></div>
             </div>
+
+            @if (showIncidentAction) {
+            <label class="incident-check">
+                <input class="form-check-input" type="checkbox" (change)="onIncidentToggle($event)">
+                <span>Marcar como incidencia</span>
+            </label>
+            }
 
             <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
                 <input class="form-control" placeholder="" formControlName="message">
