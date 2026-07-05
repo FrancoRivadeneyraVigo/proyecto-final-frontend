@@ -22,6 +22,10 @@ export class ProfilesManagementComponent {
   loading = signal(false);
   searchTerm = signal('');
 
+  // ─── Pagination state ────────────────────────────────────────────────────────
+  currentPage = signal(1);
+  pageSize = 10;
+
   filteredProfiles = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     if (!term) {
@@ -39,6 +43,19 @@ export class ProfilesManagementComponent {
     });
   });
 
+  totalPages = computed(() => {
+    return Math.max(1, Math.ceil(this.filteredProfiles().length / this.pageSize));
+  });
+
+  paginatedProfiles = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredProfiles().slice(start, start + this.pageSize);
+  });
+
+  pagesArray = computed(() => {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  });
+  
   constructor() {
     this.loadProfiles('user');
   }
@@ -52,6 +69,7 @@ export class ProfilesManagementComponent {
           ? await this.adminService.getAllProfilesWithRole()
           : await this.adminService.getProfilesByRole(filter);
       this.profiles.set(result);
+      this.currentPage.set(1);
     } catch (error) {
       console.error('Error al cargar perfiles:', error);
       toast.error('No se pudieron cargar los perfiles. Inténtalo más tarde.');
@@ -63,5 +81,19 @@ export class ProfilesManagementComponent {
 
   onSearchChange(value: string): void {
     this.searchTerm.set(value);
+    this.currentPage.set(1);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages()) return;
+    this.currentPage.set(page);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
   }
 }
