@@ -43,7 +43,7 @@
     color: var(--bs-primary);
 }
 
-.hero-section .search.input-group .btn{
+.hero-section .search.input-group .btn {
     width: 105px;
     height: 40px;
     padding: 10px 12px;
@@ -181,9 +181,9 @@
     color: var(--bs-primary);
 }
 
- .grid-watch {
+.grid-watch {
     display: grid;
-    grid-template-columns:  repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-top: 32px;
     align-items: stretch;
@@ -195,6 +195,7 @@
         padding-right: 24px;
         padding-left: 24px;
     }
+
     .grid-watch {
         grid-template-columns: 1fr;
         gap: 24px;
@@ -231,17 +232,15 @@
 }
 
 @media (max-width: 767px) {
-    
+
     .popular-brands {
         padding-left: 24px;
         padding-right: 24px;
     }
 
     .brand-card {
-      aspect-ratio: 1 / 1;
         max-width: 100%;
-        height: auto;
-
+        height: 140px;
     }
 
     .brand-card:hover {
@@ -250,8 +249,8 @@
     }
 
     .brand-img {
-        width: 70%;
-        height: 70%;
+        width: 90%;
+        height: 90%;
         max-height: none;
         object-fit: contain;
     }
@@ -310,6 +309,7 @@
     border-radius: 8px;
     transition: background-color 0.3 ease;
 }
+
 .cta-button i {
     margin-left: 8px;
 }
@@ -319,7 +319,7 @@
 }
 
 @media (max-width: 767px) {
-    .cta-section{
+    .cta-section {
         padding: 40px 24px;
     }
 
