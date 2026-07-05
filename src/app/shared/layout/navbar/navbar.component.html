@@ -70,7 +70,7 @@
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/articles/sell']"
                             (click)="closeMenu()">Vender</a>
                     </li>
-                    @if (currentUser()?.rol === 'admin') {
+                    @if (currentUser()?.rol === 'admin' || currentUser()?.rol === 'moderator') {
                     <li class="nav-item">
                         <a class="nav-link" routerLinkActive="active" [routerLink]="['/admin']"
                             (click)="closeMenu()">Administrar</a>
