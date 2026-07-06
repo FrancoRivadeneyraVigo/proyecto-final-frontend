@@ -123,10 +123,7 @@ Este proyecto forma parte del **Trabajo/Proyecto Final de Máster** y refleja la
 
 ## 👤 Autoría
 
-Desarrollado por **Franco Rivadeneyra Vigo** como parte del Proyecto Final de Máster.
+Desarrollado por el grupo de trabajo del Proyecto Final de Máster.
 
 ---
 
-## 📄 Licencia
-
-Pendiente de definición. Se recomienda añadir una licencia (por ejemplo, MIT) para clarificar el uso del código.
