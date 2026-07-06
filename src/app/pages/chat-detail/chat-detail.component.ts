@@ -107,7 +107,11 @@ export class ChatDetailComponent implements OnInit {
   }
 
   get showReportArticleAction(): boolean {
-    return this.articleStatus === 'SOLD';
+    return this.chat()?.my_role === 'BUYER' && this.articleStatus === 'SOLD';
+  }
+
+  get showIncidentAction(): boolean {
+    return this.showReportArticleAction;
   }
 
   get contactName(): string {
@@ -345,6 +349,16 @@ export class ChatDetailComponent implements OnInit {
     }
 
     this.reportArticleModal?.open();
+  }
+
+  onIncidentToggle(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (!checkbox.checked) {
+      return;
+    }
+
+    this.onReportArticle();
   }
 
   private scrollToBottom(): void {
