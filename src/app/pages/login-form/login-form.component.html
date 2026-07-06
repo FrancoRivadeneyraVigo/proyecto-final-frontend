@@ -1,0 +1,57 @@
+<div class="login-page">
+    <!-- Hero compartido -->
+    <app-auth-hero></app-auth-hero>
+
+    <!-- Contenido del formulario -->
+    <section class="login-content">
+        <div class="login-card">
+            <div class="d-flex flex-column gap-1">
+                <h3>Iniciar sesión</h3>
+                <p class="text-muted body-medium">Accede a tu cuenta para comprar y vender relojes fácilmente</p>
+            </div>
+            <div class="section">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+                    <!-- Email -->
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" class="form-control" placeholder="tu@email.com"
+                        formControlName="email" />
+                    @if (checkTouched('email') && checkError('email', 'required')) {
+                    <small class="text-danger">El email es obligatorio.</small>
+                    }
+                    @if (checkTouched('email') && checkError('email', 'pattern')) {
+                    <small class="text-danger">Introduce un email válido.</small>
+                    }
+
+                    <!-- Password -->
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input id="password" type="password" class="form-control" formControlName="password" />
+                    @if (checkTouched('password') && checkError('password', 'required')) {
+                    <small class="text-danger">La contraseña es obligatoria.</small>
+                    }
+
+                    <!-- Submit -->
+                    <app-button [text]="'Iniciar sesión'" [class]="'btn-primary'" [showIconRight]="true"
+                        [iconRight]="'bi bi-arrow-right'" [type]="'submit'" [disabled]="loginForm.invalid"
+                        [fullWidth]="true">
+                    </app-button>
+
+                    <!-- Link to register -->
+                    <p class="text-center text-muted body-medium">¿Aún no tienes cuenta en ATiempo?</p>
+                    <a routerLink="/register">
+                        <app-button [text]="'Crear cuenta'" [class]="'btn-link'"></app-button>
+                    </a>
+
+                    <!-- Link to home -->
+                    <hr>
+                    <p class="text-center text-muted body-medium">Explora la mejor selección de relojes de segunda mano</p>
+                    <a routerLink="/home">
+                        <app-button [text]="'Ir al inicio'" [class]="'btn-outline-primary'" [showIconRight]="true" [iconRight]="'bi bi-house'" [fullWidth]="true">
+                        </app-button>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<app-footer></app-footer>

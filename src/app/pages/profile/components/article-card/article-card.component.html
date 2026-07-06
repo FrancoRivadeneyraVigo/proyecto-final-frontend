@@ -1,0 +1,37 @@
+<article class="article-card">
+    <a class="article-card-thumbnail" [routerLink]="['/articles', article().id]">
+        @if (article().cover) {
+        <img [src]="article().cover" [alt]="article().title" />
+        } @else {
+        <i class="bi bi-watch"></i>
+        }
+    </a>
+
+    <div class="article-card-body">
+        <div class="article-card-header">
+            <a class="article-card-title" [routerLink]="['/articles', article().id]">
+                <h5>{{ article().title }}</h5>
+            </a>
+            <span class="article-card-badge">{{ statusLabel() }}</span>
+        </div>
+
+        <p class="article-card-description body-medium text-muted">{{ article().description }}</p>
+
+        @if (isOwner()) {
+        <div class="article-card-actions">
+            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-pencil'"
+                (click)="onEdit()"></app-button>
+            <app-button [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-trash'"
+                (click)="onDelete()"></app-button>
+        </div>
+        }
+
+        @if (showDeleteModal()) {
+        <app-confirm-modal [title]="'Eliminar artículo'" [subtitle]="article().title"
+            [message]="'¿Estás seguro de que deseas eliminar este artículo? Esta acción no se puede deshacer.'"
+            [confirmText]="'Eliminar'" [confirmIcon]="'bi bi-trash'" [iconColor]="'danger'"
+            (confirmed)="onConfirmDelete()" (cancelled)="onCancelDelete()">
+        </app-confirm-modal>
+        }
+    </div>
+</article>

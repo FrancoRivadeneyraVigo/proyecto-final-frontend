@@ -1,0 +1,32 @@
+<a class="product-card" [routerLink]="['/articles', article().id]">
+    <div class="product-image-wrapper">
+        @if (article().cover) {
+        <img class="product-image" [src]="article().cover" [alt]="article().title">
+        } @else {
+        <div class="product-image-placeholder">
+            <i class="bi bi-watch"></i>
+        </div>
+        }
+        @if (showFavorite()) {
+        <button type="button" class="favorite-btn" (click)="onFavoriteClick($event)"
+            [class.is-favorite]="article().is_favorite" aria-label="Guardar en favoritos">
+            <i class="bi" [class.bi-heart-fill]="article().is_favorite" [class.bi-heart]="!article().is_favorite"></i>
+        </button>
+        }
+      
+        <span class="brand-pill"><i class="bi bi-patch-check"></i>
+            {{article().brand?.name ||article().brand_name }}
+        </span>
+    
+    </div>
+
+    <div class="product-body">
+        <h6 class="product-title">{{ article().title }}</h6>
+        <p class="product-description">{{ article().description || 'Lorem ipsum dolor sit amet consectetur. Erat mauris ut sed ut eget. Lectus interdum urna quam pretium mattis...' }}</p>
+        <p class="product-meta">{{ metaLabel }}</p>
+        @if (locationLabel) {
+        <span class="location-pill"><i class="bi bi-geo-alt"></i> {{ locationLabel }}</span>
+        }
+        <p class="product-price">€{{ formattedPrice }}</p>
+    </div>
+</a>

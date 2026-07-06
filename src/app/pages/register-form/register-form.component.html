@@ -1,0 +1,83 @@
+<div class="register-page">
+    <!-- Hero compartido -->
+    <app-auth-hero></app-auth-hero>
+
+    <!-- Contenido del formulario -->
+    <section class="register-content">
+        <div class="register-card">
+
+            <div class="d-flex flex-column gap-1">
+                <h3>Crear cuenta</h3>
+                <p class="text-muted body-medium">
+                    Únete a ATiempo y accede al mercado de relojes de segunda mano
+                </p>
+            </div>
+
+            <div class="section">
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+                    <!-- Email -->
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" class="form-control" placeholder="tu@email.com"
+                        formControlName="email" />
+                    @if (checkTouched('email') && checkError('email', 'required')) {
+                    <small class="text-danger">El email es obligatorio.</small>
+                    }
+                    @if (checkTouched('email') && checkError('email', 'pattern')) {
+                    <small class="text-danger">Introduce un email válido.</small>
+                    }
+
+                    <!-- Password -->
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input id="password" type="password" class="form-control" formControlName="password" />
+                    @if (checkTouched('password') && checkError('password', 'required')) {
+                    <small class="text-danger">La contraseña es obligatoria.</small>
+                    }
+
+                    <!-- Repeat Password -->
+                    <label for="repeatPassword" class="form-label">Repetir contraseña</label>
+                    <input id="repeatPassword" type="password" class="form-control" formControlName="confirmPassword" />
+                    @if (checkTouched('repeatPassword') && checkError('repeatPassword', 'required')) {
+                    <small class="text-danger">Debes repetir la contraseña.</small>
+                    }
+                    @if (checkError('repeatPassword', 'passwordMismatch')) {
+                    <small class="text-danger">Las contraseñas no coinciden.</small>
+                    }
+
+                    <!-- Terms -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" formControlName="terms" />
+                        <label class="form-check-label" for="terms">
+                            He leído y acepto la Política de privacidad y Términos y condiciones
+                        </label>
+                    </div>
+                    @if (checkTouched('terms') && checkError('terms', 'required')) {
+                    <small class="text-danger">Debes aceptar los términos.</small>
+                    }
+
+                    <!-- Submit -->
+                    <app-button [text]="'Crear cuenta'" [class]="'btn-primary'" [showIconRight]="true" [iconRight]="'bi bi-arrow-right'"
+                        [type]="'submit'" [disabled]="registerForm.invalid" [fullWidth]="true">
+                    </app-button>
+
+                    <!-- Link to login -->
+                    <p class="text-center text-muted body-medium">¿Ya tienes cuenta?</p>
+                    <a routerLink="/login">
+                        <app-button [text]="'Iniciar sesión'" [class]="'btn-link'"></app-button>
+                    </a>
+                    
+                    <!-- Link to home -->
+                    <hr>
+                    <p class="text-center text-muted body-medium">Explora la mejor selección de relojes de segunda mano</p>
+                    <a routerLink="/home">
+                        <app-button [text]="'Ir al inicio'" [class]="'btn-outline-primary'" [showIconRight]="true"
+                            [iconRight]="'bi bi-house'" [fullWidth]="true">
+                        </app-button>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<app-footer></app-footer>

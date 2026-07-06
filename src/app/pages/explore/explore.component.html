@@ -1,0 +1,294 @@
+<app-navbar></app-navbar>
+
+<div class="explore container-fluid px-3 px-lg-5 py-4">
+  <div class="row g-4">
+
+    <aside class="col-12 col-lg-3 d-lg-block" [class.mobile-filters-active]="showMobileFilters()"
+      [class.d-none]="!showMobileFilters()">
+      <div class="filters-card p-3 mb-3">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0">Filtros</h5>
+          <button type="button" class="btn-reset-filters" (click)="resetFilters()">
+            Limpiar
+          </button>
+        </div>
+
+        <!-- Precio -->
+        <div class="filter-block mb-4">
+          <label class="filter-label">Precio</label>
+
+          <div class="price-range mt-3">
+            <div class="price-range__track"></div>
+            <div class="price-range__track-active" [style.left.%]="minPricePercent()"
+              [style.right.%]="100 - maxPricePercent()"></div>
+            <input type="range" class="price-range__input" [min]="priceMin" [max]="priceMax" step="100"
+              [(ngModel)]="minPrice" (ngModelChange)="onPriceChange()" />
+            <input type="range" class="price-range__input" [min]="priceMin" [max]="priceMax" step="100"
+              [(ngModel)]="maxPrice" (ngModelChange)="onPriceChange()" />
+          </div>
+
+          <div class="d-flex justify-content-between small text-muted mt-2">
+            <span>{{ formatPrice(minPrice) }}€</span>
+            <span>{{ formatPrice(maxPrice) }}€</span>
+          </div>
+        </div>
+
+        <!-- Marca -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Marca</label>
+          <div class="filter-scroll">
+            @for (brand of brands(); track brand.id) {
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" [id]="'brand-' + brand.id"
+                [checked]="selectedBrand === brand.id" (change)="selectBrand(brand.id)" />
+              <label class="form-check-label" [for]="'brand-' + brand.id">
+                {{ brand.name }}
+              </label>
+            </div>
+            }
+            @if (brands().length === 0) {
+            <p class="text-muted small mb-0">No hay marcas disponibles.</p>
+            }
+          </div>
+        </div>
+
+        <!-- Modelo (dinámico según la marca, selección múltiple) -->
+        @if (selectedBrand) {
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Modelo</label>
+
+          @if (models().length === 0) {
+          <p class="text-muted small mb-0">Esta marca no tiene modelos disponibles.</p>
+          } @else {
+          <div class="filter-scroll">
+            @for (model of models(); track model.id) {
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" [id]="'model-' + model.id"
+                [checked]="isModelSelected(model.id)" (change)="toggleModel(model.id)" />
+              <label class="form-check-label" [for]="'model-' + model.id">
+                {{ model.name }}
+              </label>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
+
+        <!-- Estilo -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Estilo</label>
+          <div class="filter-scroll">
+            @for (style of styles(); track style.id) {
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" [id]="'style-' + style.id"
+                [checked]="selectedStyle === style.id" (change)="selectStyle(style.id)" />
+              <label class="form-check-label" [for]="'style-' + style.id">
+                {{ style.name }}
+              </label>
+            </div>
+            }
+            @if (styles().length === 0) {
+            <p class="text-muted small mb-0">No hay estilos disponibles.</p>
+            }
+          </div>
+        </div>
+
+        <!-- Género -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Género</label>
+          @for (gender of genders; track gender) {
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="'gender-' + gender"
+              [checked]="isGenderSelected(gender)" (change)="toggleGender(gender)" />
+            <label class="form-check-label text-capitalize" [for]="'gender-' + gender">
+              {{ genderTranslations[gender] }}
+            </label>
+          </div>
+          }
+        </div>
+
+        <!-- Tipo de movimiento -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Tipo de movimiento</label>
+          @for (movement of movementTypes; track movement) {
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="'movement-' + movement"
+              [checked]="isMovementSelected(movement)" (change)="toggleMovement(movement)" />
+            <label class="form-check-label text-capitalize" [for]="'movement-' + movement">
+              {{ movementTranslations[movement] }}
+            </label>
+          </div>
+          }
+        </div>
+
+        <!-- Año de fabricación -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2" for="year">Año de fabricación</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1.5" y="2.5" width="13" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" />
+                <path d="M1.5 6H14.5" stroke="currentColor" stroke-width="1.2" />
+                <path d="M4.5 1.5V3.5M11.5 1.5V3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </span>
+            <input id="year" type="number" class="form-control" placeholder="Ej. 2015" min="1900" [max]="currentYear"
+              [(ngModel)]="year" (change)="applyFilters()" />
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Estado</label>
+          @for (condition of conditions; track condition) {
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="'condition-' + condition"
+              [checked]="isConditionSelected(condition)" (change)="toggleCondition(condition)" />
+            <label class="form-check-label" [for]="'condition-' + condition">
+              {{ conditionTranslations[condition] }}
+            </label>
+          </div>
+          }
+        </div>
+
+        <!-- Extras -->
+        <div class="filter-block mb-4">
+          <label class="filter-label d-block mb-2">Extras</label>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="originalBox" [(ngModel)]="originalBox"
+              (change)="applyFilters()" />
+            <label class="form-check-label" for="originalBox">Caja original</label>
+          </div>
+
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="originalPapers" [(ngModel)]="originalPapers"
+              (change)="applyFilters()" />
+            <label class="form-check-label" for="originalPapers">Papeles originales</label>
+          </div>
+        </div>
+
+        <!-- Envío -->
+        <div class="filter-block mb-2">
+          <label class="filter-label d-block mb-2">Envío</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="shipping" [(ngModel)]="shipping"
+              (change)="applyFilters()" />
+            <label class="form-check-label" for="shipping">Envío disponible</label>
+          </div>
+        </div>
+
+        <div class="mobile-filter-footer d-grid d-lg-none mt-4">
+          <button type="button" class="btn btn-primary py-2.5 rounded-3 fw-semibold w-100"
+            (click)="showMobileFilters.set(false)">
+            Ver {{ filteredArticles().length }} resultados
+          </button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- RESULTADOS -->
+    <main class="col-12 col-lg-9">
+
+      <div class="text-center mb-4">
+        <h1 class="fw-bold explore__title">Explorar relojes</h1>
+        <p class="text-muted explore__subtitle mx-auto">
+          Descubre una amplia selección de relojes y encuentra el modelo perfecto para tu estilo,
+          presupuesto y ocasión.
+        </p>
+      </div>
+
+      <!-- Buscador -->
+      <div class="search-bar mx-auto my-4">
+        <div class="search input-group bg-white position-relative mx-auto">
+          <input type="text" class="form-control border-0" placeholder="Buscar marca, modelo o estilo..."
+            [ngModel]="searchTerm()" (input)="onSearchInput($event)" (keyup.enter)="onSearch()" />
+          <button type="button" (click)="onSearch()"
+            class="btn btn-light border-0 d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-search"></i>Buscar
+          </button>
+        </div>
+      </div>
+
+      <!-- Chips rápidos de género -->
+      <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+        @for (gender of genders; track gender) {
+        <button type="button" class="chip-btn" [class.chip-btn--active]="isGenderSelected(gender)"
+          (click)="toggleGender(gender)">
+          {{ genderTranslations[gender] }}
+        </button>
+        }
+      </div>
+
+      <div class="d-block d-lg-none text-center my-3 position-relative">
+        <button type="button" class="btn btn-filter-trigger w-100 py-2.5 shadow-sm fw-semibold"
+          (click)="showMobileFilters.set(true)">
+          <i class="bi bi-sliders me-2"></i> Filtros
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">{{ filteredArticles().length }} resultados</span>
+      </div>
+
+      <!-- Estados de carga / vacío -->
+      @if (loading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="text-muted mt-3">Cargando artículos...</p>
+      </div>
+      } @else if (paginatedArticles().length === 0) {
+      <div class="text-center py-5">
+        <p class="text-muted mb-0">No se han encontrado artículos con estos filtros.</p>
+      </div>
+      } @else {
+
+      <!-- Grid de resultados -->
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-4 align-items-start">
+        @for (article of paginatedArticles(); track article.id) {
+        <div class="col">
+          <app-product-card [article]="article" (favoriteToggled)="toggleFavorite($event)"></app-product-card>
+        </div>
+        }
+      </div>
+
+      <!-- Paginación -->
+      @if (totalPages() > 1) {
+      <nav aria-label="Paginación de resultados" class="d-flex justify-content-center">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage() === 1">
+            <button class="page-link" type="button" (click)="changePage(currentPage() - 1)">
+              Anterior
+            </button>
+          </li>
+
+          @for (page of pages(); track page) {
+          <li class="page-item" [class.active]="currentPage() === page">
+            <button class="page-link" type="button" (click)="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+          }
+
+          <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+            <button class="page-link" type="button" (click)="changePage(currentPage() + 1)">
+              Siguiente
+            </button>
+          </li>
+        </ul>
+      </nav>
+      }
+
+      }
+
+    </main>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

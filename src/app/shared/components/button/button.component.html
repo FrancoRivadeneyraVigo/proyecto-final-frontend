@@ -1,0 +1,11 @@
+<button [type]="type()" class="btn {{ class() }}" [class.w-100]="fullWidth()" [disabled]="disabled()">
+    @if (showIconLeft()) {
+    <i [class]="iconLeft()"></i>
+    }
+    @if (text()) {
+    <span>{{ text() }}</span>
+    }
+    @if (showIconRight()) {
+    <i [class]="iconRight()"></i>
+    }
+</button>

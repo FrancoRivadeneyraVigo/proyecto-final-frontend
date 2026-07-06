@@ -1,0 +1,81 @@
+<div class="filter-tabs">
+    <app-button [text]="'User'" [class]="activeFilter() === 'user' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('user')">
+    </app-button>
+    <app-button [text]="'Moderador'" [class]="activeFilter() === 'moderator' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('moderator')">
+    </app-button>
+    <app-button [text]="'Administrador'" [class]="activeFilter() === 'admin' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('admin')">
+    </app-button>
+    <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="loadProfiles('all')">
+    </app-button>
+</div>
+
+<div class="search-bar">
+    <input type="text" class="search-input" placeholder="Buscar por nombre, ID o nombre de usuario"
+        [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)"
+        (keyup.enter)="onSearchChange(searchTerm())" />
+    <app-button [text]="'Buscar'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-search'"
+        (click)="onSearchChange(searchTerm())">
+    </app-button>
+</div>
+
+
+<section class="section">
+    @if (loading()) {
+    <p class="text-muted text-center py-4">Cargando perfiles...</p>
+    } @else if (filteredProfiles().length === 0) {
+    <p class="text-muted text-center py-4">No hay perfiles para este filtro</p>
+    } @else {
+    <ul class="list-group">
+        @for (profile of paginatedProfiles(); track profile.id) {
+        <li class="list-group-item list-group-item-action profile-row"
+            [routerLink]="['/admin/profile', profile.fk_usuarios_id]">
+            <app-avatar [name]="profile.name" [surname]="profile.surname" [photoUrl]="profile.photo_url"></app-avatar>
+            <div class="profile-info">
+                <h5>{{ profile.name }} {{ profile.surname }}</h5>
+                <p class="body-medium text-muted">{{ profile.username }}</p>
+            </div>
+            <span class="body-medium profile-rol">{{ profile.rol }}</span>
+            <div class="profile-badge-warpper">
+                <span class="badge" [class.badge-active]="profile.status === 'ACTIVE'"
+                    [class.badge-blocked]="profile.status === 'BLOCKED'"
+                    [class.badge-deleted]="profile.status === 'DELETED'">
+                    @switch (profile.status) {
+                    @case ('ACTIVE') { Activo }
+                    @case ('BLOCKED') { Bloqueado }
+                    @case ('DELETED') { Baja }
+                    @default { Desconocido }
+                    }
+                </span>
+            </div>
+        </li>
+        }
+    </ul>
+    @if (totalPages() > 1) {
+        <nav aria-label="Paginación de perfiles">
+            <ul class="pagination justify-content-center mt-4">
+                <li class="page-item" [class.disabled]="currentPage() === 1">
+                    <button type="button" class="page-link" (click)="previousPage()">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </li>
+        
+                @for (page of pagesArray(); track page) {
+                <li class="page-item" [class.active]="page === currentPage()">
+                    <button type="button" class="page-link" (click)="goToPage(page)">{{ page }}</button>
+                </li>
+                }
+        
+                <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                    <button type="button" class="page-link" (click)="nextPage()">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    }
+}
+</section>

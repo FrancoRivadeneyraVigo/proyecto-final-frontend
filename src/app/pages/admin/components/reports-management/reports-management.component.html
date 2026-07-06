@@ -1,0 +1,142 @@
+<div class="filter-tabs">
+    <app-button [text]="'Pendientes'"
+        [class]="activeFilter() === 'PENDING' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="onStatusChange('PENDING')">
+    </app-button>
+    <app-button [text]="'En revisión'"
+        [class]="activeFilter() === 'UNDER REVIEW' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="onStatusChange('UNDER REVIEW')">
+    </app-button>
+    <app-button [text]="'Resueltos'"
+        [class]="activeFilter() === 'RESOLVED' ? 'btn-primary' : 'btn-outline-primary'" [fullWidth]="true"
+        (click)="onStatusChange('RESOLVED')">
+    </app-button>
+    <app-button [text]="'Todos'" [class]="activeFilter() === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+        [fullWidth]="true" (click)="onStatusChange('all')">
+    </app-button>
+</div>
+
+<div class="search-bar">
+    <input type="text" class="search-input"
+        placeholder="Ej: 123, 30001, Rolex, ana@email.com, parece falso"
+        [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="applyFilters()" />
+    <app-button [text]="'Buscar'" [class]="'btn-light'" [showIconLeft]="true" [iconLeft]="'bi bi-search'"
+        (click)="applyFilters()">
+    </app-button>
+</div>
+<p class="search-hint body-small text-muted">
+    ID reporte · ID artículo · título del artículo · email o nombre del usuario · texto del comentario
+</p>
+
+<div class="advanced-filters">
+    <div class="filter-field">
+        <label class="filter-label" for="reason-filter">Motivo</label>
+        <select id="reason-filter" class="filter-select" [ngModel]="selectedReason()"
+            (ngModelChange)="selectedReason.set($event)">
+            <option value="">Todos los motivos</option>
+            @for (option of reasonOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+    </div>
+    <div class="filter-field">
+        <label class="filter-label" for="report-type-filter">Tipo</label>
+        <select id="report-type-filter" class="filter-select" [ngModel]="selectedReportType()"
+            (ngModelChange)="selectedReportType.set($event)">
+            <option value="">Todos los tipos</option>
+            @for (option of reportTypeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+    </div>
+    <div class="filter-field">
+        <label class="filter-label" for="created-from">Desde</label>
+        <input id="created-from" type="date" class="filter-input" [ngModel]="createdFrom()"
+            (ngModelChange)="createdFrom.set($event)" />
+    </div>
+    <div class="filter-field">
+        <label class="filter-label" for="created-to">Hasta</label>
+        <input id="created-to" type="date" class="filter-input" [ngModel]="createdTo()"
+            (ngModelChange)="createdTo.set($event)" />
+    </div>
+    <div class="filter-actions">
+        <app-button [text]="'Aplicar filtros'" [class]="'btn-primary'" [showIconLeft]="true"
+            [iconLeft]="'bi bi-funnel'" (click)="applyFilters()">
+        </app-button>
+        <app-button [text]="'Limpiar filtros'" [class]="'btn-outline-primary'" (click)="clearFilters()">
+        </app-button>
+    </div>
+</div>
+
+<section class="section">
+    @if (loading()) {
+    <p class="text-muted text-center py-4">Cargando reportes...</p>
+    } @else if (reports().length === 0) {
+    <p class="text-muted text-center py-4">No hay reportes para este filtro</p>
+    } @else {
+    <ul class="list-group">
+        @for (report of reports(); track report.id) {
+        <li class="list-group-item list-group-item-action report-row"
+            [routerLink]="['/admin/reports', report.id]">
+            <div class="report-main">
+                <p class="body-medium text-muted report-reporter">
+                    Reportado por: {{ report.name }} {{ report.surname }}
+                </p>
+                <h5 class="report-reason">{{ getReasonLabel(report.reason) }}</h5>
+                @if (hasId(report.article_id)) {
+                <a class="body-medium report-meta-link" [routerLink]="['/articles', report.article_id]"
+                    (click)="$event.stopPropagation()">
+                    <i class="bi bi-tag-fill"></i>
+                    ID Artículo: {{ report.article_id }}
+                </a>
+                }
+                @if (hasId(report.reported_user_id)) {
+                <a class="body-medium report-meta-link" [routerLink]="['/admin/profile', report.reported_user_id]"
+                    (click)="$event.stopPropagation()">
+                    <i class="bi bi-person-fill"></i>
+                    ID Usuario: {{ report.reported_user_id }}
+                </a>
+                }
+                <p class="body-medium text-muted report-comments">{{ report.comments }}</p>
+            </div>
+            <div class="report-meta">
+                <p class="body-medium report-date">
+                    Creado: {{ report.created_at | date:'dd/MM/yyyy' }}
+                </p>
+                <p class="body-medium report-date">
+                    Resuelto:
+                    @if (report.resolved_at) {
+                    {{ report.resolved_at | date:'dd/MM/yyyy' }}
+                    } @else {
+                    —
+                    }
+                </p>
+            </div>
+            <div class="report-badge-wrapper">
+                <span class="badge"
+                    [class.badge-active]="report.status === 'RESOLVED' && report.resolution === 'APPROVED'"
+                    [class.badge-blocked]="report.status === 'PENDING'"
+                    [class.badge-deleted]="report.status === 'UNDER REVIEW' || (report.status === 'RESOLVED' && !report.resolution)"
+                    [class.badge-rejected]="isResolvedRejected(report.status, report.resolution)">
+                    {{ getStatusLabel(report.status, report.resolution) }}
+                </span>
+            </div>
+        </li>
+        }
+    </ul>
+    @if (response() && response()!.total_pages > 1) {
+    <div class="pagination">
+        <app-button [text]="'Anterior'" [class]="'btn-outline-primary'" [disabled]="currentPage() <= 1"
+            (click)="goToPreviousPage()">
+        </app-button>
+        <span class="pagination-info">
+            Página {{ currentPage() }} de {{ response()!.total_pages }}
+        </span>
+        <app-button [text]="'Siguiente'" [class]="'btn-outline-primary'"
+            [disabled]="currentPage() >= response()!.total_pages" (click)="goToNextPage()">
+        </app-button>
+    </div>
+    }
+    }
+</section>

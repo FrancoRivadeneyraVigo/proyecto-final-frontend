@@ -1,0 +1,9 @@
+<div class="status-filter">
+    @for (filter of visibleFilters(); track filter.value) {
+    <app-button
+        [class]="activeStatus() === filter.value ? 'btn-primary' : 'btn-outline-primary'"
+        [text]="filter.label"
+        (click)="onFilterClick(filter)"
+    ></app-button>
+    }
+</div>

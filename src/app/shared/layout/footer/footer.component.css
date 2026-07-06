@@ -1,0 +1,26 @@
+.login-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 32px;
+    text-align: center;
+    width: 100%;
+    background-color: var(--bs-surface-var);
+    gap: 16px;
+}
+
+.login-footer-logo {
+    width: 96px;
+    height: auto;
+}
+
+.login-footer-brand {
+    font-weight: 700;
+    margin: 0;
+}
+
+.login-footer-copy {
+    font-size: 14px;
+    color: var(--bs-light-text-emphasis);
+    margin: 0; }
