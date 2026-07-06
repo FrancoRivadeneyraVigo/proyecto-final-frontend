@@ -1,129 +1,35 @@
-# 🎓 Proyecto Final de Máster · Frontend
+# ATiempo · Frontend
 
-<div align="center">
+**Proyecto Fin de Máster (UNIR) — Full Stack Developer**
+Plataforma de compraventa de artículos de segunda mano (relojes), con roles de **usuario**, **moderador** y **administrador**, inspirada en Vinted/Wallapop.
 
-![TypeScript](https://img.shields.io/badge/TypeScript-43.2%25-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![HTML](https://img.shields.io/badge/HTML-35.6%25-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS-21.2%25-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-
-**Repositorio:** [`FrancoRivadeneyraVigo/proyecto-final-frontend`](https://github.com/FrancoRivadeneyraVigo/proyecto-final-frontend)
-
-</div>
+Este repositorio contiene el **cliente web** del proyecto, construido con **Angular** (componentes standalone) y **Bootstrap**. Consume la [API REST del backend](https://github.com/xenixui/proyecto-final-backend), construida en Node.js + Express y MySQL.
 
 ---
 
-## 📌 Descripción
+## ¿Qué resuelve este frontend?
 
-Este repositorio contiene el **frontend** del Proyecto Final de Máster.
-Su objetivo es ofrecer una interfaz moderna, clara y usable para consumir los servicios del backend, cubriendo flujos clave como autenticación, gestión de usuario y operaciones principales de la aplicación.
+Implementa la interfaz para los tres perfiles de la aplicación, cubriendo los requisitos mínimos del proyecto:
 
-Este frontend está diseñado para integrarse con el backend oficial del proyecto:
-
-➡️ **Backend:** [`xenixui/proyecto-final-backend`](https://github.com/xenixui/proyecto-final-backend)
-
----
-
-## 🧱 Arquitectura (alto nivel)
-
-- **Cliente web (SPA)** desarrollado con tecnologías frontend modernas.
-- **Consumo de API REST** expuesta por el backend.
-- **Gestión de autenticación** mediante token (flujo login/logout y sesión).
-- **Separación por capas de UI**, lógica de presentación y servicios de acceso a datos.
+- **Autenticación**: formularios de registro e inicio de sesión con validación, redirigiendo a la vista correspondiente según el rol del usuario autenticado (usuario, moderador o administrador).
+- **Vista de usuario**: página principal con el listado de artículos publicados y acceso directo a la creación de nuevos artículos, buscador general con filtros por categoría, marca, modelo, estilo, precio y estado, gestión (alta, edición, baja) de artículos propios y marcado de artículo como vendido.
+- **Ciclo de vida del artículo**: representación en la interfaz de los estados `Borrador`, `Publicado`, `En revisión`, `Retirado` y `Vendido`.
+- **Perfil público**: artículos publicados y valoraciones recibidas de cada usuario.
+- **Mensajería interna**: chat entre comprador y vendedor asociado a un artículo, con listado de conversaciones y recepción de notificaciones en tiempo real vía Server-Sent Events (SSE).
+- **Reportes**: reporte de artículos y de usuarios desde la interfaz, que pasan a estado "En revisión".
+- **Vista de moderador**: panel de reportes pendientes con acceso al detalle de cada uno, acciones para activar o retirar el artículo (notificando al usuario afectado) e historial de moderación.
+- **Vista de administrador**: gestión de usuarios y roles, gestión del catálogo (categorías, marcas, modelos, estilos) y panel de estadísticas globales de la plataforma. Incluye además todas las acciones disponibles para el perfil de moderador.
 
 ---
 
-## 🛠️ Stack tecnológico
+## Stack técnico
 
-Según la composición del repositorio:
+- **Angular 21** (standalone components, Angular CLI/build)
+- **Bootstrap 5** + **Bootstrap Icons** para la UI
+- **ag-charts-angular** para las gráficas del panel de estadísticas
+- **ngx-sonner** para notificaciones (toasts)
 
-- **TypeScript (43.2%)**
-- **HTML (35.6%)**
-- **CSS (21.2%)**
 
----
+## Integración con el backend
 
-## 🚀 Puesta en marcha
-
-### 1) Clonar el repositorio
-
-```bash
-git clone https://github.com/FrancoRivadeneyraVigo/proyecto-final-frontend.git
-cd proyecto-final-frontend
-```
-
-### 2) Instalar dependencias
-
-```bash
-npm install
-```
-
-### 3) Configurar variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto y define, como mínimo, la URL del backend.
-
-Ejemplo:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
-
-> Si tu proyecto usa otra convención (`REACT_APP_...`, `NEXT_PUBLIC_...`, etc.), ajusta el nombre de variable según la configuración real del código.
-
-### 4) Ejecutar en desarrollo
-
-```bash
-npm run dev
-```
-
-### 5) Generar build de producción
-
-```bash
-npm run build
-```
-
-### 6) Previsualizar build
-
-```bash
-npm run preview
-```
-
----
-
-## 🔐 Integración con backend
-
-Para que el frontend funcione correctamente, asegúrate de tener el backend levantado.
-
-1. Inicia `xenixui/proyecto-final-backend`.
-2. Verifica que la URL de API configurada en el frontend coincide con el `PORT` y host del backend.
-3. Comprueba CORS y variables de entorno en ambos proyectos.
-
----
-
-## ✅ Buenas prácticas recomendadas
-
-- No subir archivos `.env` al repositorio.
-- Mantener un `.env.example` con variables mínimas.
-- Validar formularios en cliente y servidor.
-- Homogeneizar estilos y componentes reutilizables.
-- Documentar cambios relevantes en cada entrega.
-
----
-
-## 📚 Contexto académico
-
-Este proyecto forma parte del **Trabajo/Proyecto Final de Máster** y refleja la aplicación práctica de conocimientos en:
-
-- Arquitectura de aplicaciones web
-- Desarrollo frontend tipado
-- Integración cliente-servidor
-- Seguridad básica en flujos de autenticación
-- Buenas prácticas de despliegue y mantenimiento
-
----
-
-## 👤 Autoría
-
-Desarrollado por el grupo de trabajo del Proyecto Final de Máster.
-
----
-
+Este frontend requiere que la [API del backend](https://github.com/xenixui/proyecto-final-backend) esté en ejecución y accesible desde la URL configurada.
